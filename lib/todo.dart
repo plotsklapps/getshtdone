@@ -27,6 +27,8 @@ class Todo {
     return 'Todo{title: $title, description: $description, isDone: $isDone}';
   }
 
+  // I should mark the class as immutable, but I need the isDone bool to
+  // be mutable, so I'm ignoring the lint rule here.
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
@@ -37,6 +39,8 @@ class Todo {
             isDone == other.isDone;
   }
 
+  // I should mark the class as immutable, but I need the isDone bool to
+  // be mutable, so I'm ignoring the lint rule here.
   @override
   int get hashCode {
     return title.hashCode ^ description.hashCode ^ isDone.hashCode;

@@ -79,39 +79,61 @@ class HomeScreenState extends State<HomeScreen> {
                         Stack(
                           children: [
                             Align(
-                              child: Card(
-                                child: ListTile(
-                                  title: Text(
-                                    todo.title,
-                                    style: todo.isDone
-                                        ? const TextStyle(
-                                            decoration:
-                                                TextDecoration.lineThrough,
+                              child: Dismissible(
+                                key: Key(todo.title),
+                                onDismissed: (direction) {
+                                  todoStore.removeTodo(todo);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Great job on completing your task!',
+                                      ),
+                                      behavior: SnackBarBehavior.floating,
+                                      showCloseIcon: true,
+                                    ),
+                                  );
+                                },
+                                background: ColoredBox(
+                                  color: flexSchemeDark.error,
+                                  child: const Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                child: Card(
+                                  child: ListTile(
+                                    title: Text(
+                                      todo.title,
+                                      style: todo.isDone
+                                          ? const TextStyle(
+                                              decoration:
+                                                  TextDecoration.lineThrough,
+                                            )
+                                          : null,
+                                    ),
+                                    subtitle: Text(
+                                      todo.description,
+                                      style: todo.isDone
+                                          ? const TextStyle(
+                                              decoration:
+                                                  TextDecoration.lineThrough,
+                                            )
+                                          : null,
+                                    ),
+                                    trailing: todo.isDone
+                                        ? Icon(
+                                            Icons.check_circle_rounded,
+                                            color: flexSchemeDark.tertiary,
                                           )
                                         : null,
+                                    onTap: () {
+                                      todoStore.doneTodo(todo);
+                                      confettiController.play();
+                                    },
+                                    onLongPress: () {
+                                      todoStore.removeTodo(todo);
+                                    },
                                   ),
-                                  subtitle: Text(
-                                    todo.description,
-                                    style: todo.isDone
-                                        ? const TextStyle(
-                                            decoration:
-                                                TextDecoration.lineThrough,
-                                          )
-                                        : null,
-                                  ),
-                                  trailing: todo.isDone
-                                      ? Icon(
-                                          Icons.check_circle_rounded,
-                                          color: flexSchemeDark.tertiary,
-                                        )
-                                      : null,
-                                  onTap: () {
-                                    todoStore.doneTodo(todo);
-                                    confettiController.play();
-                                  },
-                                  onLongPress: () {
-                                    todoStore.removeTodo(todo);
-                                  },
                                 ),
                               ),
                             ),

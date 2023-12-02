@@ -1,11 +1,11 @@
-// Theme config for FlexColorScheme version 7.3.x. Make sure you use
-// same or higher package version, but still same major version. If you
-// use a lower package version, some properties may not be supported.
-// In that case remove them after copying this theme to your app.
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// Theme config for FlexColorScheme version 7.3.x. Make sure you use
+// same or higher package version, but still same major version. If you
+// use a lower package version, some properties may not be supported.
+// In that case remove them after copying this theme to your app.
 ThemeData themeLight = FlexThemeData.light(
   scheme: FlexScheme.money,
   surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
@@ -38,6 +38,7 @@ ThemeData themeLight = FlexThemeData.light(
     popupMenuElevation: 3.0,
     alignedDropdown: true,
     useInputDecoratorThemeInDialogs: true,
+    snackBarRadius: 12,
     drawerIndicatorRadius: 12.0,
     drawerIndicatorSchemeColor: SchemeColor.primary,
     bottomNavigationBarMutedUnselectedLabel: false,
@@ -71,7 +72,6 @@ ThemeData themeLight = FlexThemeData.light(
   tones: FlexTones.jolly(Brightness.light),
   visualDensity: FlexColorScheme.comfortablePlatformDensity,
   useMaterial3: true,
-// To use the Playground font, add GoogleFonts package and uncomment
   fontFamily: GoogleFonts.bebasNeue().fontFamily,
 );
 
@@ -107,6 +107,7 @@ ThemeData themeDark = FlexThemeData.dark(
     popupMenuElevation: 3.0,
     alignedDropdown: true,
     useInputDecoratorThemeInDialogs: true,
+    snackBarRadius: 12,
     drawerIndicatorRadius: 12.0,
     drawerIndicatorSchemeColor: SchemeColor.primary,
     bottomNavigationBarMutedUnselectedLabel: false,
@@ -139,12 +140,8 @@ ThemeData themeDark = FlexThemeData.dark(
   tones: FlexTones.jolly(Brightness.dark),
   visualDensity: FlexColorScheme.comfortablePlatformDensity,
   useMaterial3: true,
-// To use the Playground font, add GoogleFonts package and uncomment
   fontFamily: GoogleFonts.bebasNeue().fontFamily,
 );
-// If you do not have a themeMode switch, uncomment this line
-// to let the device system mode control the theme mode:
-// themeMode: ThemeMode.system,
 
 // Light and dark ColorSchemes made by FlexColorScheme v7.3.1.
 // These ColorScheme objects require Flutter 3.7 or later.

@@ -32,7 +32,11 @@ class _TodoBottomSheetState extends State<TodoBottomSheet> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.fromLTRB(
-          16.0, 0.0, 16.0, MediaQuery.of(context).viewInsets.bottom),
+        16.0,
+        0.0,
+        16.0,
+        MediaQuery.of(context).viewInsets.bottom,
+      ),
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -40,19 +44,21 @@ class _TodoBottomSheetState extends State<TodoBottomSheet> {
             const Text('Add a new task'),
             const SizedBox(height: 16.0),
             TextField(
-                controller: titleController,
-                keyboardType: TextInputType.text,
-                decoration: const InputDecoration(
-                  label: Text('Title'),
-                )),
+              controller: titleController,
+              keyboardType: TextInputType.text,
+              decoration: const InputDecoration(
+                label: Text('Title'),
+              ),
+            ),
             const SizedBox(height: 16.0),
             TextField(
-                controller: descriptionController,
-                keyboardType: TextInputType.text,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  label: Text('Description'),
-                )),
+              controller: descriptionController,
+              keyboardType: TextInputType.text,
+              maxLines: 3,
+              decoration: const InputDecoration(
+                label: Text('Description'),
+              ),
+            ),
             const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {

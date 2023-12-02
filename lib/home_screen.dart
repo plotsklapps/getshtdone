@@ -33,7 +33,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> listType = [
+    final listType = <String>[
       'TASKS',
       '+',
     ];
@@ -79,21 +79,26 @@ class HomeScreenState extends State<HomeScreen> {
                         Stack(
                           children: [
                             Align(
-                              alignment: Alignment.center,
                               child: Card(
                                 child: ListTile(
-                                  title: Text(todo.title,
-                                      style: todo.isDone
-                                          ? const TextStyle(
-                                              decoration:
-                                                  TextDecoration.lineThrough)
-                                          : null),
-                                  subtitle: Text(todo.description,
-                                      style: todo.isDone
-                                          ? const TextStyle(
-                                              decoration:
-                                                  TextDecoration.lineThrough)
-                                          : null),
+                                  title: Text(
+                                    todo.title,
+                                    style: todo.isDone
+                                        ? const TextStyle(
+                                            decoration:
+                                                TextDecoration.lineThrough,
+                                          )
+                                        : null,
+                                  ),
+                                  subtitle: Text(
+                                    todo.description,
+                                    style: todo.isDone
+                                        ? const TextStyle(
+                                            decoration:
+                                                TextDecoration.lineThrough,
+                                          )
+                                        : null,
+                                  ),
                                   trailing: todo.isDone
                                       ? Icon(
                                           Icons.check_circle_rounded,
@@ -129,7 +134,7 @@ class HomeScreenState extends State<HomeScreen> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            showModalBottomSheet(
+            showModalBottomSheet<Widget>(
               context: context,
               showDragHandle: true,
               builder: (_) {

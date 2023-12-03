@@ -6,11 +6,11 @@ class TodoBottomSheet extends StatefulWidget {
 
   @override
   State<TodoBottomSheet> createState() {
-    return _TodoBottomSheetState();
+    return TodoBottomSheetState();
   }
 }
 
-class _TodoBottomSheetState extends State<TodoBottomSheet> {
+class TodoBottomSheetState extends State<TodoBottomSheet> {
   late TextEditingController titleController;
   late TextEditingController descriptionController;
 

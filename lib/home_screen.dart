@@ -1,6 +1,8 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:getsh_tdone/all_signals.dart';
+import 'package:getsh_tdone/newtaskgroup_bottomsheet.dart';
 import 'package:getsh_tdone/theme.dart';
 import 'package:getsh_tdone/todo.dart';
 import 'package:getsh_tdone/todo_bottomsheet.dart';
@@ -34,10 +36,6 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final listType = <String>[
-      'TASKS',
-      '+',
-    ];
     return SafeArea(
       child: Scaffold(
         body: Padding(
@@ -62,25 +60,39 @@ class HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: SizedBox(
                         height: 40.0,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: listType.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: Chip(
-                                label: Text(listType[index]),
-                              ),
-                            );
-                          },
-                        ),
+                        child: Watch((_) {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: taskGroupList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: InkWell(
+                                  onTap: () {
+                                    if (taskGroupList[index] == '+') {
+                                      showModalBottomSheet<Widget>(
+                                        context: context,
+                                        showDragHandle: true,
+                                        builder: (_) {
+                                          return const NewTaskGroupBottomSheet();
+                                        },
+                                      );
+                                    }
+                                  },
+                                  child: Chip(
+                                    label: Text(taskGroupList[index]),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 16.0),
-                const Divider(thickness: 2.0),
                 Expanded(
                   child: Watch((_) {
                     return ListView(
@@ -103,11 +115,12 @@ class HomeScreenState extends State<HomeScreen> {
                                       ),
                                     );
                                   },
-                                  background: ColoredBox(
+                                  background: Card(
                                     color: flexSchemeDark.error,
-                                    child: const Icon(
-                                      Icons.delete,
-                                      color: Colors.white,
+                                    child: const ListTile(
+                                      leading: Icon(
+                                        Icons.delete_rounded,
+                                      ),
                                     ),
                                   ),
                                   child: Card(
@@ -138,7 +151,11 @@ class HomeScreenState extends State<HomeScreen> {
                                           : null,
                                       onTap: () {
                                         todoStore.doneTodo(todo);
-                                        confettiController.play();
+                                        // Only play confetti when the task is
+                                        // marked as done.
+                                        if (!todo.isDone) {
+                                          confettiController.play();
+                                        }
                                       },
                                       onLongPress: () {
                                         todoStore.removeTodo(todo);
@@ -156,7 +173,6 @@ class HomeScreenState extends State<HomeScreen> {
                               ),
                             ],
                           ),
-                        const Divider(thickness: 2.0),
                       ],
                     );
                   }),
@@ -175,7 +191,7 @@ class HomeScreenState extends State<HomeScreen> {
               },
             );
           },
-          child: const Icon(Icons.add),
+          child: const Icon(Icons.add_rounded),
         ),
       ),
     );

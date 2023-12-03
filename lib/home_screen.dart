@@ -51,9 +51,13 @@ class HomeScreenState extends State<HomeScreen> {
             ),
             child: Column(
               children: [
-                const Text(
-                  'GET SH_T DONE',
-                  style: TextStyle(fontSize: 64.0),
+                const Row(
+                  children: [
+                    Text(
+                      'GET SH_T DONE',
+                      style: TextStyle(fontSize: 64.0),
+                    ),
+                  ],
                 ),
                 Row(
                   children: [

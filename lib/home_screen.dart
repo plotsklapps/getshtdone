@@ -1,4 +1,5 @@
 import 'package:confetti/confetti.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:getsh_tdone/theme.dart';
 import 'package:getsh_tdone/todo.dart';
@@ -41,117 +42,127 @@ class HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              const Text(
-                'GET SH_T DONE',
-                style: TextStyle(fontSize: 64.0),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      height: 40.0,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: listType.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Chip(
-                              label: Text(listType[index]),
-                            ),
-                          );
-                        },
+          child: ScrollConfiguration(
+            behavior: const ScrollBehavior().copyWith(
+              dragDevices: <PointerDeviceKind>{
+                PointerDeviceKind.stylus,
+                PointerDeviceKind.touch,
+                PointerDeviceKind.mouse,
+                PointerDeviceKind.trackpad,
+              },
+            ),
+            child: Column(
+              children: [
+                const Text(
+                  'GET SH_T DONE',
+                  style: TextStyle(fontSize: 64.0),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 40.0,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: listType.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Chip(
+                                label: Text(listType[index]),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16.0),
-              const Divider(thickness: 2.0),
-              Expanded(
-                child: Watch((_) {
-                  return ListView(
-                    children: [
-                      for (final todo in todoStore.todosList.value)
-                        Stack(
-                          children: [
-                            Align(
-                              child: Dismissible(
-                                key: Key(todo.title),
-                                onDismissed: (direction) {
-                                  todoStore.removeTodo(todo);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'Great job on completing your task!',
+                  ],
+                ),
+                const SizedBox(height: 16.0),
+                const Divider(thickness: 2.0),
+                Expanded(
+                  child: Watch((_) {
+                    return ListView(
+                      children: [
+                        for (final todo in todoStore.todosList.value)
+                          Stack(
+                            children: [
+                              Align(
+                                child: Dismissible(
+                                  key: Key(todo.title),
+                                  onDismissed: (direction) {
+                                    todoStore.removeTodo(todo);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Great job on completing your task!',
+                                        ),
+                                        behavior: SnackBarBehavior.floating,
+                                        showCloseIcon: true,
                                       ),
-                                      behavior: SnackBarBehavior.floating,
-                                      showCloseIcon: true,
+                                    );
+                                  },
+                                  background: ColoredBox(
+                                    color: flexSchemeDark.error,
+                                    child: const Icon(
+                                      Icons.delete,
+                                      color: Colors.white,
                                     ),
-                                  );
-                                },
-                                background: ColoredBox(
-                                  color: flexSchemeDark.error,
-                                  child: const Icon(
-                                    Icons.delete,
-                                    color: Colors.white,
                                   ),
-                                ),
-                                child: Card(
-                                  child: ListTile(
-                                    title: Text(
-                                      todo.title,
-                                      style: todo.isDone
-                                          ? const TextStyle(
-                                              decoration:
-                                                  TextDecoration.lineThrough,
+                                  child: Card(
+                                    child: ListTile(
+                                      title: Text(
+                                        todo.title,
+                                        style: todo.isDone
+                                            ? const TextStyle(
+                                                decoration:
+                                                    TextDecoration.lineThrough,
+                                              )
+                                            : null,
+                                      ),
+                                      subtitle: Text(
+                                        todo.description,
+                                        style: todo.isDone
+                                            ? const TextStyle(
+                                                decoration:
+                                                    TextDecoration.lineThrough,
+                                              )
+                                            : null,
+                                      ),
+                                      trailing: todo.isDone
+                                          ? Icon(
+                                              Icons.check_circle_rounded,
+                                              color: flexSchemeDark.tertiary,
                                             )
                                           : null,
+                                      onTap: () {
+                                        todoStore.doneTodo(todo);
+                                        confettiController.play();
+                                      },
+                                      onLongPress: () {
+                                        todoStore.removeTodo(todo);
+                                      },
                                     ),
-                                    subtitle: Text(
-                                      todo.description,
-                                      style: todo.isDone
-                                          ? const TextStyle(
-                                              decoration:
-                                                  TextDecoration.lineThrough,
-                                            )
-                                          : null,
-                                    ),
-                                    trailing: todo.isDone
-                                        ? Icon(
-                                            Icons.check_circle_rounded,
-                                            color: flexSchemeDark.tertiary,
-                                          )
-                                        : null,
-                                    onTap: () {
-                                      todoStore.doneTodo(todo);
-                                      confettiController.play();
-                                    },
-                                    onLongPress: () {
-                                      todoStore.removeTodo(todo);
-                                    },
                                   ),
                                 ),
                               ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: ConfettiWidget(
-                                confettiController: confettiController,
-                                numberOfParticles: 100,
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: ConfettiWidget(
+                                  confettiController: confettiController,
+                                  numberOfParticles: 100,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      const Divider(thickness: 2.0),
-                    ],
-                  );
-                }),
-              ),
-            ],
+                            ],
+                          ),
+                        const Divider(thickness: 2.0),
+                      ],
+                    );
+                  }),
+                ),
+              ],
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton(

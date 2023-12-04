@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/widgets/newtask_modal.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -12,18 +13,18 @@ class HomeScreen extends StatelessWidget {
         title: const ListTile(
           contentPadding: EdgeInsets.zero,
           leading: CircleAvatar(
-            child: Icon(Icons.person_4_rounded),
+            child: FaIcon(FontAwesomeIcons.userNinja),
           ),
           title: Text('Get Sh_t Done'),
           subtitle: Text('plotsklapps'),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.calendar_month_rounded),
+            icon: const FaIcon(FontAwesomeIcons.calendarDay),
             onPressed: () {},
           ),
           IconButton(
-            icon: const Icon(Icons.doorbell_rounded),
+            icon: const FaIcon(FontAwesomeIcons.solidBell),
             onPressed: () {},
           ),
         ],
@@ -52,7 +53,9 @@ class HomeScreen extends StatelessWidget {
                         Text(
                           "Today's Todo",
                           style: TextStyle(
-                              fontSize: 24.0, fontWeight: FontWeight.bold),
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         Text('Wednesday, 24 March 2023'),
                       ],
@@ -64,7 +67,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet<void>(
             context: context,
@@ -75,13 +78,7 @@ class HomeScreen extends StatelessWidget {
             },
           );
         },
-        label: const Row(
-          children: [
-            Icon(Icons.add_rounded),
-            SizedBox(width: 8.0),
-            Text('New Sh_t To Do'),
-          ],
-        ),
+        child: const FaIcon(FontAwesomeIcons.plus),
       ),
     );
   }

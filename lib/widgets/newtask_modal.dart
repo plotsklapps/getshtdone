@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:getsh_tdone/widgets/datepicker_alert.dart';
-import 'package:getsh_tdone/widgets/timepicker_alert.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:getsh_tdone/providers/category_provider.dart';
 
-class NewTaskModal extends StatefulWidget {
+class NewTaskModal extends ConsumerStatefulWidget {
   const NewTaskModal({
     super.key,
   });
 
   @override
-  State<NewTaskModal> createState() {
+  ConsumerState<NewTaskModal> createState() {
     return NewTaskModalState();
   }
 }
 
-class NewTaskModalState extends State<NewTaskModal> {
+class NewTaskModalState extends ConsumerState<NewTaskModal> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -64,9 +64,9 @@ class NewTaskModalState extends State<NewTaskModal> {
           ),
           SizedBox(height: 12.0),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               NewTaskDatePickerButton(),
+              SizedBox(width: 16.0),
               NewTaskTimePickerButton(),
             ],
           ),
@@ -77,39 +77,43 @@ class NewTaskModalState extends State<NewTaskModal> {
               NewTaskSaveButton(),
             ],
           ),
+          SizedBox(height: 20.0),
         ],
       ),
     );
   }
 }
 
-enum Categories { study, work, personal }
-
-class NewTaskCategoryChoiceSegmentedButton extends StatefulWidget {
+class NewTaskCategoryChoiceSegmentedButton extends ConsumerStatefulWidget {
   const NewTaskCategoryChoiceSegmentedButton({super.key});
 
   @override
-  State<NewTaskCategoryChoiceSegmentedButton> createState() {
+  ConsumerState<NewTaskCategoryChoiceSegmentedButton> createState() {
     return NewTaskCategoryChoiceSegmentedButtonState();
   }
 }
 
 class NewTaskCategoryChoiceSegmentedButtonState
-    extends State<NewTaskCategoryChoiceSegmentedButton> {
-  Set<Categories> selection = <Categories>{};
-
+    extends ConsumerState<NewTaskCategoryChoiceSegmentedButton> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: SegmentedButton<Categories>(
-        selected: selection,
+        selected: ref.watch(categoryProvider),
         onSelectionChanged: (Set<Categories> newSelection) {
-          setState(() {
-            selection = newSelection;
-          });
+          if (newSelection.contains(Categories.study)) {
+            ref
+                .read(categoryProvider.notifier)
+                .updateCategory(Categories.study);
+          } else if (newSelection.contains(Categories.work)) {
+            ref.read(categoryProvider.notifier).updateCategory(Categories.work);
+          } else if (newSelection.contains(Categories.personal)) {
+            ref
+                .read(categoryProvider.notifier)
+                .updateCategory(Categories.personal);
+          }
         },
         emptySelectionAllowed: true,
-        multiSelectionEnabled: true,
         segments: const <ButtonSegment<Categories>>[
           ButtonSegment<Categories>(
             value: Categories.study,
@@ -136,21 +140,24 @@ class NewTaskDatePickerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        showDialog<void>(
-          context: context,
-          builder: (context) {
-            return const DatePickerAlert();
-          },
-        );
-      },
-      child: const Row(
-        children: [
-          Icon(Icons.edit_calendar_rounded),
-          SizedBox(width: 8.0),
-          Text('Add Due Date'),
-        ],
+    return Expanded(
+      child: ElevatedButton(
+        onPressed: () {
+          showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2020),
+            lastDate: DateTime(2030),
+          );
+        },
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.edit_calendar_rounded),
+            SizedBox(width: 8.0),
+            Text('Add Due Date'),
+          ],
+        ),
       ),
     );
   }
@@ -163,21 +170,22 @@ class NewTaskTimePickerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        showDialog<void>(
-          context: context,
-          builder: (context) {
-            return const TimePickerAlert();
-          },
-        );
-      },
-      child: const Row(
-        children: [
-          Icon(Icons.alarm_rounded),
-          SizedBox(width: 8.0),
-          Text('Add Due Time'),
-        ],
+    return Expanded(
+      child: ElevatedButton(
+        onPressed: () {
+          showTimePicker(
+            context: context,
+            initialTime: TimeOfDay.now(),
+          );
+        },
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.alarm_rounded),
+            SizedBox(width: 8.0),
+            Text('Add Due Time'),
+          ],
+        ),
       ),
     );
   }

@@ -39,13 +39,13 @@ class HomeScreen extends StatelessWidget {
             PointerDeviceKind.stylus,
           },
         ),
-        child: const SingleChildScrollView(
+        child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.0),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
               children: [
-                SizedBox(height: 16.0),
-                Row(
+                const SizedBox(height: 16.0),
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
@@ -63,8 +63,14 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 16.0),
-                TodoCard(),
+                const SizedBox(height: 16.0),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: 4,
+                  itemBuilder: (context, index) {
+                    return const TodoCard();
+                  },
+                ),
               ],
             ),
           ),

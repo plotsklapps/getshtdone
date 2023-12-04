@@ -52,6 +52,7 @@ class HomeScreenState extends State<HomeScreen> {
             child: Column(
               children: [
                 const Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       'GET SH_T DONE',

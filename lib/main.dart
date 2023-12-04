@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -32,27 +34,36 @@ class HomeScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const ListTile(
-            contentPadding: EdgeInsets.zero,
-            leading: CircleAvatar(
-              child: Icon(Icons.person_4_rounded),
-            ),
-            title: Text('Get Sh_t Done'),
-            subtitle: Text('plotsklapps'),
+      appBar: AppBar(
+        title: const ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: CircleAvatar(
+            child: Icon(Icons.person_4_rounded),
           ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.calendar_month_rounded),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: const Icon(Icons.doorbell_rounded),
-              onPressed: () {},
-            ),
-          ],
+          title: Text('Get Sh_t Done'),
+          subtitle: Text('plotsklapps'),
         ),
-        body: const SingleChildScrollView(
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.calendar_month_rounded),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.doorbell_rounded),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      body: ScrollConfiguration(
+        behavior: const ScrollBehavior().copyWith(
+          dragDevices: <PointerDeviceKind>{
+            PointerDeviceKind.touch,
+            PointerDeviceKind.mouse,
+            PointerDeviceKind.trackpad,
+            PointerDeviceKind.stylus,
+          },
+        ),
+        child: const SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
@@ -78,23 +89,26 @@ class HomeScreen extends HookWidget {
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            showModalBottomSheet<void>(
-                showDragHandle: true,
-                isScrollControlled: true,
-                context: context,
-                builder: (context) {
-                  return const NewTaskModal();
-                });
-          },
-          label: const Row(
-            children: [
-              Icon(Icons.add_rounded),
-              SizedBox(width: 8.0),
-              Text('New Sh_t To Do'),
-            ],
-          ),
-        ));
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          showModalBottomSheet<void>(
+            context: context,
+            showDragHandle: true,
+            isScrollControlled: true,
+            builder: (context) {
+              return const NewTaskModal();
+            },
+          );
+        },
+        label: const Row(
+          children: [
+            Icon(Icons.add_rounded),
+            SizedBox(width: 8.0),
+            Text('New Sh_t To Do'),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getsh_tdone/providers/category_provider.dart';
+import 'package:getsh_tdone/providers/date_provider.dart';
+import 'package:getsh_tdone/providers/time_provider.dart';
+import 'package:intl/intl.dart';
 
 class NewTaskModal extends ConsumerStatefulWidget {
   const NewTaskModal({
@@ -133,29 +136,33 @@ class NewTaskCategoryChoiceSegmentedButtonState
   }
 }
 
-class NewTaskDatePickerButton extends StatelessWidget {
+class NewTaskDatePickerButton extends ConsumerWidget {
   const NewTaskDatePickerButton({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Expanded(
       child: ElevatedButton(
-        onPressed: () {
-          showDatePicker(
+        onPressed: () async {
+          final datePicked = await showDatePicker(
             context: context,
             initialDate: DateTime.now(),
             firstDate: DateTime(2020),
             lastDate: DateTime(2030),
           );
+          if (datePicked != null) {
+            final formattedDate = DateFormat('dd/MM/yyyy').format(datePicked);
+            ref.read(dateProvider.notifier).state = formattedDate;
+          }
         },
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.edit_calendar_rounded),
-            SizedBox(width: 8.0),
-            Text('Add Due Date'),
+            const Icon(Icons.edit_calendar_rounded),
+            const SizedBox(width: 8.0),
+            Text(ref.watch(dateProvider)),
           ],
         ),
       ),
@@ -163,27 +170,32 @@ class NewTaskDatePickerButton extends StatelessWidget {
   }
 }
 
-class NewTaskTimePickerButton extends StatelessWidget {
+class NewTaskTimePickerButton extends ConsumerWidget {
   const NewTaskTimePickerButton({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Expanded(
       child: ElevatedButton(
-        onPressed: () {
-          showTimePicker(
+        onPressed: () async {
+          await showTimePicker(
             context: context,
             initialTime: TimeOfDay.now(),
-          );
+          ).then((timePicked) {
+            if (timePicked != null) {
+              final formattedTime = timePicked.format(context);
+              ref.read(timeProvider.notifier).state = formattedTime;
+            }
+          });
         },
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.alarm_rounded),
-            SizedBox(width: 8.0),
-            Text('Add Due Time'),
+            const Icon(Icons.alarm_rounded),
+            const SizedBox(width: 8.0),
+            Text(ref.watch(timeProvider)),
           ],
         ),
       ),

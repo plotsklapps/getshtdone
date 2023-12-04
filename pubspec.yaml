@@ -36,9 +36,11 @@ dependencies:
   flex_color_scheme: ^7.3.1
   flutter:
     sdk: flutter
-  flutter_riverpod: ^2.4.9
+  flutter_hooks: ^0.20.3
   google_fonts: ^6.1.0
+  hooks_riverpod: ^2.4.9
   signals: ^1.4.0
+  uuid: ^4.2.1
 
 dev_dependencies:
   flutter_test:

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/models/todo_model.dart';
+import 'package:getsh_tdone/services/firebase_service.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 import 'package:getsh_tdone/widgets/newtask_modal.dart';
@@ -38,7 +39,7 @@ class HomeScreen extends ConsumerWidget {
             ),
           ),
           title: const Text('Get Sh_t Done'),
-          subtitle: const Text('plotsklapps'),
+          subtitle: Text(ref.watch(displayNameProvider)),
         ),
         actions: <Widget>[
           IconButton(

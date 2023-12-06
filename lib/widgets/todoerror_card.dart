@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:getsh_tdone/models/todo_model.dart';
+import 'package:getsh_tdone/providers/date_provider.dart';
+import 'package:getsh_tdone/providers/time_provider.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 
-class TodoCard extends ConsumerWidget {
-  const TodoCard(
-    this.todo, {
+class TodoErrorCard extends ConsumerWidget {
+  const TodoErrorCard(
+    this.error,
+    this.stackTrace, {
     super.key,
   });
-  final Todo todo;
+
+  final Object error;
+  final StackTrace stackTrace;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12.0),
       height: 140.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.0),
@@ -42,21 +45,19 @@ class TodoCard extends ConsumerWidget {
                 children: <Widget>[
                   ListTile(
                     contentPadding: EdgeInsets.zero,
-                    title: Text(todo.title),
-                    subtitle: Text(
-                      todo.description ?? 'No Description',
+                    title: Text(error.toString()),
+                    subtitle: const Text('Something went wrong...'),
+                    trailing: const FaIcon(
+                      FontAwesomeIcons.triangleExclamation,
                     ),
-                    trailing: todo.isCompleted
-                        ? const FaIcon(FontAwesomeIcons.circleCheck)
-                        : const FaIcon(FontAwesomeIcons.circle),
                   ),
                   const Divider(thickness: 4.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      Text(todo.dueDate ?? 'No Due Date'),
+                      Text(ref.watch(dateProvider)),
                       const SizedBox(width: 8.0),
-                      Text(todo.dueTime ?? 'No Due Time'),
+                      Text(ref.watch(timeProvider)),
                     ],
                   ),
                 ],

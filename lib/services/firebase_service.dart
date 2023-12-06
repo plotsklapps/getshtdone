@@ -238,7 +238,7 @@ class FirebaseService {
 
             // If all goes well:
             Logs.loginComplete();
-            onSuccess('Successfully logged in. Welcome to BOKSklapps!');
+            onSuccess('Successfully logged in. Now get your sh_t done!');
           } else {
             // If anything goes wrong:
             Logs.loginFailed();

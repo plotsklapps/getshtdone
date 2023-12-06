@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:getsh_tdone/models/todo_model.dart';
+import 'package:getsh_tdone/providers/date_provider.dart';
+import 'package:getsh_tdone/providers/time_provider.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 
-class TodoCard extends ConsumerWidget {
-  const TodoCard(
-    this.todo, {
+class TodoLoadingCard extends ConsumerWidget {
+  const TodoLoadingCard({
     super.key,
   });
-  final Todo todo;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12.0),
       height: 140.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.0),
@@ -40,23 +37,19 @@ class TodoCard extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  ListTile(
+                  const ListTile(
                     contentPadding: EdgeInsets.zero,
-                    title: Text(todo.title),
-                    subtitle: Text(
-                      todo.description ?? 'No Description',
-                    ),
-                    trailing: todo.isCompleted
-                        ? const FaIcon(FontAwesomeIcons.circleCheck)
-                        : const FaIcon(FontAwesomeIcons.circle),
+                    title: Text('Loading...'),
+                    subtitle: Text('Please wait...'),
+                    trailing: CircularProgressIndicator(),
                   ),
                   const Divider(thickness: 4.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      Text(todo.dueDate ?? 'No Due Date'),
+                      Text(ref.watch(dateProvider)),
                       const SizedBox(width: 8.0),
-                      Text(todo.dueTime ?? 'No Due Time'),
+                      Text(ref.watch(timeProvider)),
                     ],
                   ),
                 ],

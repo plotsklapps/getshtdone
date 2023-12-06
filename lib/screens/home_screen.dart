@@ -7,6 +7,8 @@ import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 import 'package:getsh_tdone/widgets/newtask_modal.dart';
 import 'package:getsh_tdone/widgets/todo_card.dart';
+import 'package:getsh_tdone/widgets/todoerror_card.dart';
+import 'package:getsh_tdone/widgets/todoloading_card.dart';
 import 'package:getsh_tdone/widgets/usersettings_modal.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -15,6 +17,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AsyncValue<List<Todo>> todoList = ref.watch(todoListProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: ListTile(
@@ -82,33 +85,44 @@ class HomeScreen extends ConsumerWidget {
                   ],
                 ),
                 const SizedBox(height: 16.0),
-                ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: todoList.value!.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Dismissible(
-                        key: Key(todoList.value![index].id!),
-                        background: Container(
-                          margin: const EdgeInsets.only(bottom: 12.0),
-                          height: 140.0,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12.0),
-                            color: flexSchemeDark.error,
-                          ),
-                          child: const Center(
-                            child: FaIcon(
-                              FontAwesomeIcons.xmark,
+                todoList.when(
+                  data: (List<Todo> todoList) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: todoList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Dismissible(
+                          key: Key(todoList[index].id!),
+                          background: Container(
+                            margin: const EdgeInsets.only(bottom: 12.0),
+                            height: 140.0,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.0),
+                              color: flexSchemeDark.error,
+                            ),
+                            child: const Center(
+                              child: FaIcon(
+                                FontAwesomeIcons.xmark,
+                              ),
                             ),
                           ),
-                        ),
-                        onDismissed: (DismissDirection direction) {
-                          FirestoreService(ref).deleteTodo(
-                            todoList.value![index].id!,
-                          );
-                        },
-                        child: TodoCard(getIndex: index),
-                      );
-                    })
+                          onDismissed: (DismissDirection direction) {
+                            FirestoreService(ref).deleteTodo(
+                              todoList[index].id!,
+                            );
+                          },
+                          child: TodoCard(todoList[index]),
+                        );
+                      },
+                    );
+                  },
+                  error: (Object error, StackTrace stackTrace) {
+                    return TodoErrorCard(error, stackTrace);
+                  },
+                  loading: () {
+                    return const TodoLoadingCard();
+                  },
+                ),
               ],
             ),
           ),

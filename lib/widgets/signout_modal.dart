@@ -28,7 +28,14 @@ class SignoutModalState extends ConsumerState<SignoutModal> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          const Text('GO BACK TO LOG IN'),
+          const Text(
+            'GO BACK TO LOG IN',
+            style: TextStyle(
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const Divider(thickness: 4.0),
           const SizedBox(
             height: 16,
           ),
@@ -82,7 +89,7 @@ class SignoutModalState extends ConsumerState<SignoutModal> {
       SnackBar(
         content: Text(error.toString()),
         behavior: SnackBarBehavior.floating,
-        backgroundColor: flexSchemeLight.error,
+        backgroundColor: flexSchemeDark.error,
       ),
     );
   }

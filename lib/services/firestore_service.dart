@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getsh_tdone/models/todo_model.dart';
-import 'package:getsh_tdone/services/firebase_service.dart';
+import 'package:getsh_tdone/providers/firebase_provider.dart';
 
 // Provider for the Firebase Firestore instance.
 final Provider<FirebaseFirestore> firestoreProvider =

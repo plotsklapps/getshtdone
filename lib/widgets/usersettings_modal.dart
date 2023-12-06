@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:getsh_tdone/services/firebase_service.dart';
+import 'package:getsh_tdone/providers/displayname_provider.dart';
+import 'package:getsh_tdone/providers/sneakpeek_provider.dart';
 import 'package:getsh_tdone/services/navigation.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 import 'package:getsh_tdone/widgets/deleteuser_modal.dart';
@@ -27,7 +28,7 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
         children: <Widget>[
           const Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: <Widget>[
               Text(
                 'User Settings',
                 style: TextStyle(
@@ -38,6 +39,7 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
             ],
           ),
           const Divider(thickness: 4.0),
+
           // Profile ListTile.
           ListTile(
             onTap: () async {
@@ -56,7 +58,7 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
             },
             title: Text(ref.watch(displayNameProvider)),
             subtitle: const Text('CHANGE YOUR PROFILE'),
-            trailing: const FaIcon(FontAwesomeIcons.faceDizzy),
+            trailing: const FaIcon(FontAwesomeIcons.userNinja),
           ),
 
           // Sign out listtile.

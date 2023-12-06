@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:getsh_tdone/providers/displayname_provider.dart';
+import 'package:getsh_tdone/providers/email_provider.dart';
 import 'package:getsh_tdone/services/firebase_service.dart';
 import 'package:getsh_tdone/services/navigation.dart';
 import 'package:getsh_tdone/theme/theme.dart';

@@ -47,7 +47,7 @@ class TodoLoadingCard extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      Text(ref.watch(dateProvider)),
+                      Text(ref.watch(dueDateProvider)),
                       const SizedBox(width: 8.0),
                       Text(ref.watch(timeProvider)),
                     ],

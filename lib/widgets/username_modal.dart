@@ -1,6 +1,10 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:getsh_tdone/providers/displayname_provider.dart';
+import 'package:getsh_tdone/providers/photourl_provider.dart';
 import 'package:getsh_tdone/services/firebase_service.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 
@@ -159,46 +163,56 @@ class SmileyRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: <Widget>[
-          ProfileSmiley(
-            ref: ref,
-            avatarChoices: avatarChoices,
-            avatarIndex: 0,
-          ),
-          ProfileSmiley(
-            ref: ref,
-            avatarChoices: avatarChoices,
-            avatarIndex: 1,
-          ),
-          ProfileSmiley(
-            ref: ref,
-            avatarChoices: avatarChoices,
-            avatarIndex: 2,
-          ),
-          ProfileSmiley(
-            ref: ref,
-            avatarChoices: avatarChoices,
-            avatarIndex: 3,
-          ),
-          ProfileSmiley(
-            ref: ref,
-            avatarChoices: avatarChoices,
-            avatarIndex: 4,
-          ),
-          ProfileSmiley(
-            ref: ref,
-            avatarChoices: avatarChoices,
-            avatarIndex: 5,
-          ),
-          ProfileSmiley(
-            ref: ref,
-            avatarChoices: avatarChoices,
-            avatarIndex: 6,
-          ),
-        ],
+    return ScrollConfiguration(
+      behavior: const ScrollBehavior().copyWith(
+        dragDevices: <PointerDeviceKind>{
+          PointerDeviceKind.touch,
+          PointerDeviceKind.mouse,
+          PointerDeviceKind.trackpad,
+          PointerDeviceKind.stylus,
+        },
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: <Widget>[
+            ProfileSmiley(
+              ref: ref,
+              avatarChoices: avatarChoices,
+              avatarIndex: 0,
+            ),
+            ProfileSmiley(
+              ref: ref,
+              avatarChoices: avatarChoices,
+              avatarIndex: 1,
+            ),
+            ProfileSmiley(
+              ref: ref,
+              avatarChoices: avatarChoices,
+              avatarIndex: 2,
+            ),
+            ProfileSmiley(
+              ref: ref,
+              avatarChoices: avatarChoices,
+              avatarIndex: 3,
+            ),
+            ProfileSmiley(
+              ref: ref,
+              avatarChoices: avatarChoices,
+              avatarIndex: 4,
+            ),
+            ProfileSmiley(
+              ref: ref,
+              avatarChoices: avatarChoices,
+              avatarIndex: 5,
+            ),
+            ProfileSmiley(
+              ref: ref,
+              avatarChoices: avatarChoices,
+              avatarIndex: 6,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -232,19 +246,19 @@ class ProfileSmiley extends StatelessWidget {
             // If the avatarProvider is equal to the first
             // avatarChoice, set a border color.
             color: ref.watch(photoURLProvider) == avatarChoices[avatarIndex]
-                ? flexSchemeDark.primary
+                ? flexSchemeDark.tertiary
                 : Colors.transparent,
             width: 2.0,
           ),
         ),
         child: SvgPicture.asset(
-          height: 80.0,
-          width: 80.0,
+          height: 64.0,
+          width: 64.0,
           avatarChoices[avatarIndex],
           colorFilter: ColorFilter.mode(
             ref.watch(photoURLProvider) == avatarChoices[avatarIndex]
-                ? flexSchemeDark.primary
-                : flexSchemeDark.secondary,
+                ? flexSchemeDark.tertiary
+                : flexSchemeDark.inversePrimary,
             BlendMode.srcIn,
           ),
         ),

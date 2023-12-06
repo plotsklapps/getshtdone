@@ -1,92 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:getsh_tdone/providers/date_provider.dart';
+import 'package:getsh_tdone/providers/displayname_provider.dart';
+import 'package:getsh_tdone/providers/email_provider.dart';
+import 'package:getsh_tdone/providers/firebase_provider.dart';
+import 'package:getsh_tdone/providers/photourl_provider.dart';
+import 'package:getsh_tdone/providers/sneakpeek_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/services/logger.dart';
-import 'package:intl/intl.dart';
-
-// Provider for the Firebase Auth instance.
-final Provider<FirebaseAuth> firebaseProvider =
-    Provider<FirebaseAuth>((ProviderRef<FirebaseAuth> ref) {
-  return FirebaseAuth.instance;
-});
-
-// Provider for the displayName, initially fetched from Firebase.
-final StateProvider<String> displayNameProvider =
-    StateProvider<String>((StateProviderRef<String> ref) {
-  final User? user = ref.watch(firebaseProvider).currentUser;
-  if (user != null) {
-    // Fetch the displayName from Firebase Auth.
-    final String displayName = user.displayName!;
-    return displayName;
-  } else {
-    return 'NEW BOXER';
-  }
-});
-
-// Provider for the email, initially returns an empty String.
-final StateProvider<String> emailProvider =
-    StateProvider<String>((StateProviderRef<String> ref) {
-  final User? user = ref.watch(firebaseProvider).currentUser;
-  if (user != null) {
-    // Fetch the email from Firebase Auth.
-    final String email = user.email!;
-    return email;
-  } else {
-    return 'e@mail.com';
-  }
-});
-
-// Provider for the avatar picture, initially returns a standard png.
-final StateProvider<String> photoURLProvider =
-    StateProvider<String>((StateProviderRef<String> ref) {
-  final User? user = ref.watch(firebaseProvider).currentUser;
-  if (user != null) {
-    // Fetch the photoURL from Firebase Auth.
-    final String photoURL = user.photoURL!;
-    return photoURL;
-  } else {
-    return 'assets/images/face-dizzy.png';
-  }
-});
-
-// Provider for the date of creation of the account. First, it fetches
-// the user from the firebaseProvider, then it fetches the creationTime
-// for that user and formats it to a String.
-final Provider<String> creationDateProvider =
-    Provider<String>((ProviderRef<String> ref) {
-  final User? user = ref.watch(firebaseProvider).currentUser;
-  final DateTime? creationDate = user?.metadata.creationTime;
-  if (creationDate != null) {
-    final String formattedDate = DateFormat('dd-MM-yyyy').format(creationDate);
-    return formattedDate;
-  } else {
-    return 'NEVER';
-  }
-});
-
-// Provider for the date of the last sign in. First, it fetches
-// the user from the firebaseProvider, then it fetches the lastSignInTime
-// for that user and formats it to a String.
-final Provider<String> lastSignInDateProvider =
-    Provider<String>((ProviderRef<String> ref) {
-  final User? user = ref.watch(firebaseProvider).currentUser;
-  final DateTime? lastSignInDate = user?.metadata.lastSignInTime;
-  if (lastSignInDate != null) {
-    final String formattedDate =
-        DateFormat('dd-MM-yyyy').format(lastSignInDate);
-    return formattedDate;
-  } else {
-    return 'NEVER';
-  }
-});
-
-// Provider to check if the user is a Sneak Peeker, initially returns false.
-final StateProvider<bool> isSneakPeekerProvider =
-    StateProvider<bool>((StateProviderRef<bool> ref) {
-  return false;
-});
 
 // Custom class FirebaseService which takes a WidgetRef as a parameter.
 // This is used to access the Providers. In the code, it's usable as
@@ -458,15 +381,9 @@ class FirebaseService {
     }
   }
 
-  // Method to set all Providers back to their initial state.
+  // Method to set all Providers that do not autodispose back to their
+  // initial state.
   void invalidateAllProviders() {
-    ref
-      ..invalidate(displayNameProvider)
-      ..invalidate(photoURLProvider)
-      ..invalidate(emailProvider)
-      ..invalidate(creationDateProvider)
-      ..invalidate(lastSignInDateProvider)
-      ..invalidate(isSneakPeekerProvider)
-      ..invalidate(isDarkModeProvider);
+    ref.invalidate(isDarkModeProvider);
   }
 }

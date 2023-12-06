@@ -45,6 +45,8 @@ class TodoCard extends ConsumerWidget {
                     title: Text(todo.title),
                     subtitle: Text(
                       todo.description ?? 'No Description',
+                      maxLines: 2,
+                      overflow: TextOverflow.fade,
                     ),
                     trailing: todo.isCompleted
                         ? const FaIcon(FontAwesomeIcons.circleCheck)

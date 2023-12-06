@@ -9,6 +9,7 @@ import 'package:getsh_tdone/providers/time_provider.dart';
 import 'package:getsh_tdone/providers/title_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/services/logger.dart';
+import 'package:getsh_tdone/theme/theme.dart';
 import 'package:intl/intl.dart';
 
 class NewTaskModal extends ConsumerStatefulWidget {
@@ -108,43 +109,11 @@ class NewTaskModalState extends ConsumerState<NewTaskModal> {
             children: <Widget>[
               const NewTaskCancelButton(),
               const SizedBox(width: 16.0),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () async {
-                    await FirestoreService(ref).addTodo(
-                      Todo(
-                        title: ref.watch(titleProvider),
-                        description: ref.watch(descriptionProvider),
-                        category: ref.watch(categoryStringProvider),
-                        dueDate: ref.watch(dateProvider),
-                        dueTime: ref.watch(timeProvider),
-                        isCompleted: false,
-                      ),
-                    );
-                    titleController.clear();
-                    descriptionController.clear();
-                    ref
-                      ..invalidate(titleProvider)
-                      ..invalidate(descriptionProvider)
-                      ..invalidate(categoryProvider)
-                      ..invalidate(dateProvider)
-                      ..invalidate(timeProvider)
-                      ..invalidate(isCompletedProvider);
-                    Logs.addTodoComplete();
-                    if (mounted) {
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(Icons.save_rounded),
-                      SizedBox(width: 8.0),
-                      Text('Save'),
-                    ],
-                  ),
-                ),
-              ),
+              NewTaskSaveButton(
+                  ref: ref,
+                  titleController: titleController,
+                  descriptionController: descriptionController,
+                  mounted: mounted),
             ],
           ),
         ],
@@ -221,7 +190,7 @@ class NewTaskDatePickerButton extends ConsumerWidget {
           if (datePicked != null) {
             final String formattedDate =
                 DateFormat('dd/MM/yyyy').format(datePicked);
-            ref.read(dateProvider.notifier).state = formattedDate;
+            ref.read(dueDateProvider.notifier).state = formattedDate;
           }
         },
         child: Row(
@@ -229,7 +198,7 @@ class NewTaskDatePickerButton extends ConsumerWidget {
           children: <Widget>[
             const Icon(Icons.edit_calendar_rounded),
             const SizedBox(width: 8.0),
-            Text(ref.watch(dateProvider)),
+            Text(ref.watch(dueDateProvider)),
           ],
         ),
       ),
@@ -288,6 +257,71 @@ class NewTaskCancelButton extends StatelessWidget {
             Icon(Icons.delete_rounded),
             SizedBox(width: 8.0),
             Text('Cancel'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class NewTaskSaveButton extends StatelessWidget {
+  const NewTaskSaveButton({
+    required this.ref,
+    required this.titleController,
+    required this.descriptionController,
+    required this.mounted,
+    super.key,
+  });
+
+  final WidgetRef ref;
+  final TextEditingController titleController;
+  final TextEditingController descriptionController;
+  final bool mounted;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ElevatedButton(
+        onPressed: () async {
+          await FirestoreService(ref).addTodo(
+            Todo(
+              title: ref.watch(titleProvider),
+              description: ref.watch(descriptionProvider),
+              category: ref.watch(categoryStringProvider),
+              dueDate: ref.watch(dueDateProvider),
+              dueTime: ref.watch(timeProvider),
+              isCompleted: false,
+            ),
+          );
+          titleController.clear();
+          descriptionController.clear();
+          ref
+            ..invalidate(titleProvider)
+            ..invalidate(descriptionProvider)
+            ..invalidate(categoryProvider)
+            ..invalidate(dueDateProvider)
+            ..invalidate(timeProvider)
+            ..invalidate(isCompletedProvider);
+          Logs.addTodoComplete();
+          if (mounted) {
+            Navigator.pop(context);
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: flexSchemeDark.tertiary,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.save_rounded,
+              color: flexSchemeDark.surfaceVariant,
+            ),
+            const SizedBox(width: 8.0),
+            Text(
+              'Save',
+              style: TextStyle(color: flexSchemeDark.surfaceVariant),
+            ),
           ],
         ),
       ),

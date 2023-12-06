@@ -18,8 +18,9 @@ class TodoCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AsyncValue<List<Todo>> todoList = ref.watch(todoListProvider);
     return todoList.when(
-      data: (List<Todo> data) {
+      data: (List<Todo> todoList) {
         return Container(
+          margin: const EdgeInsets.only(bottom: 12.0),
           height: 140.0,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.0),
@@ -45,19 +46,23 @@ class TodoCard extends ConsumerWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      const ListTile(
+                      ListTile(
                         contentPadding: EdgeInsets.zero,
-                        title: Text('Task'),
-                        subtitle: Text('Description'),
-                        trailing: FaIcon(FontAwesomeIcons.circleCheck),
+                        title: Text(todoList[getIndex].title),
+                        subtitle: Text(
+                          todoList[getIndex].description ?? 'No Description',
+                        ),
+                        trailing: todoList[getIndex].isCompleted
+                            ? const FaIcon(FontAwesomeIcons.circleCheck)
+                            : const FaIcon(FontAwesomeIcons.circle),
                       ),
                       const Divider(thickness: 4.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
-                          Text(ref.watch(dateProvider)),
+                          Text(todoList[getIndex].dueDate ?? 'No Due Date'),
                           const SizedBox(width: 8.0),
-                          Text(ref.watch(timeProvider)),
+                          Text(todoList[getIndex].dueTime ?? 'No Due Time'),
                         ],
                       ),
                     ],
@@ -100,7 +105,7 @@ class TodoCard extends ConsumerWidget {
                         title: Text(error.toString()),
                         subtitle: const Text('Something went wrong...'),
                         trailing:
-                            const FaIcon(FontAwesomeIcons.exclamationTriangle),
+                            const FaIcon(FontAwesomeIcons.triangleExclamation),
                       ),
                       const Divider(thickness: 4.0),
                       Row(

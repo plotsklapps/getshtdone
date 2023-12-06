@@ -1,15 +1,19 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:getsh_tdone/models/todo_model.dart';
+import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/widgets/newtask_modal.dart';
 import 'package:getsh_tdone/widgets/todo_card.dart';
 import 'package:getsh_tdone/widgets/usersettings_modal.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final AsyncValue<List<Todo>> todoList = ref.watch(todoListProvider);
     return Scaffold(
       appBar: AppBar(
         title: ListTile(
@@ -79,9 +83,9 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(height: 16.0),
                 ListView.builder(
                   shrinkWrap: true,
-                  itemCount: 1,
+                  itemCount: todoList.value!.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return const TodoCard(getIndex: 0);
+                    return TodoCard(getIndex: index);
                   },
                 ),
               ],

@@ -44,8 +44,8 @@ final StateProvider<String> photoURLProvider =
   final User? user = ref.watch(firebaseProvider).currentUser;
   if (user != null) {
     // Fetch the photoURL from Firebase Auth.
-    final String avatar = user.photoURL!;
-    return avatar;
+    final String photoURL = user.photoURL!;
+    return photoURL;
   } else {
     return 'assets/images/avatar_male_white.png';
   }
@@ -142,7 +142,7 @@ class FirebaseService {
           .doc(userCredential.user?.uid)
           .set(<String, dynamic>{
         'username': ref.watch(displayNameProvider),
-        'avatar': ref.watch(photoURLProvider),
+        'photoURL': ref.watch(photoURLProvider),
         'email': ref.watch(emailProvider),
         'darkMode': ref.watch(isDarkModeProvider),
         'creationDate': ref.watch(creationDateProvider),
@@ -157,7 +157,7 @@ class FirebaseService {
           .collection('todoCollection')
           .doc()
           .set(<String, dynamic>{
-        'id': '1',
+        'id': '0',
         'title': 'My first todo',
         'description': 'This is my first todo',
         'category': 'Personal',
@@ -218,9 +218,9 @@ class FirebaseService {
                 ref.read(emailProvider.notifier).state =
                     documentSnapshot['email'] as String;
                 ref.read(photoURLProvider.notifier).state =
-                    documentSnapshot['avatar'] as String;
+                    documentSnapshot['photoURL'] as String;
                 ref.read(isDarkModeProvider.notifier).state =
-                    documentSnapshot['isDarkMode'] as bool;
+                    documentSnapshot['darkMode'] as bool;
               } else {
                 // If anything goes wrong:
                 Logs.loginFailed();

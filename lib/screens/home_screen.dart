@@ -79,9 +79,9 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(height: 16.0),
                 ListView.builder(
                   shrinkWrap: true,
-                  itemCount: 4,
+                  itemCount: 1,
                   itemBuilder: (BuildContext context, int index) {
-                    return const TodoCard();
+                    return const TodoCard(getIndex: 0);
                   },
                 ),
               ],

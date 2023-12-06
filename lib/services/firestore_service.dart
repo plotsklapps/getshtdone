@@ -10,6 +10,26 @@ final Provider<FirebaseFirestore> firestoreProvider =
   return FirebaseFirestore.instance;
 });
 
+final AutoDisposeStreamProvider<List<Todo>> todoListProvider =
+    StreamProvider.autoDispose<List<Todo>>(
+  (AutoDisposeStreamProviderRef<List<Todo>> ref) async* {
+    final User? currentUser = ref.watch(firebaseProvider).currentUser;
+    final Stream<List<Todo>> getAllTodos = ref
+        .read(firestoreProvider)
+        .collection('users')
+        .doc(currentUser?.uid)
+        .collection('todoCollection')
+        .snapshots()
+        .map((QuerySnapshot<Map<String, dynamic>> event) {
+      return event.docs
+          .map((QueryDocumentSnapshot<Map<String, dynamic>> snapshot) {
+        return Todo.fromSnapshot(snapshot);
+      }).toList();
+    });
+    yield* getAllTodos;
+  },
+);
+
 class FirestoreService {
   FirestoreService(this.ref);
   final WidgetRef ref;

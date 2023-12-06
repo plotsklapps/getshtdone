@@ -157,10 +157,12 @@ class FirebaseService {
           .collection('todoCollection')
           .doc()
           .set(<String, dynamic>{
+        'id': '1',
         'title': 'My first todo',
         'description': 'This is my first todo',
-        'dueDate': '01-01-2021',
-        'dueTime': '12:00',
+        'category': 'Personal',
+        'dueDate': '01-01-2025',
+        'dueTime': '12:00 PM',
         'isCompleted': false,
       });
 
@@ -215,16 +217,24 @@ class FirebaseService {
                     documentSnapshot['username'] as String;
                 ref.read(emailProvider.notifier).state =
                     documentSnapshot['email'] as String;
-                // ref.read(photoURLProvider.notifier).state =
-                //     documentSnapshot['avatar'] as String;
-                // ref.read(isDarkModeProvider.notifier).state =
-                //     documentSnapshot['isDarkMode'] as bool;
+                ref.read(photoURLProvider.notifier).state =
+                    documentSnapshot['avatar'] as String;
+                ref.read(isDarkModeProvider.notifier).state =
+                    documentSnapshot['isDarkMode'] as bool;
               } else {
                 // If anything goes wrong:
                 Logs.loginFailed();
                 onError('Something went wrong. Please try again.');
               }
             });
+
+            // Fetch the todos from the Firestore subcollection.
+            await ref
+                .read(firestoreProvider)
+                .collection('users')
+                .doc(currentUser.uid)
+                .collection('todoCollection')
+                .get();
 
             // If all goes well:
             Logs.loginComplete();

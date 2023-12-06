@@ -3,8 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getsh_tdone/models/todo_model.dart';
 import 'package:getsh_tdone/providers/category_provider.dart';
 import 'package:getsh_tdone/providers/date_provider.dart';
+import 'package:getsh_tdone/providers/description_provider.dart';
+import 'package:getsh_tdone/providers/iscompleted_provider.dart';
 import 'package:getsh_tdone/providers/time_provider.dart';
+import 'package:getsh_tdone/providers/title_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
+import 'package:getsh_tdone/services/logger.dart';
 import 'package:intl/intl.dart';
 
 class NewTaskModal extends ConsumerStatefulWidget {
@@ -67,6 +71,9 @@ class NewTaskModalState extends ConsumerState<NewTaskModal> {
           const SizedBox(height: 8.0),
           TextField(
             controller: titleController,
+            onChanged: (String newTitle) {
+              ref.read(titleProvider.notifier).state = newTitle;
+            },
             decoration: const InputDecoration(
               labelText: 'New TODO Title',
             ),
@@ -74,6 +81,9 @@ class NewTaskModalState extends ConsumerState<NewTaskModal> {
           const SizedBox(height: 8.0),
           TextField(
             controller: descriptionController,
+            onChanged: (String newDescription) {
+              ref.read(descriptionProvider.notifier).state = newDescription;
+            },
             maxLines: 3,
             decoration: const InputDecoration(
               labelText: 'New TODO Description',
@@ -100,17 +110,30 @@ class NewTaskModalState extends ConsumerState<NewTaskModal> {
               const SizedBox(width: 16.0),
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () {
-                    FirestoreService(ref).addTodo(
+                  onPressed: () async {
+                    await FirestoreService(ref).addTodo(
                       Todo(
-                        title: titleController.text.trim(),
-                        description: descriptionController.text.trim(),
+                        title: ref.watch(titleProvider),
+                        description: ref.watch(descriptionProvider),
                         category: ref.watch(categoryStringProvider),
                         dueDate: ref.watch(dateProvider),
                         dueTime: ref.watch(timeProvider),
+                        isCompleted: false,
                       ),
                     );
-                    Navigator.pop(context);
+                    titleController.clear();
+                    descriptionController.clear();
+                    ref
+                      ..invalidate(titleProvider)
+                      ..invalidate(descriptionProvider)
+                      ..invalidate(categoryProvider)
+                      ..invalidate(dateProvider)
+                      ..invalidate(timeProvider)
+                      ..invalidate(isCompletedProvider);
+                    Logs.addTodoComplete();
+                    if (mounted) {
+                      Navigator.pop(context);
+                    }
                   },
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,

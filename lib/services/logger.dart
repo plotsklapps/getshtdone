@@ -77,19 +77,11 @@ class Logs {
     Logger().w('Theme mode change failed');
   }
 
-  static void updateHeightComplete() {
-    Logger().i('Height updated');
+  static void addTodoComplete() {
+    Logger().i('Todo is added to Firestore');
   }
 
-  static void updateHeightFailed() {
-    Logger().w('Height update failed');
-  }
-
-  static void updateWeightComplete() {
-    Logger().i('Weight updated');
-  }
-
-  static void updateWeightFailed() {
-    Logger().w('Weight update failed');
+  static void addTodoFailed() {
+    Logger().w('Todo addition to Firestore failed');
   }
 }

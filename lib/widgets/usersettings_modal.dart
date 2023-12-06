@@ -69,7 +69,7 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
                 );
               }
             },
-            leading: FaIcon(FontAwesomeIcons.signOut),
+            leading: const FaIcon(FontAwesomeIcons.arrowRightFromBracket),
             title: const Text('SIGN OUT'),
             subtitle: const Text('GO BACK TO LOGIN'),
             trailing: const Icon(Icons.logout_rounded),

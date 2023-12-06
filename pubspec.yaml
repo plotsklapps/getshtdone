@@ -37,6 +37,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_riverpod: ^2.4.9
+  flutter_svg: ^2.0.9
   font_awesome_flutter: ^10.6.0
   google_fonts: ^6.1.0
   intl: ^0.18.1

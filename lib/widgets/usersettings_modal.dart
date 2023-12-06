@@ -4,7 +4,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/services/firebase_service.dart';
 import 'package:getsh_tdone/services/navigation.dart';
 import 'package:getsh_tdone/theme/theme.dart';
-import 'package:getsh_tdone/widgets/avatar_listtile.dart';
 import 'package:getsh_tdone/widgets/deleteuser_modal.dart';
 import 'package:getsh_tdone/widgets/signout_modal.dart';
 import 'package:getsh_tdone/widgets/username_modal.dart';
@@ -25,8 +24,20 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
       padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 24.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'User Settings',
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const Divider(thickness: 4.0),
           // Profile ListTile.
           ListTile(
             onTap: () async {
@@ -43,13 +54,9 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
                 );
               }
             },
-            leading: AvatarListTile(
-              ref: ref,
-              assetPath: ref.watch(photoURLProvider),
-            ),
             title: Text(ref.watch(displayNameProvider)),
             subtitle: const Text('CHANGE YOUR PROFILE'),
-            trailing: const Icon(Icons.edit_rounded),
+            trailing: const FaIcon(FontAwesomeIcons.faceDizzy),
           ),
 
           // Sign out listtile.
@@ -69,10 +76,11 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
                 );
               }
             },
-            leading: const FaIcon(FontAwesomeIcons.arrowRightFromBracket),
             title: const Text('SIGN OUT'),
             subtitle: const Text('GO BACK TO LOGIN'),
-            trailing: const Icon(Icons.logout_rounded),
+            trailing: const FaIcon(
+              FontAwesomeIcons.personWalkingDashedLineArrowRight,
+            ),
           ),
           // Delete user listtile.
           ListTile(
@@ -90,12 +98,9 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
                 );
               }
             },
-            leading: const AvatarListTile(
-              assetPath: 'assets/images/deleteUser.png',
-            ),
             title: const Text('DELETE ACCOUNT'),
             subtitle: const Text('PERMANENTLY REMOVE YOUR DATA'),
-            trailing: const Icon(Icons.delete_forever_rounded),
+            trailing: const FaIcon(FontAwesomeIcons.trashCan),
           ),
         ],
       ),

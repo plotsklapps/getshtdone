@@ -34,9 +34,7 @@ class HomeScreen extends ConsumerWidget {
                 },
               );
             },
-            child: const CircleAvatar(
-              child: FaIcon(FontAwesomeIcons.userNinja),
-            ),
+            child: const FaIcon(FontAwesomeIcons.faceDizzy),
           ),
           title: const Text('Get Sh_t Done'),
           subtitle: Text(ref.watch(displayNameProvider)),

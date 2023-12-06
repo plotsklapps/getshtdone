@@ -47,7 +47,7 @@ final StateProvider<String> photoURLProvider =
     final String photoURL = user.photoURL!;
     return photoURL;
   } else {
-    return 'assets/images/avatar_male_white.png';
+    return 'assets/images/face-dizzy.png';
   }
 });
 
@@ -129,8 +129,7 @@ class FirebaseService {
       await userCredential.user?.updateDisplayName(username);
 
       // Store standard avatar in Firebase Auth.
-      await userCredential.user
-          ?.updatePhotoURL('assets/images/avatar_male_white.png');
+      await userCredential.user?.updatePhotoURL('assets/images/face-dizzy.png');
 
       // Send email verification.
       await userCredential.user?.sendEmailVerification();

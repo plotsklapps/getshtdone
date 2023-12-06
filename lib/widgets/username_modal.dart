@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:getsh_tdone/services/firebase_service.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 
@@ -14,11 +15,15 @@ class UsernameModal extends ConsumerStatefulWidget {
 
 class UsernameModalState extends ConsumerState<UsernameModal> {
   List<String> avatarChoices = <String>[
-    'assets/images/avatar_female_black.png',
-    'assets/images/avatar_female_white.png',
-    'assets/images/avatar_male_black.png',
-    'assets/images/avatar_male_white.png',
+    'assets/images/face-angry.svg',
+    'assets/images/face-dizzy.svg',
+    'assets/images/face-flushed.svg',
+    'assets/images/face-grin-stars.svg',
+    'assets/images/face-kiss-wink-heart.svg',
+    'assets/images/face-sad-tear.svg',
+    'assets/images/face-surprise.svg',
   ];
+
   bool isSaving = false;
 
   @override
@@ -39,121 +44,16 @@ class UsernameModalState extends ConsumerState<UsernameModal> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          const Text('CHANGE YOUR PROFILE PICTURE'),
-          const SizedBox(
-            height: 16,
+          const Text(
+            'Change your profile',
+            style: TextStyle(
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              GestureDetector(
-                onTap: () {
-                  // Store the choice to the avatarProvider.
-                  ref.read(photoURLProvider.notifier).state = avatarChoices[0];
-                },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 400),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      // If the avatarProvider is equal to the first
-                      // avatarChoice, set a border color.
-                      color: ref.watch(photoURLProvider) == avatarChoices[0]
-                          ? flexSchemeLight.primary
-                          : Colors.transparent,
-                      width: 2.0,
-                    ),
-                  ),
-                  child: CircleAvatar(
-                    radius: 40.0,
-                    backgroundImage: AssetImage(
-                      avatarChoices[0],
-                    ),
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  // Store the choice to the avatarProvider.
-                  ref.read(photoURLProvider.notifier).state = avatarChoices[1];
-                },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 400),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      // If the avatarProvider is equal to the second
-                      // avatarChoice, set a border color.
-                      color: ref.watch(photoURLProvider) == avatarChoices[1]
-                          ? flexSchemeLight.primary
-                          : Colors.transparent,
-                      width: 2.0,
-                    ),
-                  ),
-                  child: CircleAvatar(
-                    radius: 40.0,
-                    backgroundImage: AssetImage(
-                      avatarChoices[1],
-                    ),
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  // Store the choice to the Provider.
-                  ref.read(photoURLProvider.notifier).state = avatarChoices[2];
-                },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 400),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      // If the avatarProvider is equal to the third
-                      // avatarChoice, set a border color.
-                      color: ref.watch(photoURLProvider) == avatarChoices[2]
-                          ? flexSchemeLight.primary
-                          : Colors.transparent,
-                      width: 2.0,
-                    ),
-                  ),
-                  child: CircleAvatar(
-                    radius: 40.0,
-                    backgroundImage: AssetImage(
-                      avatarChoices[2],
-                    ),
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  // Store the choice to the Provider.
-                  ref.read(photoURLProvider.notifier).state = avatarChoices[3];
-                },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 400),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      // If the avatarProvider is equal to the fourth
-                      // avatarChoice, set a border color.
-                      color: ref.watch(photoURLProvider) == avatarChoices[3]
-                          ? flexSchemeLight.primary
-                          : Colors.transparent,
-                      width: 2.0,
-                    ),
-                  ),
-                  child: CircleAvatar(
-                    radius: 40.0,
-                    backgroundImage: AssetImage(
-                      avatarChoices[3],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          const Text('CHANGE YOUR USERNAME'),
+          const Divider(thickness: 4.0),
+          const SizedBox(height: 8.0),
+          SmileyRow(ref: ref, avatarChoices: avatarChoices),
           const SizedBox(height: 16),
           TextField(
             onChanged: (String value) {
@@ -242,6 +142,112 @@ class UsernameModalState extends ConsumerState<UsernameModal> {
       SnackBar(
         content: Text(success),
         behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+}
+
+class SmileyRow extends StatelessWidget {
+  const SmileyRow({
+    required this.ref,
+    required this.avatarChoices,
+    super.key,
+  });
+
+  final WidgetRef ref;
+  final List<String> avatarChoices;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: <Widget>[
+          ProfileSmiley(
+            ref: ref,
+            avatarChoices: avatarChoices,
+            avatarIndex: 0,
+          ),
+          ProfileSmiley(
+            ref: ref,
+            avatarChoices: avatarChoices,
+            avatarIndex: 1,
+          ),
+          ProfileSmiley(
+            ref: ref,
+            avatarChoices: avatarChoices,
+            avatarIndex: 2,
+          ),
+          ProfileSmiley(
+            ref: ref,
+            avatarChoices: avatarChoices,
+            avatarIndex: 3,
+          ),
+          ProfileSmiley(
+            ref: ref,
+            avatarChoices: avatarChoices,
+            avatarIndex: 4,
+          ),
+          ProfileSmiley(
+            ref: ref,
+            avatarChoices: avatarChoices,
+            avatarIndex: 5,
+          ),
+          ProfileSmiley(
+            ref: ref,
+            avatarChoices: avatarChoices,
+            avatarIndex: 6,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ProfileSmiley extends StatelessWidget {
+  const ProfileSmiley({
+    required this.ref,
+    required this.avatarChoices,
+    required this.avatarIndex,
+    super.key,
+  });
+
+  final WidgetRef ref;
+  final List<String> avatarChoices;
+  final int avatarIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // Store the choice to the avatarProvider.
+        ref.read(photoURLProvider.notifier).state = avatarChoices[avatarIndex];
+      },
+      child: AnimatedContainer(
+        margin: const EdgeInsets.only(right: 8.0),
+        duration: const Duration(milliseconds: 400),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            // If the avatarProvider is equal to the first
+            // avatarChoice, set a border color.
+            color: ref.watch(photoURLProvider) == avatarChoices[avatarIndex]
+                ? flexSchemeDark.primary
+                : Colors.transparent,
+            width: 2.0,
+          ),
+        ),
+        child: SvgPicture.asset(
+          height: 80.0,
+          width: 80.0,
+          avatarChoices[avatarIndex],
+          colorFilter: ColorFilter.mode(
+            ref.watch(photoURLProvider) == avatarChoices[avatarIndex]
+                ? flexSchemeDark.primary
+                : flexSchemeDark.secondary,
+            BlendMode.srcIn,
+          ),
+        ),
       ),
     );
   }

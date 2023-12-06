@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/models/todo_model.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
+import 'package:getsh_tdone/theme/theme.dart';
 import 'package:getsh_tdone/widgets/newtask_modal.dart';
 import 'package:getsh_tdone/widgets/todo_card.dart';
 import 'package:getsh_tdone/widgets/usersettings_modal.dart';
@@ -82,12 +83,32 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 16.0),
                 ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: todoList.value!.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return TodoCard(getIndex: index);
-                  },
-                ),
+                    shrinkWrap: true,
+                    itemCount: todoList.value!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Dismissible(
+                        key: Key(todoList.value![index].id!),
+                        background: Container(
+                          margin: const EdgeInsets.only(bottom: 12.0),
+                          height: 140.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.0),
+                            color: flexSchemeDark.error,
+                          ),
+                          child: const Center(
+                            child: FaIcon(
+                              FontAwesomeIcons.xmark,
+                            ),
+                          ),
+                        ),
+                        onDismissed: (DismissDirection direction) {
+                          FirestoreService(ref).deleteTodo(
+                            todoList.value![index].id!,
+                          );
+                        },
+                        child: TodoCard(getIndex: index),
+                      );
+                    })
               ],
             ),
           ),

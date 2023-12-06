@@ -3,27 +3,35 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 enum Categories { study, work, personal }
 
 class CategoryNotifier extends StateNotifier<Set<Categories>> {
-  CategoryNotifier() : super(<Categories>{});
+  CategoryNotifier() : super(<Categories>{Categories.personal});
 
   void updateCategory(Categories category) {
-    state = {category};
+    state = <Categories>{category};
   }
 
-  int getCategoryInt() {
+  String getCategoryString() {
     if (state.contains(Categories.study)) {
-      return 0;
+      return 'Study';
     } else if (state.contains(Categories.work)) {
-      return 1;
+      return 'Work';
     } else if (state.contains(Categories.personal)) {
-      return 2;
+      return 'Personal';
     }
-    return 2;
+    return 'Personal';
   }
 }
 
-final categoryProvider =
+final AutoDisposeStateNotifierProvider<CategoryNotifier, Set<Categories>>
+    categoryProvider =
     StateNotifierProvider.autoDispose<CategoryNotifier, Set<Categories>>(
-  (ref) {
+  (AutoDisposeStateNotifierProviderRef<CategoryNotifier, Set<Categories>> ref) {
     return CategoryNotifier();
   },
 );
+
+final Provider<String> categoryStringProvider =
+    Provider<String>((ProviderRef<String> ref) {
+  final String categoryString =
+      ref.read(categoryProvider.notifier).getCategoryString();
+  return categoryString;
+});

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/widgets/newtask_modal.dart';
 import 'package:getsh_tdone/widgets/todo_card.dart';
+import 'package:getsh_tdone/widgets/usersettings_modal.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -11,15 +12,27 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const ListTile(
+        title: ListTile(
           contentPadding: EdgeInsets.zero,
-          leading: CircleAvatar(
-            child: FaIcon(FontAwesomeIcons.userNinja),
+          leading: InkWell(
+            onTap: () {
+              showModalBottomSheet<void>(
+                context: context,
+                showDragHandle: true,
+                isScrollControlled: true,
+                builder: (BuildContext context) {
+                  return const UserSettingsModal();
+                },
+              );
+            },
+            child: const CircleAvatar(
+              child: FaIcon(FontAwesomeIcons.userNinja),
+            ),
           ),
-          title: Text('Get Sh_t Done'),
-          subtitle: Text('plotsklapps'),
+          title: const Text('Get Sh_t Done'),
+          subtitle: const Text('plotsklapps'),
         ),
-        actions: [
+        actions: <Widget>[
           IconButton(
             icon: const FaIcon(FontAwesomeIcons.calendarDay),
             onPressed: () {},
@@ -43,14 +56,14 @@ class HomeScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
-              children: [
+              children: <Widget>[
                 const SizedBox(height: 16.0),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                  children: <Widget>[
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: <Widget>[
                         Text(
                           "Today's Todo",
                           style: TextStyle(
@@ -67,7 +80,7 @@ class HomeScreen extends StatelessWidget {
                 ListView.builder(
                   shrinkWrap: true,
                   itemCount: 4,
-                  itemBuilder: (context, index) {
+                  itemBuilder: (BuildContext context, int index) {
                     return const TodoCard();
                   },
                 ),
@@ -82,7 +95,7 @@ class HomeScreen extends StatelessWidget {
             context: context,
             showDragHandle: true,
             isScrollControlled: true,
-            builder: (context) {
+            builder: (BuildContext context) {
               return const NewTaskModal();
             },
           );

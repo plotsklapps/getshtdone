@@ -4,7 +4,6 @@ import 'package:getsh_tdone/screens/login_screen.dart';
 import 'package:getsh_tdone/screens/password_screen.dart';
 import 'package:getsh_tdone/screens/signup_screen.dart';
 import 'package:getsh_tdone/screens/splash_screen.dart';
-import 'package:getsh_tdone/screens/useraccount_screen.dart';
 
 class Navigation {
   static void navigateToSplashScreen(BuildContext context) {
@@ -57,17 +56,6 @@ class Navigation {
       MaterialPageRoute<Widget>(
         builder: (BuildContext context) {
           return const PasswordScreen();
-        },
-      ),
-    );
-  }
-
-  static void navigateToUserAccountScreen(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute<Widget>(
-        builder: (BuildContext context) {
-          return const UserAccountScreen();
         },
       ),
     );

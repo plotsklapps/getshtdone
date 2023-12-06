@@ -1,49 +1,62 @@
+import 'package:uuid/uuid.dart';
+
+Uuid uuid = Uuid();
+
 class Todo {
   Todo({
-    required this.title, required this.description, required this.category, required this.date, required this.time, this.uuid,
-    this.isCompleted = false,
-  });
-
-  factory Todo.fromMap(Map<String, dynamic> map) {
-    return Todo(
-      uuid: map['uuid'] as String,
-      title: map['title'] as String,
-      description: map['description'] as String,
-      category: map['category'] as int,
-      date: map['date'] as String,
-      time: map['time'] as String,
-      isCompleted: map['isCompleted'] as bool,
-    );
-  }
-
-  factory Todo.fromSnapshot(String uuid, Map<String, dynamic> map) {
-    return Todo(
-      uuid: uuid,
-      title: map['title'] as String,
-      description: map['description'] as String,
-      category: map['category'] as int,
-      date: map['date'] as String,
-      time: map['time'] as String,
-      isCompleted: map['isCompleted'] as bool,
-    );
-  }
-  String? uuid;
+    required this.title,
+    this.description,
+    this.category,
+    this.dueDate,
+    this.dueTime,
+    String? id,
+  }) : id = id ?? uuid.v4();
+  String? id;
   final String title;
-  final String description;
-  final int category;
-  final String date;
-  final String time;
-  bool isCompleted;
+  String? description;
+  String? category;
+  String? dueDate;
+  String? dueTime;
+  bool isCompleted = false;
 
   Map<String, dynamic> toMap() {
-    return {
-      'uuid': uuid,
+    return <String, dynamic>{
+      'id': id,
       'title': title,
       'description': description,
       'category': category,
-      'date': date,
-      'time': time,
+      'dueDate': dueDate,
+      'dueTime': dueTime,
       'isCompleted': isCompleted,
     };
+  }
+
+  factory Todo.fromMap(Map<String, dynamic> map) {
+    return Todo(
+      id: map['id'] as String?,
+      title: map['title'] as String,
+      description: map['description'] as String?,
+      category: map['category'] as String?,
+      dueDate: map['dueDate'] as String?,
+      dueTime: map['dueTime'] as String?,
+    );
+  }
+
+  factory Todo.fromSnapshot(dynamic doc) {
+    return Todo(
+      id: doc.id as String?,
+      title: doc['title'] as String,
+      description: doc['description'] as String?,
+      category: doc['category'] as String?,
+      dueDate: doc['dueDate'] as String?,
+      dueTime: doc['dueTime'] as String?,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'Todo{id: $id, title: $title, description: $description, '
+        'category: $category, dueDate: $dueDate, dueTime: $dueTime, '
+        'isCompleted: $isCompleted,}';
   }
 }

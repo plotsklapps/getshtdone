@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:getsh_tdone/models/todo_model.dart';
 import 'package:getsh_tdone/providers/category_provider.dart';
 import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/time_provider.dart';
+import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:intl/intl.dart';
 
 class NewTaskModal extends ConsumerStatefulWidget {
@@ -17,6 +19,23 @@ class NewTaskModal extends ConsumerStatefulWidget {
 }
 
 class NewTaskModalState extends ConsumerState<NewTaskModal> {
+  late TextEditingController titleController;
+  late TextEditingController descriptionController;
+
+  @override
+  void initState() {
+    super.initState();
+    titleController = TextEditingController();
+    descriptionController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,15 +43,15 @@ class NewTaskModalState extends ConsumerState<NewTaskModal> {
         24.0,
         0.0,
         24.0,
-        MediaQuery.of(context).viewInsets.bottom,
+        MediaQuery.of(context).viewInsets.bottom + 16.0,
       ),
-      child: const Column(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+        children: <Widget>[
+          const Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: <Widget>[
               Text(
                 'Create new sh_t to do',
                 style: TextStyle(
@@ -42,45 +61,69 @@ class NewTaskModalState extends ConsumerState<NewTaskModal> {
               ),
             ],
           ),
-          Divider(
+          const Divider(
             thickness: 4,
           ),
-          SizedBox(height: 8.0),
+          const SizedBox(height: 8.0),
           TextField(
-            decoration: InputDecoration(
+            controller: titleController,
+            decoration: const InputDecoration(
               labelText: 'New TODO Title',
             ),
           ),
-          SizedBox(height: 8.0),
+          const SizedBox(height: 8.0),
           TextField(
+            controller: descriptionController,
             maxLines: 3,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'New TODO Description',
             ),
           ),
-          SizedBox(height: 16.0),
-          Row(
+          const SizedBox(height: 16.0),
+          const Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: <Widget>[
               NewTaskCategoryChoiceSegmentedButton(),
             ],
           ),
-          SizedBox(height: 12.0),
-          Row(
-            children: [
+          const SizedBox(height: 12.0),
+          const Row(
+            children: <Widget>[
               NewTaskDatePickerButton(),
               SizedBox(width: 16.0),
               NewTaskTimePickerButton(),
             ],
           ),
           Row(
-            children: [
-              NewTaskCancelButton(),
-              SizedBox(width: 16.0),
-              NewTaskSaveButton(),
+            children: <Widget>[
+              const NewTaskCancelButton(),
+              const SizedBox(width: 16.0),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {
+                    FirestoreService(ref).addTodo(
+                      Todo(
+                        title: titleController.text.trim(),
+                        description: descriptionController.text.trim(),
+                        category: ref.watch(categoryStringProvider),
+                        dueDate: ref.watch(dateProvider),
+                        dueTime: ref.watch(timeProvider),
+                      ),
+                    );
+                    Navigator.pop(context);
+                  },
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(Icons.save_rounded),
+                      SizedBox(width: 8.0),
+                      Text('Save'),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
-          SizedBox(height: 20.0),
         ],
       ),
     );
@@ -146,20 +189,21 @@ class NewTaskDatePickerButton extends ConsumerWidget {
     return Expanded(
       child: ElevatedButton(
         onPressed: () async {
-          final datePicked = await showDatePicker(
+          final DateTime? datePicked = await showDatePicker(
             context: context,
             initialDate: DateTime.now(),
             firstDate: DateTime(2020),
             lastDate: DateTime(2030),
           );
           if (datePicked != null) {
-            final formattedDate = DateFormat('dd/MM/yyyy').format(datePicked);
+            final String formattedDate =
+                DateFormat('dd/MM/yyyy').format(datePicked);
             ref.read(dateProvider.notifier).state = formattedDate;
           }
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: <Widget>[
             const Icon(Icons.edit_calendar_rounded),
             const SizedBox(width: 8.0),
             Text(ref.watch(dateProvider)),
@@ -183,16 +227,16 @@ class NewTaskTimePickerButton extends ConsumerWidget {
           await showTimePicker(
             context: context,
             initialTime: TimeOfDay.now(),
-          ).then((timePicked) {
+          ).then((TimeOfDay? timePicked) {
             if (timePicked != null) {
-              final formattedTime = timePicked.format(context);
+              final String formattedTime = timePicked.format(context);
               ref.read(timeProvider.notifier).state = formattedTime;
             }
           });
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: <Widget>[
             const Icon(Icons.alarm_rounded),
             const SizedBox(width: 8.0),
             Text(ref.watch(timeProvider)),
@@ -217,35 +261,10 @@ class NewTaskCancelButton extends StatelessWidget {
         },
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: <Widget>[
             Icon(Icons.delete_rounded),
             SizedBox(width: 8.0),
             Text('Cancel'),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class NewTaskSaveButton extends StatelessWidget {
-  const NewTaskSaveButton({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: ElevatedButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.save_rounded),
-            SizedBox(width: 8.0),
-            Text('Save'),
           ],
         ),
       ),

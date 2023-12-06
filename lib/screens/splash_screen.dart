@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getsh_tdone/services/firebase_service.dart';
@@ -35,7 +36,7 @@ class SplashScreenState extends ConsumerState<SplashScreen> {
 
       // When we reach 1.0, we perform the next logic.
       if (progressValue >= 1.0) {
-        final currentUser = ref.watch(firebaseProvider).currentUser;
+        final User? currentUser = ref.watch(firebaseProvider).currentUser;
         progressValue = 1.0;
         progressTimer.cancel();
 

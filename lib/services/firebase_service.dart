@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
+import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/services/logger.dart';
 import 'package:intl/intl.dart';
 
@@ -11,19 +12,13 @@ final Provider<FirebaseAuth> firebaseProvider =
   return FirebaseAuth.instance;
 });
 
-// Provider for the Firebase Firestore instance.
-final Provider<FirebaseFirestore> firestoreProvider =
-    Provider<FirebaseFirestore>((ProviderRef<FirebaseFirestore> ref) {
-  return FirebaseFirestore.instance;
-});
-
 // Provider for the displayName, initially fetched from Firebase.
 final StateProvider<String> displayNameProvider =
     StateProvider<String>((StateProviderRef<String> ref) {
-  final user = ref.watch(firebaseProvider).currentUser;
+  final User? user = ref.watch(firebaseProvider).currentUser;
   if (user != null) {
     // Fetch the displayName from Firebase Auth.
-    final displayName = user.displayName!;
+    final String displayName = user.displayName!;
     return displayName;
   } else {
     return 'NEW BOXER';
@@ -33,10 +28,10 @@ final StateProvider<String> displayNameProvider =
 // Provider for the email, initially returns an empty String.
 final StateProvider<String> emailProvider =
     StateProvider<String>((StateProviderRef<String> ref) {
-  final user = ref.watch(firebaseProvider).currentUser;
+  final User? user = ref.watch(firebaseProvider).currentUser;
   if (user != null) {
     // Fetch the email from Firebase Auth.
-    final email = user.email!;
+    final String email = user.email!;
     return email;
   } else {
     return 'e@mail.com';
@@ -46,10 +41,10 @@ final StateProvider<String> emailProvider =
 // Provider for the avatar picture, initially returns a standard png.
 final StateProvider<String> photoURLProvider =
     StateProvider<String>((StateProviderRef<String> ref) {
-  final user = ref.watch(firebaseProvider).currentUser;
+  final User? user = ref.watch(firebaseProvider).currentUser;
   if (user != null) {
     // Fetch the photoURL from Firebase Auth.
-    final avatar = user.photoURL!;
+    final String avatar = user.photoURL!;
     return avatar;
   } else {
     return 'assets/images/avatar_male_white.png';
@@ -61,10 +56,10 @@ final StateProvider<String> photoURLProvider =
 // for that user and formats it to a String.
 final Provider<String> creationDateProvider =
     Provider<String>((ProviderRef<String> ref) {
-  final user = ref.watch(firebaseProvider).currentUser;
-  final creationDate = user?.metadata.creationTime;
+  final User? user = ref.watch(firebaseProvider).currentUser;
+  final DateTime? creationDate = user?.metadata.creationTime;
   if (creationDate != null) {
-    final formattedDate = DateFormat('dd-MM-yyyy').format(creationDate);
+    final String formattedDate = DateFormat('dd-MM-yyyy').format(creationDate);
     return formattedDate;
   } else {
     return 'NEVER';
@@ -76,10 +71,11 @@ final Provider<String> creationDateProvider =
 // for that user and formats it to a String.
 final Provider<String> lastSignInDateProvider =
     Provider<String>((ProviderRef<String> ref) {
-  final user = ref.watch(firebaseProvider).currentUser;
-  final lastSignInDate = user?.metadata.lastSignInTime;
+  final User? user = ref.watch(firebaseProvider).currentUser;
+  final DateTime? lastSignInDate = user?.metadata.lastSignInTime;
   if (lastSignInDate != null) {
-    final formattedDate = DateFormat('dd-MM-yyyy').format(lastSignInDate);
+    final String formattedDate =
+        DateFormat('dd-MM-yyyy').format(lastSignInDate);
     return formattedDate;
   } else {
     return 'NEVER';
@@ -125,7 +121,7 @@ class FirebaseService {
       }
 
       // Create new Firebase User
-      final userCredential = await ref
+      final UserCredential userCredential = await ref
           .read(firebaseProvider)
           .createUserWithEmailAndPassword(email: email, password: password);
 
@@ -152,6 +148,22 @@ class FirebaseService {
         'creationDate': ref.watch(creationDateProvider),
         'lastSignInDate': ref.watch(lastSignInDateProvider),
       });
+
+      // Create subcollection for todos.
+      await ref
+          .read(firestoreProvider)
+          .collection('users')
+          .doc(userCredential.user?.uid)
+          .collection('todoCollection')
+          .doc()
+          .set(<String, dynamic>{
+        'title': 'My first todo',
+        'description': 'This is my first todo',
+        'dueDate': '01-01-2021',
+        'dueTime': '12:00',
+        'isCompleted': false,
+      });
+
       // If all goes well:
       Logs.signupComplete();
       onSuccess('Successfully signed up! Please verify your email.');
@@ -185,7 +197,7 @@ class FirebaseService {
             password: password,
           )
           .then((_) async {
-        final currentUser = ref.watch(firebaseProvider).currentUser;
+        final User? currentUser = ref.watch(firebaseProvider).currentUser;
         if (currentUser != null) {
           // Check if the user is verified.
           if (currentUser.emailVerified) {
@@ -203,10 +215,10 @@ class FirebaseService {
                     documentSnapshot['username'] as String;
                 ref.read(emailProvider.notifier).state =
                     documentSnapshot['email'] as String;
-                ref.read(photoURLProvider.notifier).state =
-                    documentSnapshot['avatar'] as String;
-                ref.read(isDarkModeProvider.notifier).state =
-                    documentSnapshot['isDarkMode'] as bool;
+                // ref.read(photoURLProvider.notifier).state =
+                //     documentSnapshot['avatar'] as String;
+                // ref.read(isDarkModeProvider.notifier).state =
+                //     documentSnapshot['isDarkMode'] as bool;
               } else {
                 // If anything goes wrong:
                 Logs.loginFailed();
@@ -312,10 +324,10 @@ class FirebaseService {
   ) async {
     try {
       // Get credentials for reauthentication.
-      final credentials =
+      final AuthCredential credentials =
           EmailAuthProvider.credential(email: email, password: password);
       // Use the credentials to reauthenticate the user.
-      final result = await ref
+      final UserCredential? result = await ref
           .read(firebaseProvider)
           .currentUser
           ?.reauthenticateWithCredential(credentials);
@@ -346,8 +358,8 @@ class FirebaseService {
     void Function(String success) onSuccess,
   ) async {
     try {
-      final updatedDisplayName = ref.watch(displayNameProvider);
-      final currentUser = ref.watch(firebaseProvider).currentUser;
+      final String updatedDisplayName = ref.watch(displayNameProvider);
+      final User? currentUser = ref.watch(firebaseProvider).currentUser;
       // Update the displayName in the Provider.
       await currentUser?.updateDisplayName(
         updatedDisplayName,
@@ -380,8 +392,8 @@ class FirebaseService {
     void Function(String success) onSuccess,
   ) async {
     try {
-      final updatedAvatar = ref.watch(photoURLProvider);
-      final currentUser = ref.read(firebaseProvider).currentUser;
+      final String updatedAvatar = ref.watch(photoURLProvider);
+      final User? currentUser = ref.read(firebaseProvider).currentUser;
       // Update the photoURL in the Provider.
       await currentUser?.updatePhotoURL(updatedAvatar);
       // Surprise, Firebase does not change it until you do the next:
@@ -414,8 +426,8 @@ class FirebaseService {
     void Function(String success) onSuccess,
   ) async {
     try {
-      final updatedThemeMode = ref.watch(isDarkModeProvider);
-      final currentUser = ref.read(firebaseProvider).currentUser;
+      final bool updatedThemeMode = ref.watch(isDarkModeProvider);
+      final User? currentUser = ref.read(firebaseProvider).currentUser;
 
       await ref
           .read(firestoreProvider)

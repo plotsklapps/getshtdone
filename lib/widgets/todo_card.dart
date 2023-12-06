@@ -21,7 +21,7 @@ class TodoCard extends ConsumerWidget {
         ),
       ),
       child: Row(
-        children: [
+        children: <Widget>[
           Container(
             width: 20.0,
             decoration: BoxDecoration(
@@ -37,7 +37,7 @@ class TodoCard extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              children: <Widget>[
                 const ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Text('Task'),
@@ -47,7 +47,7 @@ class TodoCard extends ConsumerWidget {
                 const Divider(thickness: 4.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
+                  children: <Widget>[
                     Text(ref.watch(dateProvider)),
                     const SizedBox(width: 8.0),
                     Text(ref.watch(timeProvider)),

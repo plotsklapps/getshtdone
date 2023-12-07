@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getsh_tdone/services/firebase_service.dart';
 import 'package:getsh_tdone/services/navigation.dart';
-import 'package:getsh_tdone/theme/theme.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -42,7 +41,13 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const Text('LOGIN'),
+              const Text(
+                'LOGIN',
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 8.0),
               TextField(
                 controller: emailController,
@@ -112,16 +117,10 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                           });
                         });
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: flexSchemeDark.primary,
-                      ),
                       child: isLoggingIn
-                          ? Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8.0),
-                              child: CircularProgressIndicator(
-                                color: flexSchemeDark.background,
-                              ),
+                          ? const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 8.0),
+                              child: CircularProgressIndicator(),
                             )
                           : const Text(
                               'LOG IN',

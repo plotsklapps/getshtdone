@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/providers/displayname_provider.dart';
 import 'package:getsh_tdone/providers/sneakpeek_provider.dart';
+import 'package:getsh_tdone/providers/theme_provider.dart';
+import 'package:getsh_tdone/services/firebase_service.dart';
 import 'package:getsh_tdone/services/navigation.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 import 'package:getsh_tdone/widgets/deleteuser_modal.dart';
@@ -61,6 +63,27 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
             trailing: const FaIcon(FontAwesomeIcons.userNinja),
           ),
 
+          // Change thememode ListTile.
+          ListTile(
+            onTap: () {
+              ref.read(isDarkModeProvider.notifier).state =
+                  !ref.watch(isDarkModeProvider);
+              FirebaseService(ref).updateThemeMode((Object error) {
+                // If anything goes wrong:
+                showErrorSnack(context, error);
+              }, (String success) {
+                // If all goes well: Do nothing.
+              });
+            },
+            title: ref.watch(isDarkModeProvider)
+                ? const Text('Dark Mode')
+                : const Text('Light Mode'),
+            subtitle: const Text('Change the app theme'),
+            trailing: ref.watch(isDarkModeProvider)
+                ? const FaIcon(FontAwesomeIcons.moon)
+                : const FaIcon(FontAwesomeIcons.sun),
+          ),
+
           // Sign out listtile.
           ListTile(
             onTap: () async {
@@ -109,6 +132,18 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
     );
   }
 
+  void showErrorSnack(BuildContext context, Object error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('$error'),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: ref.watch(isDarkModeProvider)
+            ? flexSchemeDark.error
+            : flexSchemeDark.error,
+      ),
+    );
+  }
+
   void showSuccessSnack(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -124,7 +159,9 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
         content: const Text('You are currently in sneak peek mode. '
             'Please sign in to get access.'),
         behavior: SnackBarBehavior.floating,
-        backgroundColor: flexSchemeLight.error,
+        backgroundColor: ref.watch(isDarkModeProvider)
+            ? flexSchemeDark.error
+            : flexSchemeDark.error,
       ),
     );
   }

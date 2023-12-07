@@ -74,7 +74,7 @@ class SplashScreenState extends ConsumerState<SplashScreen> {
               const Text(
                 'GET SH_T DONE',
                 style: TextStyle(
-                  fontSize: 32.0,
+                  fontSize: 24.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),

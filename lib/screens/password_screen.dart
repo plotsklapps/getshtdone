@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getsh_tdone/services/firebase_service.dart';
 import 'package:getsh_tdone/services/navigation.dart';
-import 'package:getsh_tdone/theme/theme.dart';
 
 class PasswordScreen extends ConsumerStatefulWidget {
   const PasswordScreen({super.key});
@@ -38,7 +37,13 @@ class PasswordScreenState extends ConsumerState<PasswordScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const Text('RESET PASSWORD'),
+              const Text(
+                'RESET PASSWORD',
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 8.0),
               TextField(
                 controller: emailController,
@@ -79,21 +84,13 @@ class PasswordScreenState extends ConsumerState<PasswordScreen> {
                           });
                         }
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: flexSchemeDark.primary,
-                      ),
                       child: isResetting
-                          ? Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8.0),
-                              child: CircularProgressIndicator(
-                                color: flexSchemeDark.background,
-                              ),
+                          ? const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 8.0),
+                              child: CircularProgressIndicator(),
                             )
-                          : Text(
+                          : const Text(
                               'SEND RESET EMAIL',
-                              style:
-                                  TextStyle(color: flexSchemeDark.background),
                             ),
                     ),
                   ),

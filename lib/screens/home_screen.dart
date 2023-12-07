@@ -9,7 +9,6 @@ import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/displayname_provider.dart';
 import 'package:getsh_tdone/providers/photourl_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
-import 'package:getsh_tdone/theme/theme.dart';
 import 'package:getsh_tdone/widgets/newtask_modal.dart';
 import 'package:getsh_tdone/widgets/todo_card.dart';
 import 'package:getsh_tdone/widgets/todoerror_card.dart';
@@ -37,7 +36,7 @@ class HomeScreen extends ConsumerWidget {
             },
           ),
           child: ListView(
-            children: [
+            children: <Widget>[
               Column(
                 children: <Widget>[
                   const SizedBox(height: 16.0),
@@ -74,7 +73,6 @@ class HomeScreen extends ConsumerWidget {
                               height: 140.0,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
-                                color: flexSchemeDark.error,
                               ),
                               child: const Center(
                                 child: FaIcon(
@@ -140,10 +138,6 @@ class HomeScreen extends ConsumerWidget {
             height: 32.0,
             width: 32.0,
             ref.watch(photoURLProvider),
-            colorFilter: ColorFilter.mode(
-              flexSchemeDark.tertiary,
-              BlendMode.srcIn,
-            ),
           ),
         ),
         title: const Text('Get Sh_t Done'),

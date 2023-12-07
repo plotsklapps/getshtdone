@@ -74,7 +74,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
               Row(
                 children: <Widget>[
                   Expanded(
-                    child: ElevatedButton(
+                    child: OutlinedButton(
                       onPressed: () {
                         Navigation.navigateToSignupScreen(context);
                       },
@@ -123,10 +123,8 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                 color: flexSchemeDark.background,
                               ),
                             )
-                          : Text(
+                          : const Text(
                               'LOG IN',
-                              style:
-                                  TextStyle(color: flexSchemeDark.background),
                             ),
                     ),
                   ),

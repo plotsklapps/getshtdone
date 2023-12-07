@@ -133,7 +133,7 @@ class HomeScreen extends ConsumerWidget {
               },
             );
           },
-          child: FaIcon(ref.watch(smileyProvider)),
+          child: FaIcon(ref.watch(smileyIconProvider)),
         ),
         title: const Text('Get Sh_t Done'),
         subtitle: Text(ref.watch(displayNameProvider)),

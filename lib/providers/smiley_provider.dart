@@ -3,12 +3,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:getsh_tdone/services/firebase_service.dart';
-import 'package:logger/logger.dart';
 
-final StateProvider<IconData?> smileyProvider =
+final StateProvider<IconData?> smileyIconProvider =
     StateProvider<IconData?>((StateProviderRef<IconData?> ref) {
   return smileyIcons[Smileys.faceangryregular];
+});
+
+final StateProvider<String> smileyProvider =
+    StateProvider<String>((StateProviderRef<String> ref) {
+  return Smileys.faceangryregular.toString();
 });
 
 class SmileyIconRow extends ConsumerWidget {
@@ -36,13 +39,10 @@ class SmileyIconRow extends ConsumerWidget {
             final IconData? icon = smileyIcons[smiley];
             return GestureDetector(
               onTap: () {
-                ref.read(smileyProvider.notifier).state = icon;
-                FirebaseService(ref).updatePhotoURL((Object error) {
-                  Logger().w('Error updating photoURL');
-                  print(error);
-                }, (String success) {
-                  print(success);
-                });
+                // Change the IconData
+                ref.read(smileyIconProvider.notifier).state = icon;
+                // Change the IconString (for Firestore)
+                ref.read(smileyProvider.notifier).state = smiley.toString();
               },
               child: Padding(
                 padding: const EdgeInsets.only(right: 8.0),

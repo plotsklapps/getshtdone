@@ -53,8 +53,7 @@ class FirebaseService {
       await userCredential.user?.updateDisplayName(username);
 
       // Store standard avatar in Firebase Auth.
-      await userCredential.user
-          ?.updatePhotoURL(ref.watch(smileyProvider).toString());
+      await userCredential.user?.updatePhotoURL(ref.watch(smileyProvider));
 
       // Send email verification.
       await userCredential.user?.sendEmailVerification();
@@ -330,10 +329,10 @@ class FirebaseService {
     void Function(String success) onSuccess,
   ) async {
     try {
-      final String updatedAvatar = ref.watch(photoURLProvider);
+      final String updatedPhotoURL = ref.watch(photoURLProvider);
       final User? currentUser = ref.read(firebaseProvider).currentUser;
       // Update the photoURL in the Provider.
-      await currentUser?.updatePhotoURL(updatedAvatar);
+      await currentUser?.updatePhotoURL(updatedPhotoURL);
       // Surprise, Firebase does not change it until you do the next:
       await currentUser?.reload();
       // Update the photoURL in the Firestore document.

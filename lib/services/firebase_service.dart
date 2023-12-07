@@ -327,8 +327,10 @@ class FirebaseService {
     void Function(String success) onSuccess,
   ) async {
     try {
+      Logger().w(ref.watch(photoURLProvider));
       final String updatedPhotoURL = ref.watch(photoURLProvider);
       final User? currentUser = ref.read(firebaseProvider).currentUser;
+      Logger().w(ref.watch(photoURLProvider));
       // Update the photoURL in the Provider.
       await currentUser?.updatePhotoURL(updatedPhotoURL);
       // Surprise, Firebase does not change it until you do the next:
@@ -345,9 +347,9 @@ class FirebaseService {
           'photoURL': updatedPhotoURL,
         },
       );
-      Logger().e(updatedPhotoURL);
       // If all goes well:
       Logs.avatarChangeComplete();
+      Logger().w(ref.watch(photoURLProvider));
       onSuccess('Successfully updated avatar.');
     } catch (error) {
       // If anything goes wrong:

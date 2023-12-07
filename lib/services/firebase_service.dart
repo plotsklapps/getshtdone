@@ -6,6 +6,7 @@ import 'package:getsh_tdone/providers/displayname_provider.dart';
 import 'package:getsh_tdone/providers/email_provider.dart';
 import 'package:getsh_tdone/providers/firebase_provider.dart';
 import 'package:getsh_tdone/providers/photourl_provider.dart';
+import 'package:getsh_tdone/providers/smiley_provider.dart';
 import 'package:getsh_tdone/providers/sneakpeek_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
@@ -52,7 +53,8 @@ class FirebaseService {
       await userCredential.user?.updateDisplayName(username);
 
       // Store standard avatar in Firebase Auth.
-      await userCredential.user?.updatePhotoURL('assets/images/face-dizzy.png');
+      await userCredential.user
+          ?.updatePhotoURL(ref.watch(smileyProvider).toString());
 
       // Send email verification.
       await userCredential.user?.sendEmailVerification();
@@ -63,7 +65,7 @@ class FirebaseService {
           .collection('users')
           .doc(userCredential.user?.uid)
           .set(<String, dynamic>{
-        'username': ref.watch(displayNameProvider),
+        'displayName': ref.watch(displayNameProvider),
         'photoURL': ref.watch(photoURLProvider),
         'email': ref.watch(emailProvider),
         'darkMode': ref.watch(isDarkModeProvider),
@@ -136,13 +138,17 @@ class FirebaseService {
                     (DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
               if (documentSnapshot.exists) {
                 ref.read(displayNameProvider.notifier).state =
-                    documentSnapshot['username'] as String;
+                    documentSnapshot['displayName'] as String;
                 ref.read(emailProvider.notifier).state =
                     documentSnapshot['email'] as String;
                 ref.read(photoURLProvider.notifier).state =
                     documentSnapshot['photoURL'] as String;
                 ref.read(isDarkModeProvider.notifier).state =
                     documentSnapshot['darkMode'] as bool;
+                ref.read(creationDateProvider.notifier).state =
+                    documentSnapshot['creationDate'] as String;
+                ref.read(lastSignInDateProvider.notifier).state =
+                    documentSnapshot['lastSignInDate'] as String;
               } else {
                 // If anything goes wrong:
                 Logs.loginFailed();

@@ -21,8 +21,8 @@ final AutoDisposeStateProvider<String> dueDateProvider =
 // Provider for the date of creation of the account. First, it fetches
 // the user from the firebaseProvider, then it fetches the creationTime
 // for that user and formats it to a String and auto disposes it.
-final AutoDisposeProvider<String> creationDateProvider =
-    Provider.autoDispose<String>((ProviderRef<String> ref) {
+final AutoDisposeStateProvider<String> creationDateProvider =
+    StateProvider.autoDispose<String>((StateProviderRef<String> ref) {
   final User? user = ref.watch(firebaseProvider).currentUser;
   final DateTime? creationDate = user?.metadata.creationTime;
   if (creationDate != null) {
@@ -36,8 +36,8 @@ final AutoDisposeProvider<String> creationDateProvider =
 // Provider for the date of the last sign in. First, it fetches
 // the user from the firebaseProvider, then it fetches the lastSignInTime
 // for that user and formats it to a String and auto disposes it.
-final AutoDisposeProvider<String> lastSignInDateProvider =
-    Provider.autoDispose<String>((ProviderRef<String> ref) {
+final AutoDisposeStateProvider<String> lastSignInDateProvider =
+    StateProvider.autoDispose<String>((StateProviderRef<String> ref) {
   final User? user = ref.watch(firebaseProvider).currentUser;
   final DateTime? lastSignInDate = user?.metadata.lastSignInTime;
   if (lastSignInDate != null) {

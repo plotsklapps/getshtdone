@@ -7,11 +7,11 @@ import 'package:getsh_tdone/providers/smiley_provider.dart';
 final AutoDisposeStateProvider<String> photoURLProvider =
     StateProvider.autoDispose<String>((StateProviderRef<String> ref) {
   final User? user = ref.watch(firebaseProvider).currentUser;
-  if (user != null) {
+  if (user != null && user.photoURL != null) {
     // Fetch the photoURL from Firebase Auth.
     final String photoURL = user.photoURL!;
     return photoURL;
   } else {
-    return Smileys.facegrinheartsregular.toString();
+    return Smileys.faceangryregular.toString();
   }
 });

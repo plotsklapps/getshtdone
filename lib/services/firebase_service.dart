@@ -339,7 +339,7 @@ class FirebaseService {
           )
           .update(
         <String, dynamic>{
-          'avatar': ref.watch(photoURLProvider),
+          'photoURL': ref.watch(photoURLProvider),
         },
       );
       // If all goes well:

@@ -2,12 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/models/todo_model.dart';
 import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/displayname_provider.dart';
-import 'package:getsh_tdone/providers/photourl_provider.dart';
+import 'package:getsh_tdone/providers/smiley_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/widgets/newtask_modal.dart';
 import 'package:getsh_tdone/widgets/todo_card.dart';
@@ -134,11 +133,7 @@ class HomeScreen extends ConsumerWidget {
               },
             );
           },
-          child: SvgPicture.asset(
-            height: 32.0,
-            width: 32.0,
-            ref.watch(photoURLProvider),
-          ),
+          child: FaIcon(ref.watch(smileyProvider)),
         ),
         title: const Text('Get Sh_t Done'),
         subtitle: Text(ref.watch(displayNameProvider)),

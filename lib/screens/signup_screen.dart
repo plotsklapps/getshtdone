@@ -15,7 +15,7 @@ class SignupScreen extends ConsumerStatefulWidget {
 }
 
 class SignupScreenState extends ConsumerState<SignupScreen> {
-  late TextEditingController usernameController;
+  late TextEditingController displayNameController;
   late TextEditingController emailController;
   late TextEditingController passwordController;
   late TextEditingController confirmPasswordController;
@@ -26,7 +26,7 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
   @override
   void initState() {
     super.initState();
-    usernameController = TextEditingController();
+    displayNameController = TextEditingController();
     emailController = TextEditingController();
     passwordController = TextEditingController();
     confirmPasswordController = TextEditingController();
@@ -35,7 +35,7 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
   @override
   void dispose() {
     super.dispose();
-    usernameController.dispose();
+    displayNameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
@@ -59,7 +59,7 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
               ),
               const SizedBox(height: 8.0),
               TextField(
-                controller: usernameController,
+                controller: displayNameController,
                 onChanged: (String value) {
                   ref.read(displayNameProvider.notifier).state = value;
                 },
@@ -133,7 +133,7 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
                         // success or error. Switch bool to false to
                         // hide loading indicator.
                         await FirebaseService(ref).signUp(
-                            usernameController.text.trim(),
+                            displayNameController.text.trim(),
                             emailController.text.trim(),
                             passwordController.text.trim(),
                             confirmPasswordController.text.trim(),

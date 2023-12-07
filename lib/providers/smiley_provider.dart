@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/providers/photourl_provider.dart';
 
-final StateProvider<IconData?> smileyIconProvider =
-    StateProvider<IconData?>((StateProviderRef<IconData?> ref) {
-  return smileyIcons[Smileys.faceangryregular];
+final StateProvider<IconData> smileyProvider =
+    StateProvider<IconData>((StateProviderRef<IconData> ref) {
+  return FontAwesomeIcons.faceAngry;
 });
 
 class SmileyIconRow extends ConsumerWidget {
@@ -29,16 +29,18 @@ class SmileyIconRow extends ConsumerWidget {
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           shrinkWrap: true,
-          itemCount: Smileys.values.length,
+          itemCount: smileyIcons.length,
           itemBuilder: (BuildContext context, int index) {
-            final Smileys smiley = Smileys.values[index];
-            final IconData? icon = smileyIcons[smiley];
+            final String smileyKey = smileyIcons.keys.elementAt(index);
+            final IconData? icon = smileyIcons[smileyKey];
             return GestureDetector(
               onTap: () {
                 // Change the IconData
-                ref.read(smileyIconProvider.notifier).state = icon;
+                ref.read(smileyProvider.notifier).state =
+                    smileyIcons[smileyIcons.keys.elementAt(index)]!;
                 // Change the photoURL
-                ref.read(photoURLProvider.notifier).state = smiley.toString();
+                ref.read(photoURLProvider.notifier).state =
+                    smileyIcons.keys.elementAt(index);
               },
               child: Padding(
                 padding: const EdgeInsets.only(right: 8.0),
@@ -52,84 +54,43 @@ class SmileyIconRow extends ConsumerWidget {
   }
 }
 
-enum Smileys {
-  faceangryregular,
-  facedizzyregular,
-  faceflushedregular,
-  facefrownopenregular,
-  facefrownregular,
-  facegrimaceregular,
-  facegrinbeamregular,
-  facegrinbeamsweatregular,
-  facegrinheartsregular,
-  facegrinregular,
-  facegrinsquintregular,
-  facegrinsquinttearsregular,
-  facegrinstarsregular,
-  facegrintearsregular,
-  facegrintongueregular,
-  facegrintonguesquintregular,
-  facegrintonguewinkregular,
-  facegrinwideregular,
-  facegrinwinkregular,
-  facekissbeamregular,
-  facekissregular,
-  facekisswinkheartregular,
-  facelaughbeamregular,
-  facelaughregular,
-  facelaughsquintregular,
-  facelaughwinkregular,
-  facemehblankregular,
-  facemehregular,
-  facerollingeyesregular,
-  facesadcryregular,
-  facesadtearregular,
-  facesmilebeamregular,
-  facesmileregular,
-  facesmilewinkregular,
-  facesurpriseregular,
-  facetiredregular,
-  handpeaceregular,
-  heartregular,
-}
-
-final Map<Smileys, IconData> smileyIcons = <Smileys, IconData>{
-  Smileys.faceangryregular: FontAwesomeIcons.faceAngry,
-  Smileys.facedizzyregular: FontAwesomeIcons.faceDizzy,
-  Smileys.faceflushedregular: FontAwesomeIcons.faceFlushed,
-  Smileys.facefrownopenregular: FontAwesomeIcons.faceFrownOpen,
-  Smileys.facefrownregular: FontAwesomeIcons.faceFrown,
-  Smileys.facegrimaceregular: FontAwesomeIcons.faceGrimace,
-  Smileys.facegrinbeamregular: FontAwesomeIcons.faceGrinBeam,
-  Smileys.facegrinbeamsweatregular: FontAwesomeIcons.faceGrinBeamSweat,
-  Smileys.facegrinheartsregular: FontAwesomeIcons.faceGrinHearts,
-  Smileys.facegrinregular: FontAwesomeIcons.faceGrin,
-  Smileys.facegrinsquintregular: FontAwesomeIcons.faceGrinSquint,
-  Smileys.facegrinsquinttearsregular: FontAwesomeIcons.faceGrinSquintTears,
-  Smileys.facegrinstarsregular: FontAwesomeIcons.faceGrinStars,
-  Smileys.facegrintearsregular: FontAwesomeIcons.faceGrinTears,
-  Smileys.facegrintongueregular: FontAwesomeIcons.faceGrinTongue,
-  Smileys.facegrintonguesquintregular: FontAwesomeIcons.faceGrinTongueSquint,
-  Smileys.facegrintonguewinkregular: FontAwesomeIcons.faceGrinTongueWink,
-  Smileys.facegrinwideregular: FontAwesomeIcons.faceGrinWide,
-  Smileys.facegrinwinkregular: FontAwesomeIcons.faceGrinWink,
-  Smileys.facekissbeamregular: FontAwesomeIcons.faceKissBeam,
-  Smileys.facekissregular: FontAwesomeIcons.faceKiss,
-  Smileys.facekisswinkheartregular: FontAwesomeIcons.faceKissWinkHeart,
-  Smileys.facelaughbeamregular: FontAwesomeIcons.faceLaughBeam,
-  Smileys.facelaughregular: FontAwesomeIcons.faceLaugh,
-  Smileys.facelaughsquintregular: FontAwesomeIcons.faceLaughSquint,
-  Smileys.facelaughwinkregular: FontAwesomeIcons.faceLaughWink,
-  Smileys.facemehblankregular: FontAwesomeIcons.faceMehBlank,
-  Smileys.facemehregular: FontAwesomeIcons.faceMeh,
-  Smileys.facerollingeyesregular: FontAwesomeIcons.faceRollingEyes,
-  Smileys.facesadcryregular: FontAwesomeIcons.faceSadCry,
-  Smileys.facesadtearregular: FontAwesomeIcons.faceSadTear,
-  Smileys.facesmilebeamregular: FontAwesomeIcons.faceSmileBeam,
-  Smileys.facesmileregular: FontAwesomeIcons.faceSmile,
-  Smileys.facesmilewinkregular: FontAwesomeIcons.faceSmileWink,
-  Smileys.facesurpriseregular: FontAwesomeIcons.faceSurprise,
-  Smileys.facetiredregular: FontAwesomeIcons.faceTired,
-  Smileys.handpeaceregular: FontAwesomeIcons.handPeace,
-  Smileys.heartregular: FontAwesomeIcons.heart,
+final Map<String, IconData> smileyIcons = <String, IconData>{
+  'faceangryregular': FontAwesomeIcons.faceAngry,
+  'facedizzyregular': FontAwesomeIcons.faceDizzy,
+  'faceflushedregular': FontAwesomeIcons.faceFlushed,
+  'facefrownopenregular': FontAwesomeIcons.faceFrownOpen,
+  'facefrownregular': FontAwesomeIcons.faceFrown,
+  'facegrimaceregular': FontAwesomeIcons.faceGrimace,
+  'facegrinbeamregular': FontAwesomeIcons.faceGrinBeam,
+  'facegrinbeamsweatregular': FontAwesomeIcons.faceGrinBeamSweat,
+  'facegrinheartsregular': FontAwesomeIcons.faceGrinHearts,
+  'facegrinregular': FontAwesomeIcons.faceGrin,
+  'facegrinsquintregular': FontAwesomeIcons.faceGrinSquint,
+  'facegrinsquinttearsregular': FontAwesomeIcons.faceGrinSquintTears,
+  'facegrinstarsregular': FontAwesomeIcons.faceGrinStars,
+  'facegrintearsregular': FontAwesomeIcons.faceGrinTears,
+  'facegrintongueregular': FontAwesomeIcons.faceGrinTongue,
+  'facegrintonguesquintregular': FontAwesomeIcons.faceGrinTongueSquint,
+  'facegrintonguewinkregular': FontAwesomeIcons.faceGrinTongueWink,
+  'facegrinwideregular': FontAwesomeIcons.faceGrinWide,
+  'facegrinwinkregular': FontAwesomeIcons.faceGrinWink,
+  'facekissbeamregular': FontAwesomeIcons.faceKissBeam,
+  'facekissregular': FontAwesomeIcons.faceKiss,
+  'facekisswinkheartregular': FontAwesomeIcons.faceKissWinkHeart,
+  'facelaughbeamregular': FontAwesomeIcons.faceLaughBeam,
+  'facelaughregular': FontAwesomeIcons.faceLaugh,
+  'facelaughsquintregular': FontAwesomeIcons.faceLaughSquint,
+  'facelaughwinkregular': FontAwesomeIcons.faceLaughWink,
+  'facemehblankregular': FontAwesomeIcons.faceMehBlank,
+  'facemehregular': FontAwesomeIcons.faceMeh,
+  'facerollingeyesregular': FontAwesomeIcons.faceRollingEyes,
+  'facesadcryregular': FontAwesomeIcons.faceSadCry,
+  'facesadtearregular': FontAwesomeIcons.faceSadTear,
+  'facesmilebeamregular': FontAwesomeIcons.faceSmileBeam,
+  'facesmileregular': FontAwesomeIcons.faceSmile,
+  'facesmilewinkregular': FontAwesomeIcons.faceSmileWink,
+  'facesurpriseregular': FontAwesomeIcons.faceSurprise,
+  'facetiredregular': FontAwesomeIcons.faceTired,
+  'handpeaceregular': FontAwesomeIcons.handPeace,
+  'heartregular': FontAwesomeIcons.heart,
 };

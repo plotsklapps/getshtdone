@@ -9,21 +9,20 @@ import 'package:getsh_tdone/providers/time_provider.dart';
 import 'package:getsh_tdone/providers/title_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/services/logger.dart';
-import 'package:getsh_tdone/theme/theme.dart';
 import 'package:intl/intl.dart';
 
-class NewTaskModal extends ConsumerStatefulWidget {
-  const NewTaskModal({
+class NewTodoModal extends ConsumerStatefulWidget {
+  const NewTodoModal({
     super.key,
   });
 
   @override
-  ConsumerState<NewTaskModal> createState() {
-    return NewTaskModalState();
+  ConsumerState<NewTodoModal> createState() {
+    return NewTodoModalState();
   }
 }
 
-class NewTaskModalState extends ConsumerState<NewTaskModal> {
+class NewTodoModalState extends ConsumerState<NewTodoModal> {
   late TextEditingController titleController;
   late TextEditingController descriptionController;
 
@@ -110,10 +109,11 @@ class NewTaskModalState extends ConsumerState<NewTaskModal> {
               const NewTaskCancelButton(),
               const SizedBox(width: 16.0),
               NewTaskSaveButton(
-                  ref: ref,
-                  titleController: titleController,
-                  descriptionController: descriptionController,
-                  mounted: mounted),
+                ref: ref,
+                titleController: titleController,
+                descriptionController: descriptionController,
+                mounted: mounted,
+              ),
             ],
           ),
         ],
@@ -281,7 +281,7 @@ class NewTaskSaveButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: ElevatedButton(
+      child: FilledButton(
         onPressed: () async {
           await FirestoreService(ref).addTodo(
             Todo(
@@ -307,20 +307,15 @@ class NewTaskSaveButton extends StatelessWidget {
             Navigator.pop(context);
           }
         },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: flexSchemeDark.tertiary,
-        ),
-        child: Row(
+        child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Icon(
               Icons.save_rounded,
-              color: flexSchemeDark.surfaceVariant,
             ),
-            const SizedBox(width: 8.0),
+            SizedBox(width: 8.0),
             Text(
               'Save',
-              style: TextStyle(color: flexSchemeDark.surfaceVariant),
             ),
           ],
         ),

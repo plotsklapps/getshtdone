@@ -61,7 +61,7 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
             },
             title: Text(ref.watch(displayNameProvider)),
             subtitle: const Text('CHANGE YOUR PROFILE'),
-            trailing: FaIcon(ref.watch(smileyIconProvider)),
+            trailing: FaIcon(ref.watch(smileyProvider)),
           ),
 
           // Change thememode ListTile.

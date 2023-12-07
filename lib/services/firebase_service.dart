@@ -10,7 +10,6 @@ import 'package:getsh_tdone/providers/sneakpeek_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/services/logger.dart';
-import 'package:logger/logger.dart';
 
 // Custom class FirebaseService which takes a WidgetRef as a parameter.
 // This is used to access the Providers. In the code, it's usable as
@@ -19,14 +18,14 @@ class FirebaseService {
   FirebaseService(this.ref);
   final WidgetRef ref;
 
-  // Method to sign up the user for a Firebase account. Username is
+  // Method to sign up the user for a Firebase account. Displayname is
   // stored in the displayNameProvider, email is stored in the
   // emailProvider.
   // These are used to create an initial Firestore document for the user.
   // onError and onSuccess are callbacks which are used to show a
   // SnackBar to the user.
   Future<void> signUp(
-    String username,
+    String displayname,
     String email,
     String password,
     String confirmPassword,
@@ -34,8 +33,8 @@ class FirebaseService {
     void Function(String success) onSuccess,
   ) async {
     try {
-      // Check if username, email or password is empty.
-      if (username.isEmpty || email.isEmpty || password.isEmpty) {
+      // Check if displayname, email or password is empty.
+      if (displayname.isEmpty || email.isEmpty || password.isEmpty) {
         throw Exception('Username, email and/or password cannot be empty.');
       }
 
@@ -50,7 +49,7 @@ class FirebaseService {
           .createUserWithEmailAndPassword(email: email, password: password);
 
       // Store displayName in Firebase Auth.
-      await userCredential.user?.updateDisplayName(username);
+      await userCredential.user?.updateDisplayName(displayname);
 
       // Store standard avatar in Firebase Auth.
       await userCredential.user?.updatePhotoURL(ref.watch(photoURLProvider));
@@ -310,7 +309,7 @@ class FirebaseService {
           )
           .update(
         <String, dynamic>{
-          'username': updatedDisplayName,
+          'displayName': updatedDisplayName,
         },
       );
       Logs.displayNameChangeComplete();
@@ -327,10 +326,8 @@ class FirebaseService {
     void Function(String success) onSuccess,
   ) async {
     try {
-      Logger().w(ref.watch(photoURLProvider));
       final String updatedPhotoURL = ref.watch(photoURLProvider);
       final User? currentUser = ref.read(firebaseProvider).currentUser;
-      Logger().w(ref.watch(photoURLProvider));
       // Update the photoURL in the Provider.
       await currentUser?.updatePhotoURL(updatedPhotoURL);
       // Surprise, Firebase does not change it until you do the next:
@@ -349,7 +346,6 @@ class FirebaseService {
       );
       // If all goes well:
       Logs.avatarChangeComplete();
-      Logger().w(ref.watch(photoURLProvider));
       onSuccess('Successfully updated avatar.');
     } catch (error) {
       // If anything goes wrong:
@@ -373,7 +369,7 @@ class FirebaseService {
           .doc(currentUser!.uid)
           .update(
         <String, dynamic>{
-          'isDarkMode': updatedThemeMode,
+          'darkMode': updatedThemeMode,
         },
       );
       // If all goes well:

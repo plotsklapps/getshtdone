@@ -10,7 +10,7 @@ import 'package:getsh_tdone/providers/smiley_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/theme/theme.dart';
-import 'package:getsh_tdone/widgets/newtask_modal.dart';
+import 'package:getsh_tdone/widgets/newtodo_modal.dart';
 import 'package:getsh_tdone/widgets/todo_card.dart';
 import 'package:getsh_tdone/widgets/todoerror_card.dart';
 import 'package:getsh_tdone/widgets/todoloading_card.dart';
@@ -113,7 +113,7 @@ class HomeScreen extends ConsumerWidget {
             showDragHandle: true,
             isScrollControlled: true,
             builder: (BuildContext context) {
-              return const NewTaskModal();
+              return const NewTodoModal();
             },
           );
         },
@@ -284,7 +284,7 @@ This feature is a work in progress...''',
               },
             );
           },
-          child: FaIcon(ref.watch(smileyIconProvider)),
+          child: FaIcon(ref.watch(smileyProvider)),
         ),
         title: const Text('Get Sh_t Done'),
         subtitle: Text(ref.watch(displayNameProvider)),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/providers/displayname_provider.dart';
+import 'package:getsh_tdone/providers/smiley_provider.dart';
 import 'package:getsh_tdone/providers/sneakpeek_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/services/firebase_service.dart';
@@ -60,7 +61,7 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
             },
             title: Text(ref.watch(displayNameProvider)),
             subtitle: const Text('CHANGE YOUR PROFILE'),
-            trailing: const FaIcon(FontAwesomeIcons.userNinja),
+            trailing: FaIcon(ref.watch(smileyIconProvider)),
           ),
 
           // Change thememode ListTile.

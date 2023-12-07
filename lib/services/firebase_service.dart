@@ -6,11 +6,11 @@ import 'package:getsh_tdone/providers/displayname_provider.dart';
 import 'package:getsh_tdone/providers/email_provider.dart';
 import 'package:getsh_tdone/providers/firebase_provider.dart';
 import 'package:getsh_tdone/providers/photourl_provider.dart';
-import 'package:getsh_tdone/providers/smiley_provider.dart';
 import 'package:getsh_tdone/providers/sneakpeek_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/services/logger.dart';
+import 'package:logger/logger.dart';
 
 // Custom class FirebaseService which takes a WidgetRef as a parameter.
 // This is used to access the Providers. In the code, it's usable as
@@ -53,7 +53,7 @@ class FirebaseService {
       await userCredential.user?.updateDisplayName(username);
 
       // Store standard avatar in Firebase Auth.
-      await userCredential.user?.updatePhotoURL(ref.watch(smileyProvider));
+      await userCredential.user?.updatePhotoURL(ref.watch(photoURLProvider));
 
       // Send email verification.
       await userCredential.user?.sendEmailVerification();
@@ -298,9 +298,7 @@ class FirebaseService {
       final String updatedDisplayName = ref.watch(displayNameProvider);
       final User? currentUser = ref.watch(firebaseProvider).currentUser;
       // Update the displayName in the Provider.
-      await currentUser?.updateDisplayName(
-        updatedDisplayName,
-      );
+      await currentUser?.updateDisplayName(updatedDisplayName);
       // Surprise, Firebase does not change it until you do the next:
       await ref.read(firebaseProvider).currentUser?.reload();
       // Update the displayName in the Firestore document.
@@ -334,19 +332,20 @@ class FirebaseService {
       // Update the photoURL in the Provider.
       await currentUser?.updatePhotoURL(updatedPhotoURL);
       // Surprise, Firebase does not change it until you do the next:
-      await currentUser?.reload();
+      await ref.read(firebaseProvider).currentUser?.reload();
       // Update the photoURL in the Firestore document.
       await ref
           .read(firestoreProvider)
           .collection('users')
           .doc(
-            ref.read(firebaseProvider).currentUser?.uid,
+            currentUser?.uid,
           )
           .update(
         <String, dynamic>{
-          'photoURL': ref.watch(photoURLProvider),
+          'photoURL': updatedPhotoURL,
         },
       );
+      Logger().e(updatedPhotoURL);
       // If all goes well:
       Logs.avatarChangeComplete();
       onSuccess('Successfully updated avatar.');

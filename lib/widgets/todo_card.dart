@@ -13,59 +13,61 @@ class TodoCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
+    return Card(
       margin: const EdgeInsets.only(bottom: 12.0),
-      height: 140.0,
-      decoration: BoxDecoration(
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(
-          color: flexSchemeDark.tertiary,
+        side: BorderSide(
+          color: flexSchemeLight.primary,
         ),
       ),
-      child: Row(
-        children: <Widget>[
-          Container(
-            width: 20.0,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12.0),
-                bottomLeft: Radius.circular(12.0),
+      child: SizedBox(
+        height: 140.0,
+        child: Row(
+          children: <Widget>[
+            Container(
+              width: 20.0,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(12.0),
+                  bottomLeft: Radius.circular(12.0),
+                ),
+                color: flexSchemeDark.primary,
               ),
-              color: flexSchemeDark.tertiary,
             ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(todo.title),
-                    subtitle: Text(
-                      todo.description ?? 'No Description',
-                      maxLines: 2,
-                      overflow: TextOverflow.fade,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(todo.title),
+                      subtitle: Text(
+                        todo.description ?? 'No Description',
+                        maxLines: 2,
+                        overflow: TextOverflow.fade,
+                      ),
+                      trailing: todo.isCompleted
+                          ? const FaIcon(FontAwesomeIcons.circleCheck)
+                          : const FaIcon(FontAwesomeIcons.circle),
                     ),
-                    trailing: todo.isCompleted
-                        ? const FaIcon(FontAwesomeIcons.circleCheck)
-                        : const FaIcon(FontAwesomeIcons.circle),
-                  ),
-                  const Divider(thickness: 4.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Text(todo.dueDate ?? 'No Due Date'),
-                      const SizedBox(width: 8.0),
-                      Text(todo.dueTime ?? 'No Due Time'),
-                    ],
-                  ),
-                ],
+                    const Divider(thickness: 4.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Text(todo.dueDate ?? 'No Due Date'),
+                        const SizedBox(width: 8.0),
+                        Text(todo.dueTime ?? 'No Due Time'),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

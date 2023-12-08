@@ -7,6 +7,7 @@ import 'package:getsh_tdone/providers/description_provider.dart';
 import 'package:getsh_tdone/providers/displayname_provider.dart';
 import 'package:getsh_tdone/providers/email_provider.dart';
 import 'package:getsh_tdone/providers/firebase_provider.dart';
+import 'package:getsh_tdone/providers/firestore_provider.dart';
 import 'package:getsh_tdone/providers/iscompleted_provider.dart';
 import 'package:getsh_tdone/providers/photourl_provider.dart';
 import 'package:getsh_tdone/providers/smiley_provider.dart';
@@ -14,7 +15,6 @@ import 'package:getsh_tdone/providers/sneakpeek_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/providers/time_provider.dart';
 import 'package:getsh_tdone/providers/title_provider.dart';
-import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/services/logger.dart';
 
 // Custom class FirebaseService which takes a WidgetRef as a parameter.
@@ -124,63 +124,47 @@ class FirebaseService {
             email: email,
             password: password,
           );
-
-      // Listen to auth state changes
-      FirebaseAuth.instance.authStateChanges().listen((User? user) async {
-        if (user == null) {
-          // User is signed out
-          Logs.loginFailed();
-          onError('Something went wrong. Please try again.');
+      // Retrieve an User object from Firebase Auth.
+      final User? currentUser = ref.read(firebaseProvider).currentUser;
+      if (currentUser == null) {
+        onError('Something went wrong. Please try again.');
+      } else {
+        if (!currentUser.emailVerified) {
+          onError('Please verify your email address.');
         } else {
-          // User is signed in
-          if (!user.emailVerified) {
-            // User is not verified
-            Logs.loginFailed();
-            onError('Please verify your email address.');
-          } else {
-            // Fetch the Firestore document and store the data in their
-            // respective Providers. (Punches will be done later.)
-            await ref
-                .read(firestoreProvider)
-                .collection('users')
-                .doc(user.uid)
-                .get()
-                .then(
-                    (DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
-              if (documentSnapshot.exists) {
-                ref.read(displayNameProvider.notifier).state =
-                    documentSnapshot['displayName'] as String;
-                ref.read(emailProvider.notifier).state =
-                    documentSnapshot['email'] as String;
-                ref.read(photoURLProvider.notifier).state =
-                    documentSnapshot['photoURL'] as String;
-                ref.read(isDarkModeProvider.notifier).state =
-                    documentSnapshot['darkMode'] as bool;
-                ref.read(creationDateProvider.notifier).state =
-                    documentSnapshot['creationDate'] as String;
-                ref.read(lastSignInDateProvider.notifier).state =
-                    documentSnapshot['lastSignInDate'] as String;
-              } else {
-                // If anything goes wrong:
-                Logs.loginFailed();
-                onError('Something went wrong. Please try again.');
-              }
-            });
+          // Fetch the Firestore document and store the data in their
+          // respective Providers.
+          await ref
+              .read(firestoreProvider)
+              .collection('users')
+              .doc(currentUser.uid)
+              .get()
+              .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+            if (documentSnapshot.exists) {
+              ref.read(displayNameProvider.notifier).state =
+                  documentSnapshot['displayName'] as String;
+              ref.read(emailProvider.notifier).state =
+                  documentSnapshot['email'] as String;
+              ref.read(photoURLProvider.notifier).state =
+                  documentSnapshot['photoURL'] as String;
+              ref.read(isDarkModeProvider.notifier).state =
+                  documentSnapshot['darkMode'] as bool;
+              ref.read(creationDateProvider.notifier).state =
+                  documentSnapshot['creationDate'] as String;
+              ref.read(lastSignInDateProvider.notifier).state =
+                  documentSnapshot['lastSignInDate'] as String;
+            } else {
+              // If anything goes wrong:
+              Logs.loginFailed();
+              onError('Something went wrong. Please try again.');
+            }
+          });
 
-            // Fetch the todos from the Firestore subcollection.
-            await ref
-                .read(firestoreProvider)
-                .collection('users')
-                .doc(user.uid)
-                .collection('todoCollection')
-                .get();
-
-            // If all goes well:
-            Logs.loginComplete();
-            onSuccess('Successfully logged in. Now get your sh_t done!');
-          }
+          // If all goes well:
+          Logs.loginComplete();
+          onSuccess('Successfully logged in. Now get your sh_t done!');
         }
-      });
+      }
     } catch (error) {
       // If anything goes wrong:
       Logs.loginFailed();
@@ -240,17 +224,16 @@ class FirebaseService {
   ) async {
     try {
       await ref.read(firebaseProvider).signOut().then((_) {
-        FirebaseAuth.instance.authStateChanges().listen((User? user) {
-          if (user == null) {
-            // If all goes well:
-            invalidateAllProviders();
-            Logs.signOutComplete();
-            onSuccess('Successfully signed out!');
-          } else {
-            // If anything goes wrong:
-            Logs.signOutFailed();
-          }
-        });
+        final User? currentUser = ref.read(firebaseProvider).currentUser;
+        if (currentUser == null) {
+          // If all goes well:
+          invalidateAllProviders();
+          Logs.signOutComplete();
+          onSuccess('Successfully signed out!');
+        } else {
+          // If anything goes wrong:
+          Logs.signOutFailed();
+        }
       });
     } catch (error) {
       // If anything goes wrong:

@@ -7,6 +7,7 @@ import 'package:getsh_tdone/models/todo_model.dart';
 import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/smiley_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
+import 'package:getsh_tdone/providers/todolist_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 import 'package:getsh_tdone/widgets/newtodo_modal.dart';

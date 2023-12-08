@@ -6,3 +6,9 @@ final Provider<FirebaseAuth> firebaseProvider =
     Provider<FirebaseAuth>((ProviderRef<FirebaseAuth> ref) {
   return FirebaseAuth.instance;
 });
+
+// Provider for the current user.
+final StreamProvider<User?> firebaseUserProvider =
+    StreamProvider<User?>((StreamProviderRef<User?> ref) {
+  return ref.watch(firebaseProvider).authStateChanges();
+});

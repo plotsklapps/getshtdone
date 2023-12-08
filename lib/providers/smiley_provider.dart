@@ -7,7 +7,11 @@ import 'package:getsh_tdone/providers/photourl_provider.dart';
 
 final StateProvider<IconData> smileyProvider =
     StateProvider<IconData>((StateProviderRef<IconData> ref) {
-  return FontAwesomeIcons.faceAngry;
+  // Fetch the photoURL from Firebase Auth.
+  final String smileyKey = ref.watch(photoURLProvider);
+  // Return the corresponding IconData from the smileyIcons map, or the default
+  // smiley icon if the smileyKey is not found.
+  return smileyIcons[smileyKey] ?? FontAwesomeIcons.faceAngry;
 });
 
 class SmileyIconRow extends ConsumerWidget {

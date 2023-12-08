@@ -87,7 +87,9 @@ class FirebaseService {
           .set(<String, dynamic>{
         'id': '0',
         'title': 'My first todo',
-        'description': 'This is my first todo',
+        'description':
+            'Get your sh_t done. Swipe right to delete, swipe left to share or '
+                'long press to edit.',
         'category': 'Personal',
         'dueDate': '01-01-2025',
         'dueTime': '12:00 PM',

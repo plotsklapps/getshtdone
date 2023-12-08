@@ -153,7 +153,10 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
           },
           destinations: <NavigationDestination>[
             NavigationDestination(
-              icon: Icon(ref.watch(smileyProvider)),
+              icon: Icon(
+                ref.watch(smileyProvider),
+                size: 32.0,
+              ),
               label: 'Account',
             ),
             NavigationDestination(
@@ -161,12 +164,12 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                 clipBehavior: Clip.none,
                 children: <Widget>[
                   Positioned(
-                    top: -24.0,
+                    top: -18.0,
                     left: 0.0,
                     right: 0.0,
                     child: Icon(
                       FontAwesomeIcons.circlePlus,
-                      size: 72.0,
+                      size: 64.0,
                       color: ref.watch(isDarkModeProvider)
                           ? flexSchemeDark.primary
                           : flexSchemeLight.primary,
@@ -177,7 +180,10 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
               label: 'New Sh_t Todo',
             ),
             const NavigationDestination(
-              icon: Icon(FontAwesomeIcons.circleQuestion),
+              icon: Icon(
+                FontAwesomeIcons.circleQuestion,
+                size: 32.0,
+              ),
               label: 'About',
             ),
           ],

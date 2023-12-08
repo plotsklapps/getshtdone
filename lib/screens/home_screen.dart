@@ -115,6 +115,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
         bottomNavigationBar: NavigationBar(
+          indicatorColor: Colors.transparent,
           selectedIndex: 1,
           onDestinationSelected: (int index) {
             if (index == 0) {
@@ -150,12 +151,22 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
               label: 'Account',
             ),
             NavigationDestination(
-              icon: Icon(
-                FontAwesomeIcons.circlePlus,
-                size: 48.0,
-                color: ref.watch(isDarkModeProvider)
-                    ? flexSchemeDark.primary
-                    : flexSchemeLight.primary,
+              icon: Stack(
+                clipBehavior: Clip.none,
+                children: <Widget>[
+                  Positioned(
+                    top: -24.0,
+                    left: 0.0,
+                    right: 0.0,
+                    child: Icon(
+                      FontAwesomeIcons.circlePlus,
+                      size: 72.0,
+                      color: ref.watch(isDarkModeProvider)
+                          ? flexSchemeDark.primary
+                          : flexSchemeLight.primary,
+                    ),
+                  ),
+                ],
               ),
               label: 'New Sh_t Todo',
             ),

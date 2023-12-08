@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/models/todo_model.dart';
 import 'package:getsh_tdone/providers/date_provider.dart';
-import 'package:getsh_tdone/providers/displayname_provider.dart';
 import 'package:getsh_tdone/providers/smiley_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
@@ -16,108 +15,148 @@ import 'package:getsh_tdone/widgets/todoerror_card.dart';
 import 'package:getsh_tdone/widgets/todoloading_card.dart';
 import 'package:getsh_tdone/widgets/usersettings_modal.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() {
+    return HomeScreenState();
+  }
+}
+
+class HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
+  Widget build(BuildContext context) {
     final AsyncValue<List<Todo>> todoList = ref.watch(todoListProvider);
 
-    return Scaffold(
-      appBar: buildHomeScreenAppBar(context, ref),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: ScrollConfiguration(
-          behavior: const ScrollBehavior().copyWith(
-            dragDevices: <PointerDeviceKind>{
-              PointerDeviceKind.touch,
-              PointerDeviceKind.mouse,
-              PointerDeviceKind.trackpad,
-              PointerDeviceKind.stylus,
-            },
-          ),
-          child: ListView(
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  const SizedBox(height: 16.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          const Text(
-                            "Today's Todo's",
-                            style: TextStyle(
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.bold,
+    return SafeArea(
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: ScrollConfiguration(
+            behavior: const ScrollBehavior().copyWith(
+              dragDevices: <PointerDeviceKind>{
+                PointerDeviceKind.touch,
+                PointerDeviceKind.mouse,
+                PointerDeviceKind.trackpad,
+                PointerDeviceKind.stylus,
+              },
+            ),
+            child: ListView(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    const SizedBox(height: 16.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            const Text(
+                              'Get Sh_t Done',
+                              style: TextStyle(
+                                fontSize: 32.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          Text(ref.watch(dateProvider)),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16.0),
-                  todoList.when(
-                    data: (List<Todo> todoList) {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: todoList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Dismissible(
-                            key: Key(todoList[index].id!),
-                            background: const TodoCardBackgroundDelete(),
-                            secondaryBackground:
-                                const TodoCardBackgroundShare(),
-                            confirmDismiss: (DismissDirection direction) {
-                              if (direction == DismissDirection.startToEnd) {
-                                return showDeleteTaskModal(
-                                  context,
-                                  ref,
-                                  todoList,
-                                  index,
-                                );
-                              } else {
-                                return showShareTaskModal(
-                                  context,
-                                  ref,
-                                );
-                              }
-                            },
-                            child: TodoCard(
-                              todoList[index],
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    error: (Object error, StackTrace stackTrace) {
-                      return TodoErrorCard(error, stackTrace);
-                    },
-                    loading: () {
-                      return const TodoLoadingCard();
-                    },
-                  ),
-                ],
-              ),
-            ],
+                            Text(ref.watch(dateProvider)),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16.0),
+                    todoList.when(
+                      data: (List<Todo> todoList) {
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: todoList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Dismissible(
+                              key: Key(todoList[index].id!),
+                              background: const TodoCardBackgroundDelete(),
+                              secondaryBackground:
+                                  const TodoCardBackgroundShare(),
+                              confirmDismiss: (DismissDirection direction) {
+                                if (direction == DismissDirection.startToEnd) {
+                                  return showDeleteTaskModal(
+                                    context,
+                                    ref,
+                                    todoList,
+                                    index,
+                                  );
+                                } else {
+                                  return showShareTaskModal(
+                                    context,
+                                    ref,
+                                  );
+                                }
+                              },
+                              child: TodoCard(
+                                todoList[index],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      error: (Object error, StackTrace stackTrace) {
+                        return TodoErrorCard(error, stackTrace);
+                      },
+                      loading: () {
+                        return const TodoLoadingCard();
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showModalBottomSheet<void>(
-            context: context,
-            showDragHandle: true,
-            isScrollControlled: true,
-            builder: (BuildContext context) {
-              return const NewTodoModal();
-            },
-          );
-        },
-        child: const FaIcon(FontAwesomeIcons.plus),
+        bottomNavigationBar: NavigationBar(
+          selectedIndex: 1,
+          onDestinationSelected: (int index) {
+            if (index == 0) {
+              showModalBottomSheet<Widget>(
+                context: context,
+                showDragHandle: true,
+                isScrollControlled: true,
+                builder: (BuildContext context) {
+                  return const UserSettingsModal();
+                },
+              );
+            } else if (index == 1) {
+              showModalBottomSheet<Widget>(
+                context: context,
+                showDragHandle: true,
+                isScrollControlled: true,
+                builder: (BuildContext context) {
+                  return const NewTodoModal();
+                },
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Work in progress!'),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            }
+          },
+          destinations: <NavigationDestination>[
+            NavigationDestination(
+              icon: Icon(ref.watch(smileyProvider)),
+              label: 'Account',
+            ),
+            const NavigationDestination(
+              icon: Icon(FontAwesomeIcons.circlePlus, size: 48.0),
+              label: 'New Sh_t Todo',
+            ),
+            const NavigationDestination(
+              icon: Icon(FontAwesomeIcons.circleInfo),
+              label: 'About',
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -240,6 +279,7 @@ This feature is a work in progress...''',
                       FirestoreService(ref).deleteTodo(
                         todoList[index].id!,
                       );
+                      Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ref.watch(
@@ -267,40 +307,6 @@ This feature is a work in progress...''',
       },
     );
   }
-
-  AppBar buildHomeScreenAppBar(BuildContext context, WidgetRef ref) {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      title: ListTile(
-        contentPadding: EdgeInsets.zero,
-        leading: InkWell(
-          onTap: () {
-            showModalBottomSheet<void>(
-              context: context,
-              showDragHandle: true,
-              isScrollControlled: true,
-              builder: (BuildContext context) {
-                return const UserSettingsModal();
-              },
-            );
-          },
-          child: FaIcon(ref.watch(smileyProvider)),
-        ),
-        title: const Text('Get Sh_t Done'),
-        subtitle: Text(ref.watch(displayNameProvider)),
-      ),
-      actions: <Widget>[
-        IconButton(
-          icon: const FaIcon(FontAwesomeIcons.calendarDay),
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: const FaIcon(FontAwesomeIcons.solidBell),
-          onPressed: () {},
-        ),
-      ],
-    );
-  }
 }
 
 class TodoCardBackgroundShare extends ConsumerWidget {
@@ -314,28 +320,34 @@ class TodoCardBackgroundShare extends ConsumerWidget {
       margin: const EdgeInsets.only(bottom: 12.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: Container(
-        height: 140.0,
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(12.0),
-          ),
+        side: BorderSide(
           color: ref.watch(isDarkModeProvider)
               ? flexSchemeDark.primary
               : flexSchemeLight.primary,
+          width: 4.0,
+        ),
+      ),
+      child: Container(
+        height: 140.0,
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(12.0),
+          ),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 24.0,
           ),
-          child: Center(
-            child: FaIcon(
-              FontAwesomeIcons.share,
-              color: ref.watch(isDarkModeProvider)
-                  ? flexSchemeDark.onPrimary
-                  : flexSchemeLight.onPrimary,
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              FaIcon(
+                FontAwesomeIcons.share,
+                color: ref.watch(isDarkModeProvider)
+                    ? flexSchemeDark.primary
+                    : flexSchemeLight.primary,
+              ),
+            ],
           ),
         ),
       ),
@@ -354,28 +366,33 @@ class TodoCardBackgroundDelete extends ConsumerWidget {
       margin: const EdgeInsets.only(bottom: 12.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: Container(
-        height: 140.0,
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(12.0),
-          ),
+        side: BorderSide(
           color: ref.watch(isDarkModeProvider)
               ? flexSchemeDark.error
               : flexSchemeLight.error,
+          width: 4.0,
+        ),
+      ),
+      child: Container(
+        height: 140.0,
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(12.0),
+          ),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 24.0,
           ),
-          child: Center(
-            child: FaIcon(
-              FontAwesomeIcons.trash,
-              color: ref.watch(isDarkModeProvider)
-                  ? flexSchemeDark.background
-                  : flexSchemeLight.background,
-            ),
+          child: Row(
+            children: <Widget>[
+              FaIcon(
+                FontAwesomeIcons.trash,
+                color: ref.watch(isDarkModeProvider)
+                    ? flexSchemeDark.error
+                    : flexSchemeLight.error,
+              ),
+            ],
           ),
         ),
       ),

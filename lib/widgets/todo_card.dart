@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/models/todo_model.dart';
+import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 
 class TodoCard extends ConsumerWidget {
@@ -18,7 +19,9 @@ class TodoCard extends ConsumerWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
         side: BorderSide(
-          color: flexSchemeLight.primary,
+          color: ref.watch(isDarkModeProvider)
+              ? flexSchemeDark.primary
+              : flexSchemeLight.primary,
         ),
       ),
       child: SizedBox(
@@ -32,7 +35,9 @@ class TodoCard extends ConsumerWidget {
                   topLeft: Radius.circular(12.0),
                   bottomLeft: Radius.circular(12.0),
                 ),
-                color: flexSchemeDark.primary,
+                color: ref.watch(isDarkModeProvider)
+                    ? flexSchemeDark.primary
+                    : flexSchemeLight.primary,
               ),
             ),
             Expanded(

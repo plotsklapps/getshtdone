@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/time_provider.dart';
 import 'package:getsh_tdone/theme/theme.dart';
+import 'package:logger/logger.dart';
 
 class TodoErrorCard extends ConsumerWidget {
   const TodoErrorCard(
@@ -17,6 +18,7 @@ class TodoErrorCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Logger().e(error, stackTrace: stackTrace);
     return Container(
       height: 140.0,
       decoration: BoxDecoration(
@@ -45,8 +47,16 @@ class TodoErrorCard extends ConsumerWidget {
                 children: <Widget>[
                   ListTile(
                     contentPadding: EdgeInsets.zero,
-                    title: Text(error.toString()),
-                    subtitle: const Text('Something went wrong...'),
+                    title: Text(
+                      error.toString(),
+                      maxLines: 1,
+                      overflow: TextOverflow.fade,
+                    ),
+                    subtitle: const Text(
+                      'Something went wrong...',
+                      maxLines: 3,
+                      overflow: TextOverflow.fade,
+                    ),
                     trailing: const FaIcon(
                       FontAwesomeIcons.triangleExclamation,
                     ),
@@ -57,7 +67,7 @@ class TodoErrorCard extends ConsumerWidget {
                     children: <Widget>[
                       Text(ref.watch(dueDateProvider)),
                       const SizedBox(width: 8.0),
-                      Text(ref.watch(timeProvider)),
+                      Text(ref.watch(dueTimeProvider)),
                     ],
                   ),
                 ],

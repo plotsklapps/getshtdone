@@ -26,6 +26,11 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class HomeScreenState extends ConsumerState<HomeScreen> {
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final AsyncValue<List<Todo>> todoList = ref.watch(todoListProvider);
 

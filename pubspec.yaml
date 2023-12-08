@@ -39,7 +39,7 @@ dependencies:
   flutter_riverpod: ^2.4.9
   font_awesome_flutter: ^10.6.0
   google_fonts: ^6.1.0
-  intl: ^0.18.1
+  intl: ^0.19.0
   logger: ^2.0.2+1
   uuid: ^4.2.1
 

@@ -48,10 +48,14 @@ class TodoCard extends ConsumerWidget {
                   children: <Widget>[
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: Text(todo.title),
+                      title: Text(
+                        todo.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.fade,
+                      ),
                       subtitle: Text(
                         todo.description ?? 'No Description',
-                        maxLines: 2,
+                        maxLines: 3,
                         overflow: TextOverflow.fade,
                       ),
                       trailing: todo.isCompleted

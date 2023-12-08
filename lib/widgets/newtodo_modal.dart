@@ -222,7 +222,7 @@ class NewTaskTimePickerButton extends ConsumerWidget {
           ).then((TimeOfDay? timePicked) {
             if (timePicked != null) {
               final String formattedTime = timePicked.format(context);
-              ref.read(timeProvider.notifier).state = formattedTime;
+              ref.read(dueTimeProvider.notifier).state = formattedTime;
             }
           });
         },
@@ -231,7 +231,7 @@ class NewTaskTimePickerButton extends ConsumerWidget {
           children: <Widget>[
             const Icon(Icons.alarm_rounded),
             const SizedBox(width: 8.0),
-            Text(ref.watch(timeProvider)),
+            Text(ref.watch(dueTimeProvider)),
           ],
         ),
       ),
@@ -289,7 +289,7 @@ class NewTaskSaveButton extends StatelessWidget {
               description: ref.watch(descriptionProvider),
               category: ref.watch(categoryStringProvider),
               dueDate: ref.watch(dueDateProvider),
-              dueTime: ref.watch(timeProvider),
+              dueTime: ref.watch(dueTimeProvider),
               isCompleted: false,
             ),
           );
@@ -300,7 +300,7 @@ class NewTaskSaveButton extends StatelessWidget {
             ..invalidate(descriptionProvider)
             ..invalidate(categoryProvider)
             ..invalidate(dueDateProvider)
-            ..invalidate(timeProvider)
+            ..invalidate(dueTimeProvider)
             ..invalidate(isCompletedProvider);
           Logs.addTodoComplete();
           if (mounted) {

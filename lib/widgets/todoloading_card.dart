@@ -49,7 +49,7 @@ class TodoLoadingCard extends ConsumerWidget {
                     children: <Widget>[
                       Text(ref.watch(dueDateProvider)),
                       const SizedBox(width: 8.0),
-                      Text(ref.watch(timeProvider)),
+                      Text(ref.watch(dueTimeProvider)),
                     ],
                   ),
                 ],

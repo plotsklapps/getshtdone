@@ -1,13 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:getsh_tdone/providers/category_provider.dart';
 import 'package:getsh_tdone/providers/date_provider.dart';
+import 'package:getsh_tdone/providers/description_provider.dart';
 import 'package:getsh_tdone/providers/displayname_provider.dart';
 import 'package:getsh_tdone/providers/email_provider.dart';
 import 'package:getsh_tdone/providers/firebase_provider.dart';
+import 'package:getsh_tdone/providers/iscompleted_provider.dart';
 import 'package:getsh_tdone/providers/photourl_provider.dart';
+import 'package:getsh_tdone/providers/smiley_provider.dart';
 import 'package:getsh_tdone/providers/sneakpeek_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
+import 'package:getsh_tdone/providers/time_provider.dart';
+import 'package:getsh_tdone/providers/title_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/services/logger.dart';
 
@@ -114,23 +120,30 @@ class FirebaseService {
         throw Exception('Email and/or password cannot be empty.');
       }
       // Sign in with email and password.
-      await ref
-          .read(firebaseProvider)
-          .signInWithEmailAndPassword(
+      await ref.read(firebaseProvider).signInWithEmailAndPassword(
             email: email,
             password: password,
-          )
-          .then((_) async {
-        final User? currentUser = ref.watch(firebaseProvider).currentUser;
-        if (currentUser != null) {
-          // Check if the user is verified.
-          if (currentUser.emailVerified) {
+          );
+
+      // Listen to auth state changes
+      FirebaseAuth.instance.authStateChanges().listen((User? user) async {
+        if (user == null) {
+          // User is signed out
+          Logs.loginFailed();
+          onError('Something went wrong. Please try again.');
+        } else {
+          // User is signed in
+          if (!user.emailVerified) {
+            // User is not verified
+            Logs.loginFailed();
+            onError('Please verify your email address.');
+          } else {
             // Fetch the Firestore document and store the data in their
             // respective Providers. (Punches will be done later.)
             await ref
                 .read(firestoreProvider)
                 .collection('users')
-                .doc(currentUser.uid)
+                .doc(user.uid)
                 .get()
                 .then(
                     (DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
@@ -158,22 +171,14 @@ class FirebaseService {
             await ref
                 .read(firestoreProvider)
                 .collection('users')
-                .doc(currentUser.uid)
+                .doc(user.uid)
                 .collection('todoCollection')
                 .get();
 
             // If all goes well:
             Logs.loginComplete();
             onSuccess('Successfully logged in. Now get your sh_t done!');
-          } else {
-            // If anything goes wrong:
-            Logs.loginFailed();
-            onError('Please verify your email address.');
           }
-        } else {
-          // If anything goes wrong:
-          Logs.loginFailed();
-          onError('Something went wrong. Please try again.');
         }
       });
     } catch (error) {
@@ -235,10 +240,17 @@ class FirebaseService {
   ) async {
     try {
       await ref.read(firebaseProvider).signOut().then((_) {
-        // If all goes well:
-        invalidateAllProviders();
-        Logs.signOutComplete();
-        onSuccess('Successfully signed out!');
+        FirebaseAuth.instance.authStateChanges().listen((User? user) {
+          if (user == null) {
+            // If all goes well:
+            invalidateAllProviders();
+            Logs.signOutComplete();
+            onSuccess('Successfully signed out!');
+          } else {
+            // If anything goes wrong:
+            Logs.signOutFailed();
+          }
+        });
       });
     } catch (error) {
       // If anything goes wrong:
@@ -386,6 +398,24 @@ class FirebaseService {
   // Method to set all Providers that do not autodispose back to their
   // initial state.
   void invalidateAllProviders() {
-    ref.invalidate(isDarkModeProvider);
+    ref
+      ..invalidate(firebaseProvider)
+      ..invalidate(firestoreProvider)
+      ..invalidate(categoryProvider)
+      ..invalidate(dateProvider)
+      ..invalidate(dueDateProvider)
+      ..invalidate(dueTimeProvider)
+      ..invalidate(creationDateProvider)
+      ..invalidate(lastSignInDateProvider)
+      ..invalidate(displayNameProvider)
+      ..invalidate(emailProvider)
+      ..invalidate(photoURLProvider)
+      ..invalidate(smileyProvider)
+      ..invalidate(isSneakPeekerProvider)
+      ..invalidate(titleProvider)
+      ..invalidate(descriptionProvider)
+      ..invalidate(isCompletedProvider)
+      ..invalidate(isDarkModeProvider)
+      ..invalidate(themeModeProvider);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/services/firebase_service.dart';
 import 'package:getsh_tdone/services/navigation.dart';
 import 'package:getsh_tdone/theme/theme.dart';
@@ -23,7 +24,7 @@ class SignoutModalState extends ConsumerState<SignoutModal> {
         16.0,
         8.0,
         16.0,
-        MediaQuery.of(context).viewInsets.bottom,
+        MediaQuery.of(context).viewInsets.bottom + 16,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -56,7 +57,7 @@ class SignoutModalState extends ConsumerState<SignoutModal> {
                     },
                         // If everything goes well:
                         (String success) {
-                      Navigation.navigateToLoginScreen(context);
+                      Navigation.navigateToSplashScreen(context);
                       showSuccessSnack(context, success);
                     });
                     setState(() {
@@ -89,7 +90,9 @@ class SignoutModalState extends ConsumerState<SignoutModal> {
       SnackBar(
         content: Text(error.toString()),
         behavior: SnackBarBehavior.floating,
-        backgroundColor: flexSchemeDark.error,
+        backgroundColor: ref.watch(isDarkModeProvider)
+            ? flexSchemeDark.error
+            : flexSchemeLight.error,
       ),
     );
   }

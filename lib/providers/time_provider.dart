@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final AutoDisposeStateProvider<String> timeProvider =
+final AutoDisposeStateProvider<String> dueTimeProvider =
     StateProvider.autoDispose<String>((
   AutoDisposeStateProviderRef<String> ref,
 ) {

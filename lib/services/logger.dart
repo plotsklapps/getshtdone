@@ -84,4 +84,12 @@ class Logs {
   static void addTodoFailed() {
     Logger().w('Todo addition to Firestore failed');
   }
+
+  static void toggleTodoComplete() {
+    Logger().i('Todo is toggled in Firestore');
+  }
+
+  static void toggleTodoFailed() {
+    Logger().w('Todo toggle in Firestore failed');
+  }
 }

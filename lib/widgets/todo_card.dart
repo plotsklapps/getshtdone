@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/models/todo_model.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
+import 'package:getsh_tdone/providers/todolist_provider.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 
 class TodoCard extends ConsumerWidget {
@@ -47,16 +48,27 @@ class TodoCard extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     ListTile(
+                      onTap: () {
+                        ref
+                            .read(todoListProvider.notifier)
+                            .toggleCompleted(todo.id!);
+                      },
                       contentPadding: EdgeInsets.zero,
                       title: Text(
                         todo.title,
                         maxLines: 1,
                         overflow: TextOverflow.fade,
+                        style: const TextStyle(
+                          fontSize: 22.0,
+                        ),
                       ),
                       subtitle: Text(
                         todo.description ?? 'No Description',
                         maxLines: 3,
                         overflow: TextOverflow.fade,
+                        style: const TextStyle(
+                          fontSize: 14.0,
+                        ),
                       ),
                       trailing: todo.isCompleted
                           ? const FaIcon(FontAwesomeIcons.circleCheck)

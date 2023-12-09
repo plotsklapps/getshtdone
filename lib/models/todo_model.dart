@@ -37,6 +37,7 @@ class Todo {
       isCompleted: doc['isCompleted'] as bool? ?? false,
     );
   }
+
   String? id;
   final String title;
   String? description;
@@ -44,6 +45,27 @@ class Todo {
   String? dueDate;
   String? dueTime;
   bool isCompleted = false;
+
+  Todo copyWith({
+    String? title,
+    String? description,
+    bool? isCompleted,
+    String? dueDate,
+    String? dueTime,
+  }) {
+    return Todo(
+      id: id, // Keep the same id
+      title: title ?? this.title,
+      description: description ?? this.description,
+      isCompleted: isCompleted ?? this.isCompleted,
+      dueDate: dueDate ?? this.dueDate,
+      dueTime: dueTime ?? this.dueTime,
+    );
+  }
+
+  void toggleCompleted() {
+    isCompleted = !isCompleted;
+  }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{

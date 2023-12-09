@@ -15,6 +15,7 @@ import 'package:getsh_tdone/providers/sneakpeek_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/providers/time_provider.dart';
 import 'package:getsh_tdone/providers/title_provider.dart';
+import 'package:getsh_tdone/providers/todolist_provider.dart';
 import 'package:getsh_tdone/services/logger.dart';
 
 // Custom class FirebaseService which takes a WidgetRef as a parameter.
@@ -162,6 +163,10 @@ class FirebaseService {
             }
           });
 
+          // Fetch the todos from Firestore and store them in the
+          // todoListProvider.
+          ref.read(todoListProvider.notifier).fetchTodos();
+
           // If all goes well:
           Logs.loginComplete();
           onSuccess('Successfully logged in. Now get your sh_t done!');
@@ -225,6 +230,9 @@ class FirebaseService {
     void Function(String success) onSuccess,
   ) async {
     try {
+      // Cancel the Firestore listener.
+      ref.read(todoListProvider.notifier).cancelSubscription();
+      // Sign out from Firebase Auth.
       await ref.read(firebaseProvider).signOut().then((_) {
         final User? currentUser = ref.read(firebaseProvider).currentUser;
         if (currentUser == null) {

@@ -83,4 +83,8 @@ class TodoListNotifier extends StateNotifier<AsyncValue<List<Todo>>> {
       state = const AsyncValue<List<Todo>>.data(<Todo>[]);
     }
   }
+
+  void cancelSubscription() {
+    todoSubscription?.cancel();
+  }
 }

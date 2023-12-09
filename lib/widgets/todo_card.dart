@@ -58,20 +58,41 @@ class TodoCard extends ConsumerWidget {
                         todo.title,
                         maxLines: 1,
                         overflow: TextOverflow.fade,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 22.0,
+                          color: todo.isCompleted
+                              ? ref.watch(isDarkModeProvider)
+                                  ? flexSchemeDark.outline
+                                  : flexSchemeLight.outline
+                              : null,
+                          decoration: todo.isCompleted
+                              ? TextDecoration.lineThrough
+                              : null,
                         ),
                       ),
                       subtitle: Text(
                         todo.description ?? 'No Description',
                         maxLines: 3,
                         overflow: TextOverflow.fade,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14.0,
+                          color: todo.isCompleted
+                              ? ref.watch(isDarkModeProvider)
+                                  ? flexSchemeDark.outline
+                                  : flexSchemeLight.outline
+                              : null,
+                          decoration: todo.isCompleted
+                              ? TextDecoration.lineThrough
+                              : null,
                         ),
                       ),
                       trailing: todo.isCompleted
-                          ? const FaIcon(FontAwesomeIcons.circleCheck)
+                          ? FaIcon(
+                              FontAwesomeIcons.circleCheck,
+                              color: ref.watch(isDarkModeProvider)
+                                  ? flexSchemeDark.primary
+                                  : flexSchemeLight.primary,
+                            )
                           : const FaIcon(FontAwesomeIcons.circle),
                     ),
                     const Divider(thickness: 4.0),

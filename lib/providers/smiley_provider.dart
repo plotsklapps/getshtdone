@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/providers/photourl_provider.dart';
+import 'package:getsh_tdone/providers/theme_provider.dart';
+import 'package:getsh_tdone/theme/theme.dart';
 
 final StateProvider<IconData> smileyProvider =
     StateProvider<IconData>((StateProviderRef<IconData> ref) {
@@ -19,6 +21,7 @@ class SmileyIconRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final IconData selectedSmiley = ref.watch(smileyProvider);
     return SizedBox(
       height: 50.0,
       child: ScrollConfiguration(
@@ -48,7 +51,21 @@ class SmileyIconRow extends ConsumerWidget {
               },
               child: Padding(
                 padding: const EdgeInsets.only(right: 8.0),
-                child: FaIcon(icon, size: 48.0),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 500),
+                  decoration: BoxDecoration(
+                    color: icon == selectedSmiley
+                        ? ref.watch(isDarkModeProvider)
+                            ? flexSchemeDark.primary
+                            : flexSchemeLight.primary
+                        : null,
+                    borderRadius: BorderRadius.circular(24.0),
+                  ),
+                  child: FaIcon(
+                    icon,
+                    size: 48.0,
+                  ),
+                ),
               ),
             );
           },

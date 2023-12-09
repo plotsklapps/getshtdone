@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 
 Uuid uuid = const Uuid();
@@ -25,9 +26,9 @@ class Todo {
     );
   }
 
-  factory Todo.fromSnapshot(dynamic doc) {
+  factory Todo.fromSnapshot(DocumentSnapshot<Object?> doc) {
     return Todo(
-      id: doc.id as String?,
+      id: doc.id,
       title: doc['title'] as String,
       description: doc['description'] as String?,
       category: doc['category'] as String?,

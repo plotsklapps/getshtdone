@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,9 +18,13 @@ final StateNotifierProvider<TodoListNotifier, AsyncValue<List<Todo>>>
 class TodoListNotifier extends StateNotifier<AsyncValue<List<Todo>>> {
   TodoListNotifier(this.ref) : super(const AsyncValue<List<Todo>>.loading()) {
     fetchTodos();
+    ref.onDispose(() {
+      todoSubscription?.cancel();
+    });
   }
 
   final StateNotifierProviderRef<TodoListNotifier, AsyncValue<List<Todo>>> ref;
+  StreamSubscription<QuerySnapshot<Object?>>? todoSubscription;
 
   void toggleCompleted(String id) {
     state.whenData((List<Todo> todos) {
@@ -51,26 +57,28 @@ class TodoListNotifier extends StateNotifier<AsyncValue<List<Todo>>> {
     });
   }
 
-  Future<void> fetchTodos() async {
+  void fetchTodos() {
     final User? currentUser = FirebaseAuth.instance.currentUser;
 
     if (currentUser != null && currentUser.emailVerified) {
-      try {
-        final QuerySnapshot<Map<String, dynamic>> snapshot = await ref
-            .read(firestoreProvider)
-            .collection('users')
-            .doc(currentUser.uid)
-            .collection('todoCollection')
-            .get();
-
-        final List<Todo> todos = snapshot.docs
-            .map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
-          return Todo.fromSnapshot(doc);
-        }).toList();
-        state = AsyncValue<List<Todo>>.data(todos);
-      } catch (error, stackTrace) {
-        state = AsyncValue<List<Todo>>.error(error, stackTrace);
-      }
+      todoSubscription = ref
+          .read(firestoreProvider)
+          .collection('users')
+          .doc(currentUser.uid)
+          .collection('todoCollection')
+          .snapshots()
+          .listen(
+        (QuerySnapshot<Map<String, dynamic>> snapshot) {
+          final List<Todo> todos = snapshot.docs
+              .map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+            return Todo.fromSnapshot(doc);
+          }).toList();
+          state = AsyncValue<List<Todo>>.data(todos);
+        },
+        onError: (Object error, StackTrace stackTrace) {
+          state = AsyncValue<List<Todo>>.error(error, stackTrace);
+        },
+      );
     } else {
       state = const AsyncValue<List<Todo>>.data(<Todo>[]);
     }

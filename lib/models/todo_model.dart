@@ -79,26 +79,6 @@ class Todo {
     };
   }
 
-  Todo copyWith({
-    String? id,
-    String? title,
-    String? description,
-    String? category,
-    String? dueDate,
-    String? dueTime,
-    bool? isCompleted,
-  }) {
-    return Todo(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      category: category ?? this.category,
-      dueDate: dueDate ?? this.dueDate,
-      dueTime: dueTime ?? this.dueTime,
-      isCompleted: isCompleted ?? this.isCompleted,
-    );
-  }
-
   @override
   String toString() {
     return 'Todo{id: $id, title: $title, description: $description, '

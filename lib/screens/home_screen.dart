@@ -181,10 +181,10 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             const NavigationDestination(
               icon: Icon(
-                FontAwesomeIcons.circleQuestion,
+                FontAwesomeIcons.sort,
                 size: 32.0,
               ),
-              label: 'About',
+              label: 'Sort',
             ),
           ],
         ),

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getsh_tdone/models/todo_model.dart';
@@ -49,74 +51,86 @@ class NewTodoModalState extends ConsumerState<NewTodoModal> {
         24.0,
         MediaQuery.of(context).viewInsets.bottom + 16.0,
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+      child: ScrollConfiguration(
+        behavior: const ScrollBehavior().copyWith(
+          dragDevices: <PointerDeviceKind>{
+            PointerDeviceKind.touch,
+            PointerDeviceKind.mouse,
+            PointerDeviceKind.trackpad,
+            PointerDeviceKind.stylus,
+          },
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
-                'Create new sh_t to do',
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Create new sh_t to do',
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(
+                thickness: 4,
+              ),
+              const SizedBox(height: 8.0),
+              TextField(
+                controller: titleController,
+                onChanged: (String newTitle) {
+                  ref.read(titleProvider.notifier).state = newTitle;
+                },
+                decoration: const InputDecoration(
+                  labelText: 'New TODO Title',
                 ),
               ),
-            ],
-          ),
-          const Divider(
-            thickness: 4,
-          ),
-          const SizedBox(height: 8.0),
-          TextField(
-            controller: titleController,
-            onChanged: (String newTitle) {
-              ref.read(titleProvider.notifier).state = newTitle;
-            },
-            decoration: const InputDecoration(
-              labelText: 'New TODO Title',
-            ),
-          ),
-          const SizedBox(height: 8.0),
-          TextField(
-            controller: descriptionController,
-            onChanged: (String newDescription) {
-              ref.read(descriptionProvider.notifier).state = newDescription;
-            },
-            maxLines: 3,
-            decoration: const InputDecoration(
-              labelText: 'New TODO Description',
-            ),
-          ),
-          const SizedBox(height: 16.0),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              NewTaskCategoryChoiceSegmentedButton(),
-            ],
-          ),
-          const SizedBox(height: 12.0),
-          const Row(
-            children: <Widget>[
-              NewTaskDatePickerButton(),
-              SizedBox(width: 16.0),
-              NewTaskTimePickerButton(),
-            ],
-          ),
-          Row(
-            children: <Widget>[
-              const NewTaskCancelButton(),
-              const SizedBox(width: 16.0),
-              NewTaskSaveButton(
-                ref: ref,
-                titleController: titleController,
-                descriptionController: descriptionController,
-                mounted: mounted,
+              const SizedBox(height: 8.0),
+              TextField(
+                controller: descriptionController,
+                onChanged: (String newDescription) {
+                  ref.read(descriptionProvider.notifier).state = newDescription;
+                },
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  labelText: 'New TODO Description',
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  NewTaskCategoryChoiceSegmentedButton(),
+                ],
+              ),
+              const SizedBox(height: 12.0),
+              const Row(
+                children: <Widget>[
+                  NewTaskDatePickerButton(),
+                  SizedBox(width: 16.0),
+                  NewTaskTimePickerButton(),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  const NewTaskCancelButton(),
+                  const SizedBox(width: 16.0),
+                  NewTaskSaveButton(
+                    ref: ref,
+                    titleController: titleController,
+                    descriptionController: descriptionController,
+                    mounted: mounted,
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -139,31 +153,31 @@ class NewTaskCategoryChoiceSegmentedButtonState
       child: SegmentedButton<Categories>(
         selected: ref.watch(categoryProvider),
         onSelectionChanged: (Set<Categories> newSelection) {
-          if (newSelection.contains(Categories.study)) {
-            ref
-                .read(categoryProvider.notifier)
-                .updateCategory(Categories.study);
-          } else if (newSelection.contains(Categories.work)) {
-            ref.read(categoryProvider.notifier).updateCategory(Categories.work);
-          } else if (newSelection.contains(Categories.personal)) {
+          if (newSelection.contains(Categories.personal)) {
             ref
                 .read(categoryProvider.notifier)
                 .updateCategory(Categories.personal);
+          } else if (newSelection.contains(Categories.work)) {
+            ref.read(categoryProvider.notifier).updateCategory(Categories.work);
+          } else if (newSelection.contains(Categories.study)) {
+            ref
+                .read(categoryProvider.notifier)
+                .updateCategory(Categories.study);
           }
         },
         emptySelectionAllowed: true,
         segments: const <ButtonSegment<Categories>>[
           ButtonSegment<Categories>(
-            value: Categories.study,
-            label: Text('Study'),
+            value: Categories.personal,
+            label: Text('Personal'),
           ),
           ButtonSegment<Categories>(
             value: Categories.work,
             label: Text('Work'),
           ),
           ButtonSegment<Categories>(
-            value: Categories.personal,
-            label: Text('personal'),
+            value: Categories.study,
+            label: Text('Study'),
           ),
         ],
       ),
@@ -179,7 +193,7 @@ class NewTaskDatePickerButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Expanded(
-      child: ElevatedButton(
+      child: OutlinedButton(
         onPressed: () async {
           final DateTime? datePicked = await showDatePicker(
             context: context,
@@ -214,7 +228,7 @@ class NewTaskTimePickerButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Expanded(
-      child: ElevatedButton(
+      child: OutlinedButton(
         onPressed: () async {
           await showTimePicker(
             context: context,
@@ -247,7 +261,7 @@ class NewTaskCancelButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: ElevatedButton(
+      child: FilledButton(
         onPressed: () {
           Navigator.pop(context);
         },

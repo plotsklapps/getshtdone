@@ -10,12 +10,12 @@ class CategoryNotifier extends StateNotifier<Set<Categories>> {
   }
 
   String getCategoryString() {
-    if (state.contains(Categories.study)) {
-      return 'Study';
+    if (state.contains(Categories.personal)) {
+      return 'Personal';
     } else if (state.contains(Categories.work)) {
       return 'Work';
-    } else if (state.contains(Categories.personal)) {
-      return 'Personal';
+    } else if (state.contains(Categories.study)) {
+      return 'Study';
     }
     return 'Personal';
   }

@@ -15,6 +15,7 @@ class TodoCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final bool isDarkMode = ref.watch(isDarkModeProvider);
     return Card(
       margin: const EdgeInsets.only(bottom: 12.0),
       shape: RoundedRectangleBorder(
@@ -36,9 +37,19 @@ class TodoCard extends ConsumerWidget {
                   topLeft: Radius.circular(12.0),
                   bottomLeft: Radius.circular(12.0),
                 ),
-                color: ref.watch(isDarkModeProvider)
-                    ? flexSchemeDark.primary
-                    : flexSchemeLight.primary,
+                color: todo.category == 'Personal'
+                    ? isDarkMode
+                        ? flexSchemeDark.primary
+                        : flexSchemeLight.primary
+                    : todo.category == 'Work'
+                        ? isDarkMode
+                            ? flexSchemeDark.secondary
+                            : flexSchemeLight.secondary
+                        : todo.category == 'Study'
+                            ? isDarkMode
+                                ? flexSchemeDark.onErrorContainer
+                                : flexSchemeLight.onErrorContainer
+                            : flexSchemeLight.primary,
               ),
             ),
             Expanded(
@@ -97,11 +108,16 @@ class TodoCard extends ConsumerWidget {
                     ),
                     const Divider(thickness: 4.0),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text(todo.dueDate ?? 'No Due Date'),
-                        const SizedBox(width: 8.0),
-                        Text(todo.dueTime ?? 'No Due Time'),
+                        Text(todo.category ?? 'No Category'),
+                        Row(
+                          children: <Widget>[
+                            Text(todo.dueDate ?? 'No Due Date'),
+                            const SizedBox(width: 8.0),
+                            Text(todo.dueTime ?? 'No Due Time'),
+                          ],
+                        ),
                       ],
                     ),
                   ],

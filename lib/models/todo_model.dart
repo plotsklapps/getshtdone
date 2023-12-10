@@ -49,17 +49,19 @@ class Todo {
   Todo copyWith({
     String? title,
     String? description,
-    bool? isCompleted,
+    String? category,
     String? dueDate,
     String? dueTime,
+    bool? isCompleted,
   }) {
     return Todo(
       id: id, // Keep the same id
       title: title ?? this.title,
       description: description ?? this.description,
-      isCompleted: isCompleted ?? this.isCompleted,
+      category: category ?? this.category,
       dueDate: dueDate ?? this.dueDate,
       dueTime: dueTime ?? this.dueTime,
+      isCompleted: isCompleted ?? this.isCompleted,
     );
   }
 

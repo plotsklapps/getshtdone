@@ -156,13 +156,15 @@ class NewTaskCategoryChoiceSegmentedButtonState
           if (newSelection.contains(Categories.personal)) {
             ref
                 .read(categoryProvider.notifier)
-                .updateCategory(Categories.personal);
+                .updateCategory(Categories.personal, ref);
           } else if (newSelection.contains(Categories.work)) {
-            ref.read(categoryProvider.notifier).updateCategory(Categories.work);
+            ref
+                .read(categoryProvider.notifier)
+                .updateCategory(Categories.work, ref);
           } else if (newSelection.contains(Categories.study)) {
             ref
                 .read(categoryProvider.notifier)
-                .updateCategory(Categories.study);
+                .updateCategory(Categories.study, ref);
           }
         },
         emptySelectionAllowed: true,

@@ -7,10 +7,12 @@ import 'package:getsh_tdone/providers/category_provider.dart';
 import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/description_provider.dart';
 import 'package:getsh_tdone/providers/iscompleted_provider.dart';
+import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/providers/time_provider.dart';
 import 'package:getsh_tdone/providers/title_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/services/logger.dart';
+import 'package:getsh_tdone/theme/theme.dart';
 import 'package:intl/intl.dart';
 
 class UpdateTodoModal extends ConsumerStatefulWidget {
@@ -116,17 +118,18 @@ class UpdateTodoModalState extends ConsumerState<UpdateTodoModal> {
               const SizedBox(height: 12.0),
               const Row(
                 children: <Widget>[
-                  NewTaskDatePickerButton(),
+                  UpdateTaskDatePickerButton(),
                   SizedBox(width: 16.0),
-                  NewTaskTimePickerButton(),
+                  UpdateTaskTimePickerButton(),
                 ],
               ),
               Row(
                 children: <Widget>[
-                  const NewTaskCancelButton(),
+                  const UpdateTaskCancelButton(),
                   const SizedBox(width: 16.0),
-                  NewTaskSaveButton(
+                  UpdateTaskSaveButton(
                     ref: ref,
+                    id: widget.todo.id!,
                     titleController: titleController,
                     descriptionController: descriptionController,
                     mounted: mounted,
@@ -177,16 +180,16 @@ class UpdateTaskCategoryChoiceSegmentedButtonState
     return Expanded(
       child: SegmentedButton<Categories>(
         selected: ref.watch(categoryProvider),
-        onSelectionChanged: (Set<Categories> newSelection) {
-          if (newSelection.contains(Categories.personal)) {
+        onSelectionChanged: (Set<Categories> updatedSelection) {
+          if (updatedSelection.contains(Categories.personal)) {
             ref
                 .read(categoryProvider.notifier)
                 .updateCategory(Categories.personal, ref);
-          } else if (newSelection.contains(Categories.work)) {
+          } else if (updatedSelection.contains(Categories.work)) {
             ref
                 .read(categoryProvider.notifier)
                 .updateCategory(Categories.work, ref);
-          } else if (newSelection.contains(Categories.study)) {
+          } else if (updatedSelection.contains(Categories.study)) {
             ref
                 .read(categoryProvider.notifier)
                 .updateCategory(Categories.study, ref);
@@ -212,8 +215,8 @@ class UpdateTaskCategoryChoiceSegmentedButtonState
   }
 }
 
-class NewTaskDatePickerButton extends ConsumerWidget {
-  const NewTaskDatePickerButton({
+class UpdateTaskDatePickerButton extends ConsumerWidget {
+  const UpdateTaskDatePickerButton({
     super.key,
   });
 
@@ -249,8 +252,8 @@ class NewTaskDatePickerButton extends ConsumerWidget {
   }
 }
 
-class NewTaskTimePickerButton extends ConsumerWidget {
-  const NewTaskTimePickerButton({
+class UpdateTaskTimePickerButton extends ConsumerWidget {
+  const UpdateTaskTimePickerButton({
     super.key,
   });
 
@@ -283,8 +286,8 @@ class NewTaskTimePickerButton extends ConsumerWidget {
   }
 }
 
-class NewTaskCancelButton extends StatelessWidget {
-  const NewTaskCancelButton({
+class UpdateTaskCancelButton extends StatelessWidget {
+  const UpdateTaskCancelButton({
     super.key,
   });
 
@@ -308,9 +311,10 @@ class NewTaskCancelButton extends StatelessWidget {
   }
 }
 
-class NewTaskSaveButton extends StatelessWidget {
-  const NewTaskSaveButton({
+class UpdateTaskSaveButton extends StatelessWidget {
+  const UpdateTaskSaveButton({
     required this.ref,
+    required this.id,
     required this.titleController,
     required this.descriptionController,
     required this.mounted,
@@ -318,6 +322,7 @@ class NewTaskSaveButton extends StatelessWidget {
   });
 
   final WidgetRef ref;
+  final String id;
   final TextEditingController titleController;
   final TextEditingController descriptionController;
   final bool mounted;
@@ -327,28 +332,46 @@ class NewTaskSaveButton extends StatelessWidget {
     return Expanded(
       child: FilledButton(
         onPressed: () async {
-          await FirestoreService(ref).addTodo(
-            Todo(
-              title: ref.watch(titleProvider),
-              description: ref.watch(descriptionProvider),
-              category: ref.watch(categoryStringProvider),
-              dueDate: ref.watch(dueDateProvider),
-              dueTime: ref.watch(dueTimeProvider),
-              isCompleted: false,
-            ),
-          );
-          titleController.clear();
-          descriptionController.clear();
-          ref
-            ..invalidate(titleProvider)
-            ..invalidate(descriptionProvider)
-            ..invalidate(categoryProvider)
-            ..invalidate(dueDateProvider)
-            ..invalidate(dueTimeProvider)
-            ..invalidate(isCompletedProvider);
-          Logs.addTodoComplete();
-          if (mounted) {
-            Navigator.pop(context);
+          try {
+            await FirestoreService(ref).updateTodo(
+              Todo(
+                id: id,
+                title: ref.watch(titleProvider),
+                description: ref.watch(descriptionProvider),
+                category: ref.watch(categoryStringProvider),
+                dueDate: ref.watch(dueDateProvider),
+                dueTime: ref.watch(dueTimeProvider),
+                isCompleted: false,
+              ),
+            );
+            titleController.clear();
+            descriptionController.clear();
+            ref
+              ..invalidate(titleProvider)
+              ..invalidate(descriptionProvider)
+              ..invalidate(categoryProvider)
+              ..invalidate(dueDateProvider)
+              ..invalidate(dueTimeProvider)
+              ..invalidate(isCompletedProvider);
+            Logs.updateTodoComplete();
+            if (mounted) {
+              Navigator.pop(context);
+            }
+          } catch (error) {
+            Logs.updateTodoFailed();
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Failed to update TODO: $error',
+                  ),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: ref.watch(isDarkModeProvider)
+                      ? flexSchemeDark.error
+                      : flexSchemeLight.error,
+                ),
+              );
+            }
           }
         },
         child: const Row(

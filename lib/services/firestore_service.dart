@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getsh_tdone/models/todo_model.dart';
 import 'package:getsh_tdone/providers/firebase_provider.dart';
 import 'package:getsh_tdone/providers/firestore_provider.dart';
+import 'package:logger/logger.dart';
 
 class FirestoreService {
   FirestoreService(this.ref);
@@ -16,22 +17,31 @@ class FirestoreService {
         .collection('users')
         .doc(currentUser?.uid)
         .collection('todoCollection')
-        .add(
+        .doc(newTodo.id)
+        .set(
           newTodo.toMap(),
         );
   }
 
   Future<void> updateTodo(Todo todo) async {
     final User? currentUser = ref.read(firebaseProvider).currentUser;
-    await ref
+    final DocumentReference<Map<String, dynamic>> docRef = ref
         .read(firestoreProvider)
         .collection('users')
         .doc(currentUser?.uid)
         .collection('todoCollection')
-        .doc(todo.id)
-        .update(
-          todo.toMap(),
-        );
+        .doc(todo.id);
+
+    final DocumentSnapshot<Map<String, dynamic>> docSnapshot =
+        await docRef.get();
+
+    if (docSnapshot.exists) {
+      await docRef.update(
+        todo.toMap(),
+      );
+    } else {
+      Logger().w('Document does not exist on the database');
+    }
   }
 
   Future<void> deleteTodo(String id) async {
@@ -43,18 +53,5 @@ class FirestoreService {
         .collection('todoCollection')
         .doc(id)
         .delete();
-  }
-
-  Future<List<Todo>> getTodos() async {
-    final User? currentUser = ref.read(firebaseProvider).currentUser;
-    final QuerySnapshot<Map<String, dynamic>> snapshot = await ref
-        .read(firestoreProvider)
-        .collection('users')
-        .doc(currentUser?.uid)
-        .collection('todoCollection')
-        .get();
-    return snapshot.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
-      return Todo.fromSnapshot(doc);
-    }).toList();
   }
 }

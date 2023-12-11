@@ -65,10 +65,6 @@ class Todo {
     );
   }
 
-  void toggleCompleted() {
-    isCompleted = !isCompleted;
-  }
-
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
@@ -79,12 +75,5 @@ class Todo {
       'dueTime': dueTime,
       'isCompleted': isCompleted,
     };
-  }
-
-  @override
-  String toString() {
-    return 'Todo{id: $id, title: $title, description: $description, '
-        'category: $category, dueDate: $dueDate, dueTime: $dueTime, '
-        'isCompleted: $isCompleted,}';
   }
 }

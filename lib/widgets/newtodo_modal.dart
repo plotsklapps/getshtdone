@@ -197,17 +197,19 @@ class NewTaskDatePickerButton extends ConsumerWidget {
     return Expanded(
       child: OutlinedButton(
         onPressed: () async {
-          final DateTime? datePicked = await showDatePicker(
+          await showDatePicker(
             context: context,
             initialDate: DateTime.now(),
             firstDate: DateTime(2020),
             lastDate: DateTime(2030),
-          );
-          if (datePicked != null) {
-            final String formattedDate =
-                DateFormat('dd/MM/yyyy').format(datePicked);
-            ref.read(dueDateProvider.notifier).state = formattedDate;
-          }
+          ).then((DateTime? datePicked) {
+            if (datePicked != null) {
+              final String formattedDate =
+                  DateFormat('dd/MM/yyyy').format(datePicked);
+              ref.read(dueDateProvider.notifier).state = formattedDate;
+              return null;
+            }
+          });
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -239,6 +241,7 @@ class NewTaskTimePickerButton extends ConsumerWidget {
             if (timePicked != null) {
               final String formattedTime = timePicked.format(context);
               ref.read(dueTimeProvider.notifier).state = formattedTime;
+              return null;
             }
           });
         },

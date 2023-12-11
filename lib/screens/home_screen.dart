@@ -11,6 +11,7 @@ import 'package:getsh_tdone/providers/todolist_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 import 'package:getsh_tdone/widgets/newtodo_modal.dart';
+import 'package:getsh_tdone/widgets/responsive_layout.dart';
 import 'package:getsh_tdone/widgets/todo_card.dart';
 import 'package:getsh_tdone/widgets/todoerror_card.dart';
 import 'package:getsh_tdone/widgets/todoloading_card.dart';
@@ -37,87 +38,89 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
 
     return SafeArea(
       child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            children: <Widget>[
-              const SizedBox(height: 16.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const Text(
-                        'Get Sh_t Done',
-                        style: TextStyle(
-                          fontSize: 32.0,
-                          fontWeight: FontWeight.bold,
+        body: ResponsiveLayout(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              children: <Widget>[
+                const SizedBox(height: 16.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const Text(
+                          'Get Sh_t Done',
+                          style: TextStyle(
+                            fontSize: 32.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      Text(ref.watch(dateProvider)),
-                    ],
-                  ),
-                ],
-              ),
-              const Divider(
-                thickness: 4.0,
-              ),
-              const SizedBox(height: 8.0),
-              Flexible(
-                child: todoList.when(
-                  data: (List<Todo> todoList) {
-                    return ScrollConfiguration(
-                      behavior: const ScrollBehavior().copyWith(
-                        dragDevices: <PointerDeviceKind>{
-                          PointerDeviceKind.touch,
-                          PointerDeviceKind.mouse,
-                          PointerDeviceKind.trackpad,
-                          PointerDeviceKind.stylus,
-                        },
-                      ),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: todoList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Dismissible(
-                            key: Key(todoList[index].id!),
-                            background: const TodoCardBackgroundDelete(),
-                            secondaryBackground:
-                                const TodoCardBackgroundShare(),
-                            confirmDismiss: (DismissDirection direction) {
-                              if (direction == DismissDirection.startToEnd) {
-                                return showDeleteTaskModal(
-                                  context,
-                                  ref,
-                                  todoList,
-                                  index,
-                                );
-                              } else {
-                                return showShareTaskModal(
-                                  context,
-                                  ref,
-                                );
-                              }
-                            },
-                            child: TodoCard(
-                              todoList[index],
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  error: (Object error, StackTrace stackTrace) {
-                    return TodoErrorCard(error, stackTrace);
-                  },
-                  loading: () {
-                    return const TodoLoadingCard();
-                  },
+                        Text(ref.watch(dateProvider)),
+                      ],
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                const Divider(
+                  thickness: 4.0,
+                ),
+                const SizedBox(height: 8.0),
+                Flexible(
+                  child: todoList.when(
+                    data: (List<Todo> todoList) {
+                      return ScrollConfiguration(
+                        behavior: const ScrollBehavior().copyWith(
+                          dragDevices: <PointerDeviceKind>{
+                            PointerDeviceKind.touch,
+                            PointerDeviceKind.mouse,
+                            PointerDeviceKind.trackpad,
+                            PointerDeviceKind.stylus,
+                          },
+                        ),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: todoList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Dismissible(
+                              key: Key(todoList[index].id!),
+                              background: const TodoCardBackgroundDelete(),
+                              secondaryBackground:
+                                  const TodoCardBackgroundShare(),
+                              confirmDismiss: (DismissDirection direction) {
+                                if (direction == DismissDirection.startToEnd) {
+                                  return showDeleteTaskModal(
+                                    context,
+                                    ref,
+                                    todoList,
+                                    index,
+                                  );
+                                } else {
+                                  return showShareTaskModal(
+                                    context,
+                                    ref,
+                                  );
+                                }
+                              },
+                              child: TodoCard(
+                                todoList[index],
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    error: (Object error, StackTrace stackTrace) {
+                      return TodoErrorCard(error, stackTrace);
+                    },
+                    loading: () {
+                      return const TodoLoadingCard();
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: NavigationBar(

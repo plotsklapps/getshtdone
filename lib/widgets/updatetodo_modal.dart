@@ -130,6 +130,10 @@ class UpdateTodoModalState extends ConsumerState<UpdateTodoModal> {
                   UpdateTaskSaveButton(
                     ref: ref,
                     id: widget.todo.id!,
+                    oldTitle: widget.todo.title,
+                    oldDescription: widget.todo.description,
+                    oldDueDate: widget.todo.dueDate,
+                    oldDueTime: widget.todo.dueTime,
                     titleController: titleController,
                     descriptionController: descriptionController,
                     mounted: mounted,
@@ -319,10 +323,18 @@ class UpdateTaskSaveButton extends StatelessWidget {
     required this.descriptionController,
     required this.mounted,
     super.key,
+    this.oldTitle,
+    this.oldDescription,
+    this.oldDueDate,
+    this.oldDueTime,
   });
 
   final WidgetRef ref;
   final String id;
+  final String? oldTitle;
+  final String? oldDescription;
+  final String? oldDueDate;
+  final String? oldDueTime;
   final TextEditingController titleController;
   final TextEditingController descriptionController;
   final bool mounted;

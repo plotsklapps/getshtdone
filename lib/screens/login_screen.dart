@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getsh_tdone/services/firebase_service.dart';
 import 'package:getsh_tdone/services/navigation.dart';
+import 'package:getsh_tdone/widgets/responsive_layout.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -36,126 +37,128 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Text(
-                'LOGIN',
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              TextField(
-                controller: emailController,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.email),
-                  labelText: 'EMAIL',
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              TextField(
-                controller: passwordController,
-                obscureText: isPasswordObscured,
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.lock),
-                  labelText: 'PASSWORD',
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        isPasswordObscured = !isPasswordObscured;
-                      });
-                    },
-                    icon: isPasswordObscured
-                        ? const Icon(Icons.visibility_off)
-                        : const Icon(Icons.visibility),
+        body: ResponsiveLayout(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Text(
+                  'LOGIN',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-              const SizedBox(height: 16.0),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: OutlinedButton(
+                const SizedBox(height: 8.0),
+                TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.email),
+                    labelText: 'EMAIL',
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                TextField(
+                  controller: passwordController,
+                  obscureText: isPasswordObscured,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.lock),
+                    labelText: 'PASSWORD',
+                    suffixIcon: IconButton(
                       onPressed: () {
-                        Navigation.navigateToSignupScreen(context);
+                        setState(() {
+                          isPasswordObscured = !isPasswordObscured;
+                        });
                       },
-                      child: const Text('SIGN UP'),
+                      icon: isPasswordObscured
+                          ? const Icon(Icons.visibility_off)
+                          : const Icon(Icons.visibility),
                     ),
                   ),
-                  const SizedBox(width: 16.0),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        // Switch bool to true to show loading indicator
-                        if (!isLoggingIn) {
-                          setState(() {
-                            isLoggingIn = true;
-                          });
-                        }
-                        // Log in user. Show snackbar on success or error.
-                        // Switch bool to false to hide loading indicator.
-                        await FirebaseService(ref).logIn(
-                            emailController.text.trim(),
-                            passwordController.text.trim(),
-                            // If anything goes wrong:
-                            (Object error) {
-                          showErrorSnack(context, error);
-                          setState(() {
-                            isLoggingIn = false;
+                ),
+                const SizedBox(height: 16.0),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          Navigation.navigateToSignupScreen(context);
+                        },
+                        child: const Text('SIGN UP'),
+                      ),
+                    ),
+                    const SizedBox(width: 16.0),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          // Switch bool to true to show loading indicator
+                          if (!isLoggingIn) {
+                            setState(() {
+                              isLoggingIn = true;
+                            });
+                          }
+                          // Log in user. Show snackbar on success or error.
+                          // Switch bool to false to hide loading indicator.
+                          await FirebaseService(ref).logIn(
+                              emailController.text.trim(),
+                              passwordController.text.trim(),
+                              // If anything goes wrong:
+                              (Object error) {
+                            showErrorSnack(context, error);
+                            setState(() {
+                              isLoggingIn = false;
+                            });
+                          },
+                              // If everything goes well:
+                              (String success) {
+                            Navigation.navigateToHomeScreen(context);
+                            showSuccessSnack(context, success);
+                            setState(() {
+                              isLoggingIn = false;
+                            });
                           });
                         },
+                        child: isLoggingIn
+                            ? const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0),
+                                child: CircularProgressIndicator(),
+                              )
+                            : const Text(
+                                'LOG IN',
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigation.navigateToPasswordScreen(context);
+                      },
+                      child: const Text('FORGOT PASSWORD'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        // Sneak peek user. Show snackbar on success
+                        // or error.
+                        // Switch bool to false to hide loading indicator.
+                        FirebaseService(ref).sneakPeek(
                             // If everything goes well:
                             (String success) {
                           Navigation.navigateToHomeScreen(context);
                           showSuccessSnack(context, success);
-                          setState(() {
-                            isLoggingIn = false;
-                          });
                         });
                       },
-                      child: isLoggingIn
-                          ? const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8.0),
-                              child: CircularProgressIndicator(),
-                            )
-                          : const Text(
-                              'LOG IN',
-                            ),
+                      child: const Text('SNEAK PEEK'),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      Navigation.navigateToPasswordScreen(context);
-                    },
-                    child: const Text('FORGOT PASSWORD'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // Sneak peek user. Show snackbar on success
-                      // or error.
-                      // Switch bool to false to hide loading indicator.
-                      FirebaseService(ref).sneakPeek(
-                          // If everything goes well:
-                          (String success) {
-                        Navigation.navigateToHomeScreen(context);
-                        showSuccessSnack(context, success);
-                      });
-                    },
-                    child: const Text('SNEAK PEEK'),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

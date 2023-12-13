@@ -39,6 +39,10 @@ class UpdateTodoModalState extends ConsumerState<UpdateTodoModal> {
     titleController = TextEditingController(text: widget.todo.title);
     descriptionController =
         TextEditingController(text: widget.todo.description);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(titleProvider.notifier).state = widget.todo.title;
+      ref.read(descriptionProvider.notifier).state = widget.todo.description!;
+    });
   }
 
   @override

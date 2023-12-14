@@ -125,7 +125,6 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         bottomNavigationBar: NavigationBar(
           indicatorColor: Colors.transparent,
-          selectedIndex: 1,
           onDestinationSelected: (int index) {
             if (index == 0) {
               showModalBottomSheet<Widget>(
@@ -134,15 +133,6 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                 isScrollControlled: true,
                 builder: (BuildContext context) {
                   return const UserSettingsModal();
-                },
-              );
-            } else if (index == 1) {
-              showModalBottomSheet<Widget>(
-                context: context,
-                showDragHandle: true,
-                isScrollControlled: true,
-                builder: (BuildContext context) {
-                  return const NewTodoModal();
                 },
               );
             } else {
@@ -162,26 +152,6 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               label: 'Account',
             ),
-            NavigationDestination(
-              icon: Stack(
-                clipBehavior: Clip.none,
-                children: <Widget>[
-                  Positioned(
-                    top: -18.0,
-                    left: 0.0,
-                    right: 0.0,
-                    child: Icon(
-                      FontAwesomeIcons.circlePlus,
-                      size: 64.0,
-                      color: ref.watch(isDarkModeProvider)
-                          ? flexSchemeDark.primary
-                          : flexSchemeLight.primary,
-                    ),
-                  ),
-                ],
-              ),
-              label: 'New Sh_t Todo',
-            ),
             const NavigationDestination(
               icon: Icon(
                 FontAwesomeIcons.sort,
@@ -191,6 +161,23 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ],
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            showModalBottomSheet<Widget>(
+              context: context,
+              showDragHandle: true,
+              isScrollControlled: true,
+              builder: (BuildContext context) {
+                return const NewTodoModal();
+              },
+            );
+          },
+          child: const Icon(
+            FontAwesomeIcons.plus,
+            size: 32.0,
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }

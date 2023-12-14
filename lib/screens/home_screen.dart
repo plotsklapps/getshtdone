@@ -126,12 +126,11 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
           shape: const CircularNotchedRectangle(),
           child: SizedBox(
             height: 56.0,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  IconButton(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: IconButton(
                     onPressed: () {
                       showModalBottomSheet<Widget>(
                         context: context,
@@ -147,7 +146,9 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                       size: 32.0,
                     ),
                   ),
-                  IconButton(
+                ),
+                Expanded(
+                  child: IconButton(
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -163,8 +164,8 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                       size: 32.0,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

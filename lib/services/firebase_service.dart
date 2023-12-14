@@ -268,20 +268,20 @@ class FirebaseService {
     void Function(String success) onSuccess,
   ) async {
     try {
+      // Get the current user
+      final User? currentUser = ref.read(firebaseProvider).currentUser;
       // Get credentials for reauthentication.
       final AuthCredential credentials =
           EmailAuthProvider.credential(email: email, password: password);
       // Use the credentials to reauthenticate the user.
-      final UserCredential? result = await ref
-          .read(firebaseProvider)
-          .currentUser
-          ?.reauthenticateWithCredential(credentials);
+      final UserCredential result =
+          await currentUser!.reauthenticateWithCredential(credentials);
       // When reauthenticated, delete the user doc from Firestore
       // database.
       await ref
           .read(firestoreProvider)
           .collection('users')
-          .doc(result?.user?.uid)
+          .doc(result.user?.uid)
           .delete();
       // Now we can delete user from Firebase Auth.
       await ref.watch(firebaseProvider).currentUser?.delete();

@@ -123,50 +123,48 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
         bottomNavigationBar: BottomAppBar(
+          height: 64.0,
           shape: const CircularNotchedRectangle(),
-          child: SizedBox(
-            height: 56.0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  child: IconButton(
-                    onPressed: () {
-                      showModalBottomSheet<Widget>(
-                        context: context,
-                        showDragHandle: true,
-                        isScrollControlled: true,
-                        builder: (BuildContext context) {
-                          return const NewTodoModal();
-                        },
-                      );
-                    },
-                    icon: FaIcon(
-                      ref.watch(smileyProvider),
-                      size: 32.0,
-                    ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: IconButton(
+                  onPressed: () {
+                    showModalBottomSheet<Widget>(
+                      context: context,
+                      showDragHandle: true,
+                      isScrollControlled: true,
+                      builder: (BuildContext context) {
+                        return const NewTodoModal();
+                      },
+                    );
+                  },
+                  icon: FaIcon(
+                    ref.watch(smileyProvider),
+                    size: 32.0,
                   ),
                 ),
-                Expanded(
-                  child: IconButton(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Work in progress!',
-                          ),
-                          behavior: SnackBarBehavior.floating,
+              ),
+              Expanded(
+                child: IconButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Work in progress!',
                         ),
-                      );
-                    },
-                    icon: const Icon(
-                      FontAwesomeIcons.sort,
-                      size: 32.0,
-                    ),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  },
+                  icon: const Icon(
+                    FontAwesomeIcons.sort,
+                    size: 32.0,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
         floatingActionButton: FloatingActionButton(

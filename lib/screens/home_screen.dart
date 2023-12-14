@@ -15,7 +15,6 @@ import 'package:getsh_tdone/widgets/responsive_layout.dart';
 import 'package:getsh_tdone/widgets/todo_card.dart';
 import 'package:getsh_tdone/widgets/todoerror_card.dart';
 import 'package:getsh_tdone/widgets/todoloading_card.dart';
-import 'package:getsh_tdone/widgets/usersettings_modal.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -123,43 +122,51 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
         ),
-        bottomNavigationBar: NavigationBar(
-          indicatorColor: Colors.transparent,
-          onDestinationSelected: (int index) {
-            if (index == 0) {
-              showModalBottomSheet<Widget>(
-                context: context,
-                showDragHandle: true,
-                isScrollControlled: true,
-                builder: (BuildContext context) {
-                  return const UserSettingsModal();
-                },
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Work in progress!'),
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
-            }
-          },
-          destinations: <NavigationDestination>[
-            NavigationDestination(
-              icon: Icon(
-                ref.watch(smileyProvider),
-                size: 32.0,
+        bottomNavigationBar: BottomAppBar(
+          shape: const CircularNotchedRectangle(),
+          child: SizedBox(
+            height: 56.0,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  IconButton(
+                    onPressed: () {
+                      showModalBottomSheet<Widget>(
+                        context: context,
+                        showDragHandle: true,
+                        isScrollControlled: true,
+                        builder: (BuildContext context) {
+                          return const NewTodoModal();
+                        },
+                      );
+                    },
+                    icon: FaIcon(
+                      ref.watch(smileyProvider),
+                      size: 32.0,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Work in progress!',
+                          ),
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    },
+                    icon: const Icon(
+                      FontAwesomeIcons.sort,
+                      size: 32.0,
+                    ),
+                  ),
+                ],
               ),
-              label: 'Account',
             ),
-            const NavigationDestination(
-              icon: Icon(
-                FontAwesomeIcons.sort,
-                size: 32.0,
-              ),
-              label: 'Sort',
-            ),
-          ],
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {

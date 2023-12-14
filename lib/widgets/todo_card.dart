@@ -20,12 +20,13 @@ class TodoCard extends ConsumerWidget {
     return GestureDetector(
       onLongPress: () async {
         await showModalBottomSheet<Widget>(
-            context: context,
-            showDragHandle: true,
-            isScrollControlled: true,
-            builder: (BuildContext context) {
-              return UpdateTodoModal(todo);
-            });
+          context: context,
+          showDragHandle: true,
+          isScrollControlled: true,
+          builder: (BuildContext context) {
+            return UpdateTodoModal(todo);
+          },
+        );
       },
       child: Card(
         margin: const EdgeInsets.only(bottom: 12.0),

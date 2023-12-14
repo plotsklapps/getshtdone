@@ -90,7 +90,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     const SizedBox(width: 16.0),
                     Expanded(
-                      child: ElevatedButton(
+                      child: FilledButton(
                         onPressed: () async {
                           // Switch bool to true to show loading indicator
                           if (!isLoggingIn) {

@@ -124,7 +124,7 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
                 Row(
                   children: <Widget>[
                     Expanded(
-                      child: ElevatedButton(
+                      child: FilledButton(
                         onPressed: () async {
                           // Switch bool to true to show loading indicator.
                           if (!isSigningUp) {

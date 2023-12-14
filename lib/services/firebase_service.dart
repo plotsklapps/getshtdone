@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/providers/category_provider.dart';
 import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/description_provider.dart';
@@ -189,6 +190,9 @@ class FirebaseService {
   ) async {
     ref.read(displayNameProvider.notifier).state = 'SNEAK PEEKER';
     ref.read(isSneakPeekerProvider.notifier).state = true;
+    ref.read(photoURLProvider.notifier).state = 'facegrintonguesquintregular';
+    ref.read(smileyProvider.notifier).state =
+        FontAwesomeIcons.solidFaceGrinTongueSquint;
     Logs.sneakPeekComplete();
     onSuccess('Enjoy your sneak peek. Your data will not be stored.');
   }

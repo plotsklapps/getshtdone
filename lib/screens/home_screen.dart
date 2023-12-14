@@ -11,6 +11,7 @@ import 'package:getsh_tdone/providers/todolist_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 import 'package:getsh_tdone/widgets/newtodo_modal.dart';
+import 'package:getsh_tdone/widgets/usersettings_modal.dart';
 import 'package:getsh_tdone/widgets/responsive_layout.dart';
 import 'package:getsh_tdone/widgets/todo_card.dart';
 import 'package:getsh_tdone/widgets/todoerror_card.dart';
@@ -136,7 +137,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                       showDragHandle: true,
                       isScrollControlled: true,
                       builder: (BuildContext context) {
-                        return const NewTodoModal();
+                        return const UserSettingsModal();
                       },
                     );
                   },

@@ -11,11 +11,11 @@ import 'package:getsh_tdone/providers/todolist_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 import 'package:getsh_tdone/widgets/newtodo_modal.dart';
-import 'package:getsh_tdone/widgets/usersettings_modal.dart';
 import 'package:getsh_tdone/widgets/responsive_layout.dart';
 import 'package:getsh_tdone/widgets/todo_card.dart';
 import 'package:getsh_tdone/widgets/todoerror_card.dart';
 import 'package:getsh_tdone/widgets/todoloading_card.dart';
+import 'package:getsh_tdone/widgets/usersettings_modal.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/services/firebase_service.dart';
 import 'package:getsh_tdone/services/navigation.dart';
+import 'package:getsh_tdone/theme/theme.dart';
 import 'package:getsh_tdone/widgets/responsive_layout.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -81,7 +83,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                 Row(
                   children: <Widget>[
                     Expanded(
-                      child: OutlinedButton(
+                      child: ElevatedButton(
                         onPressed: () {
                           Navigation.navigateToSignupScreen(context);
                         },
@@ -120,9 +122,16 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                           });
                         },
                         child: isLoggingIn
-                            ? const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
-                                child: CircularProgressIndicator(),
+                            ? Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    ref.watch(isDarkModeProvider)
+                                        ? flexSchemeDark.onPrimary
+                                        : flexSchemeLight.onPrimary,
+                                  ),
+                                ),
                               )
                             : const Text(
                                 'LOG IN',

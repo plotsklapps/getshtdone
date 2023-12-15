@@ -8,6 +8,11 @@ final StateProvider<bool> isDarkModeProvider = StateProvider<bool>((
   return false;
 });
 
+final StateProvider<bool> isGreenSchemeProvider =
+    StateProvider<bool>((StateProviderRef<bool> ref) {
+  return true;
+});
+
 final StateProvider<ThemeMode> themeModeProvider = StateProvider<ThemeMode>((
   StateProviderRef<ThemeMode> ref,
 ) {
@@ -25,9 +30,4 @@ final StateProvider<FlexScheme> flexSchemeProvider =
   } else {
     return FlexScheme.espresso;
   }
-});
-
-final StateProvider<bool> isGreenSchemeProvider =
-    StateProvider<bool>((StateProviderRef<bool> ref) {
-  return true;
 });

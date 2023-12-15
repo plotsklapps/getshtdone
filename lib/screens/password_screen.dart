@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/services/firebase_service.dart';
 import 'package:getsh_tdone/services/navigation.dart';
+import 'package:getsh_tdone/theme/theme.dart';
 import 'package:getsh_tdone/widgets/responsive_layout.dart';
 
 class PasswordScreen extends ConsumerStatefulWidget {
@@ -87,9 +89,14 @@ class PasswordScreenState extends ConsumerState<PasswordScreen> {
                           }
                         },
                         child: isResetting
-                            ? const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
-                                child: CircularProgressIndicator(),
+                            ? Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      ref.watch(isDarkModeProvider)
+                                          ? flexSchemeDark.onPrimary
+                                          : flexSchemeLight.onPrimary,),
+                                ),
                               )
                             : const Text(
                                 'SEND RESET EMAIL',

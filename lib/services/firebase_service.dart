@@ -75,7 +75,7 @@ class FirebaseService {
         'photoURL': ref.watch(photoURLProvider),
         'email': ref.watch(emailProvider),
         'darkMode': ref.watch(isDarkModeProvider),
-        'isGreenScheme': ref.watch(isGreenSchemeProvider),
+        'greenScheme': ref.watch(isGreenSchemeProvider),
         'creationDate': ref.watch(creationDateProvider),
         'lastSignInDate': ref.watch(lastSignInDateProvider),
       });
@@ -155,7 +155,7 @@ class FirebaseService {
               ref.read(isDarkModeProvider.notifier).state =
                   documentSnapshot['darkMode'] as bool;
               ref.read(isGreenSchemeProvider.notifier).state =
-                  documentSnapshot['isGreenScheme'] as bool;
+                  documentSnapshot['greenScheme'] as bool;
               ref.read(creationDateProvider.notifier).state =
                   documentSnapshot['creationDate'] as String;
               ref.read(lastSignInDateProvider.notifier).state =

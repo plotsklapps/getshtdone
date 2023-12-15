@@ -124,45 +124,73 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
         bottomNavigationBar: BottomAppBar(
-          height: 64.0,
           shape: const CircularNotchedRectangle(),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Expanded(
-                child: IconButton(
-                  onPressed: () {
-                    showModalBottomSheet<Widget>(
-                      context: context,
-                      showDragHandle: true,
-                      isScrollControlled: true,
-                      builder: (BuildContext context) {
-                        return const UserSettingsModal();
-                      },
-                    );
-                  },
-                  icon: FaIcon(
-                    ref.watch(smileyProvider),
-                    size: 32.0,
-                  ),
+              IconButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Work in progress!',
+                      ),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                },
+                icon: const FaIcon(
+                  FontAwesomeIcons.starOfLife,
+                  size: 32.0,
                 ),
               ),
-              Expanded(
-                child: IconButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Work in progress!',
-                        ),
-                        behavior: SnackBarBehavior.floating,
+              IconButton(
+                onPressed: () {
+                  showModalBottomSheet<Widget>(
+                    context: context,
+                    showDragHandle: true,
+                    isScrollControlled: true,
+                    builder: (BuildContext context) {
+                      return const UserSettingsModal();
+                    },
+                  );
+                },
+                icon: FaIcon(
+                  ref.watch(smileyProvider),
+                  size: 32.0,
+                ),
+              ),
+              const SizedBox(width: 32.0),
+              IconButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Work in progress!',
                       ),
-                    );
-                  },
-                  icon: const Icon(
-                    FontAwesomeIcons.sort,
-                    size: 32.0,
-                  ),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                },
+                icon: const FaIcon(
+                  FontAwesomeIcons.hand,
+                  size: 32.0,
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Work in progress!',
+                      ),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                },
+                icon: const Icon(
+                  FontAwesomeIcons.sort,
+                  size: 32.0,
                 ),
               ),
             ],

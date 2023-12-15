@@ -66,20 +66,27 @@ class SplashScreenState extends ConsumerState<SplashScreen> {
     return SafeArea(
       child: Scaffold(
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Stack(
             children: <Widget>[
-              const Text(
-                'GET SH_T DONE',
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
+              Align(
+                child: SizedBox(
+                  height: 100.0,
+                  width: 100.0,
+                  child: CircularProgressIndicator(
+                    value: progressValue,
+                    strokeWidth: 10.0,
+                  ),
                 ),
               ),
-              const SizedBox(height: 48.0),
-              CircularProgressIndicator(
-                value: progressValue,
-                strokeWidth: 10.0,
+              Align(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16.0),
+                  child: Image.asset(
+                    'assets/images/gsdIcon.png',
+                    height: 72.0,
+                    width: 72.0,
+                  ),
+                ),
               ),
             ],
           ),

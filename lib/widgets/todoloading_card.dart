@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:getsh_tdone/providers/date_provider.dart';
-import 'package:getsh_tdone/providers/time_provider.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 
 class TodoLoadingCard extends ConsumerWidget {
@@ -31,25 +29,31 @@ class TodoLoadingCard extends ConsumerWidget {
               color: flexSchemeDark(ref).tertiary,
             ),
           ),
-          Expanded(
+          const Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              padding: EdgeInsets.symmetric(horizontal: 24.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const ListTile(
+                  ListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Text('Loading...'),
                     subtitle: Text('Please wait...'),
                     trailing: CircularProgressIndicator(),
                   ),
-                  const Divider(thickness: 4.0),
+                  Divider(thickness: 4.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      Text(ref.watch(dueDateProvider)),
-                      const SizedBox(width: 8.0),
-                      Text(ref.watch(dueTimeProvider)),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          Text('Created: LOADING...'),
+                          Text(
+                            'Due: LOADING...',
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ],

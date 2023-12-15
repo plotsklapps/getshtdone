@@ -10,12 +10,28 @@ final AutoDisposeStateProvider<String> dateProvider =
   return formattedDate;
 });
 
+// Provider for the date of creation of the task. Formats it to a String and
+// auto disposes it.
+final AutoDisposeStateProvider<String> createdDateProvider =
+    StateProvider.autoDispose<String>((
+  AutoDisposeStateProviderRef<String> ref,
+) {
+  final DateTime creationDate = DateTime.now();
+  final String formattedDate = DateFormat('dd/MM/yyyy').format(creationDate);
+  return formattedDate;
+});
+
 // Provider for the due date. Formats it to a String and auto disposes it.
 final AutoDisposeStateProvider<String> dueDateProvider =
     StateProvider.autoDispose<String>((
   AutoDisposeStateProviderRef<String> ref,
 ) {
-  return 'Add due date';
+  final String createdDate = ref.watch(createdDateProvider);
+  final DateFormat format = DateFormat('dd/MM/yyyy');
+  final DateTime dueDate = format.parse(createdDate);
+  final DateTime dueDatePlusWeek = dueDate.add(const Duration(days: 7));
+  final String formattedDate = format.format(dueDatePlusWeek);
+  return formattedDate;
 });
 
 // Provider for the date of creation of the account. First, it fetches

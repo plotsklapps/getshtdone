@@ -8,7 +8,6 @@ import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/description_provider.dart';
 import 'package:getsh_tdone/providers/iscompleted_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
-import 'package:getsh_tdone/providers/time_provider.dart';
 import 'package:getsh_tdone/providers/title_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/services/logger.dart';
@@ -120,13 +119,7 @@ class UpdateTodoModalState extends ConsumerState<UpdateTodoModal> {
                 ],
               ),
               const SizedBox(height: 12.0),
-              const Row(
-                children: <Widget>[
-                  UpdateTaskDatePickerButton(),
-                  SizedBox(width: 16.0),
-                  UpdateTaskTimePickerButton(),
-                ],
-              ),
+              const UpdateTaskDatePickerButton(),
               Row(
                 children: <Widget>[
                   const UpdateTaskCancelButton(),
@@ -136,8 +129,8 @@ class UpdateTodoModalState extends ConsumerState<UpdateTodoModal> {
                     id: widget.todo.id!,
                     oldTitle: widget.todo.title,
                     oldDescription: widget.todo.description,
+                    oldCreatedDate: widget.todo.createdDate,
                     oldDueDate: widget.todo.dueDate,
-                    oldDueTime: widget.todo.dueTime,
                     titleController: titleController,
                     descriptionController: descriptionController,
                     mounted: mounted,
@@ -260,40 +253,6 @@ class UpdateTaskDatePickerButton extends ConsumerWidget {
   }
 }
 
-class UpdateTaskTimePickerButton extends ConsumerWidget {
-  const UpdateTaskTimePickerButton({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Expanded(
-      child: OutlinedButton(
-        onPressed: () async {
-          await showTimePicker(
-            context: context,
-            initialTime: TimeOfDay.now(),
-          ).then((TimeOfDay? timePicked) {
-            if (timePicked != null) {
-              final String formattedTime = timePicked.format(context);
-              ref.read(dueTimeProvider.notifier).state = formattedTime;
-              return null;
-            }
-          });
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Icon(Icons.alarm_rounded),
-            const SizedBox(width: 8.0),
-            Text(ref.watch(dueTimeProvider)),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class UpdateTaskCancelButton extends StatelessWidget {
   const UpdateTaskCancelButton({
     super.key,
@@ -329,16 +288,16 @@ class UpdateTaskSaveButton extends StatelessWidget {
     super.key,
     this.oldTitle,
     this.oldDescription,
+    this.oldCreatedDate,
     this.oldDueDate,
-    this.oldDueTime,
   });
 
   final WidgetRef ref;
   final String id;
   final String? oldTitle;
   final String? oldDescription;
+  final String? oldCreatedDate;
   final String? oldDueDate;
-  final String? oldDueTime;
   final TextEditingController titleController;
   final TextEditingController descriptionController;
   final bool mounted;
@@ -355,8 +314,8 @@ class UpdateTaskSaveButton extends StatelessWidget {
                 title: ref.watch(titleProvider),
                 description: ref.watch(descriptionProvider),
                 category: ref.watch(categoryStringProvider),
+                createdDate: ref.watch(createdDateProvider),
                 dueDate: ref.watch(dueDateProvider),
-                dueTime: ref.watch(dueTimeProvider),
                 isCompleted: false,
               ),
             );
@@ -366,8 +325,8 @@ class UpdateTaskSaveButton extends StatelessWidget {
               ..invalidate(titleProvider)
               ..invalidate(descriptionProvider)
               ..invalidate(categoryProvider)
+              ..invalidate(createdDateProvider)
               ..invalidate(dueDateProvider)
-              ..invalidate(dueTimeProvider)
               ..invalidate(isCompletedProvider);
             Logs.updateTodoComplete();
             if (mounted) {

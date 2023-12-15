@@ -9,8 +9,8 @@ class Todo {
   final String title;
   String? description;
   String? category;
+  String? createdDate;
   String? dueDate;
-  String? dueTime;
   bool isCompleted = false;
 
   // Constructor for the task class.
@@ -20,8 +20,8 @@ class Todo {
     required this.isCompleted,
     this.description,
     this.category,
+    this.createdDate,
     this.dueDate,
-    this.dueTime,
     String? id,
   }) : id = id ?? uuid.v4();
 
@@ -31,8 +31,8 @@ class Todo {
     String? title,
     String? description,
     String? category,
+    String? createdDate,
     String? dueDate,
-    String? dueTime,
     bool? isCompleted,
   }) {
     return Todo(
@@ -40,8 +40,8 @@ class Todo {
       title: title ?? this.title,
       description: description ?? this.description,
       category: category ?? this.category,
+      createdDate: createdDate ?? this.createdDate,
       dueDate: dueDate ?? this.dueDate,
-      dueTime: dueTime ?? this.dueTime,
       isCompleted: isCompleted ?? this.isCompleted,
     );
   }
@@ -54,8 +54,8 @@ class Todo {
       'title': title,
       'description': description,
       'category': category,
+      'createdDate': createdDate,
       'dueDate': dueDate,
-      'dueTime': dueTime,
       'isCompleted': isCompleted,
     };
   }
@@ -68,8 +68,8 @@ class Todo {
       title: doc['title'] as String,
       description: doc['description'] as String?,
       category: doc['category'] as String?,
+      createdDate: doc['createdDate'] as String?,
       dueDate: doc['dueDate'] as String?,
-      dueTime: doc['dueTime'] as String?,
       isCompleted: doc['isCompleted'] as bool? ?? false,
     );
   }

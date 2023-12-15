@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:getsh_tdone/providers/date_provider.dart';
-import 'package:getsh_tdone/providers/time_provider.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 import 'package:logger/logger.dart';
 
@@ -62,12 +60,18 @@ class TodoErrorCard extends ConsumerWidget {
                     ),
                   ),
                   const Divider(thickness: 4.0),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      Text(ref.watch(dueDateProvider)),
-                      const SizedBox(width: 8.0),
-                      Text(ref.watch(dueTimeProvider)),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          Text('Created: ERROR'),
+                          Text(
+                            'Due: ERROR',
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ],

@@ -14,7 +14,6 @@ import 'package:getsh_tdone/providers/photourl_provider.dart';
 import 'package:getsh_tdone/providers/smiley_provider.dart';
 import 'package:getsh_tdone/providers/sneakpeek_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
-import 'package:getsh_tdone/providers/time_provider.dart';
 import 'package:getsh_tdone/providers/title_provider.dart';
 import 'package:getsh_tdone/providers/todolist_provider.dart';
 import 'package:getsh_tdone/services/logger.dart';
@@ -91,11 +90,11 @@ class FirebaseService {
         'id': '0',
         'title': 'My first todo',
         'description':
-            'Get your sh_t done. Swipe right to delete, swipe left to share or '
-                'long press to edit.',
+            'Get your sh_t done.\nSwipe right to delete, swipe left to share '
+                'or long press to edit.',
         'category': 'Personal',
-        'dueDate': '01-01-2025',
-        'dueTime': '12:00 PM',
+        'createdDate': ref.watch(createdDateProvider),
+        'dueDate': ref.watch(dueDateProvider),
         'isCompleted': false,
       });
 
@@ -431,8 +430,8 @@ class FirebaseService {
       ..invalidate(firestoreProvider)
       ..invalidate(categoryProvider)
       ..invalidate(dateProvider)
+      ..invalidate(createdDateProvider)
       ..invalidate(dueDateProvider)
-      ..invalidate(dueTimeProvider)
       ..invalidate(creationDateProvider)
       ..invalidate(lastSignInDateProvider)
       ..invalidate(displayNameProvider)
@@ -444,6 +443,7 @@ class FirebaseService {
       ..invalidate(descriptionProvider)
       ..invalidate(isCompletedProvider)
       ..invalidate(isDarkModeProvider)
+      ..invalidate(isGreenSchemeProvider)
       ..invalidate(themeModeProvider);
   }
 }

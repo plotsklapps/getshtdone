@@ -141,7 +141,6 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                 },
                 icon: const FaIcon(
                   FontAwesomeIcons.starOfLife,
-                  size: 32.0,
                 ),
               ),
               IconButton(
@@ -157,7 +156,6 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                 },
                 icon: FaIcon(
                   ref.watch(smileyProvider),
-                  size: 32.0,
                 ),
               ),
               const SizedBox(width: 32.0),
@@ -174,7 +172,6 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                 },
                 icon: const FaIcon(
                   FontAwesomeIcons.hand,
-                  size: 32.0,
                 ),
               ),
               IconButton(
@@ -190,7 +187,6 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                 },
                 icon: const Icon(
                   FontAwesomeIcons.sort,
-                  size: 32.0,
                 ),
               ),
             ],

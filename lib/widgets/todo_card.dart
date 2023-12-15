@@ -29,7 +29,7 @@ class TodoCard extends ConsumerWidget {
         );
       },
       child: Card(
-        margin: const EdgeInsets.only(bottom: 12.0),
+        margin: const EdgeInsets.only(bottom: 16.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
           side: BorderSide(
@@ -38,100 +38,107 @@ class TodoCard extends ConsumerWidget {
                 : flexSchemeLight(ref).primary,
           ),
         ),
-        child: SizedBox(
-          height: 140.0,
+        child: IntrinsicHeight(
           child: Row(
             children: <Widget>[
-              Container(
-                width: 20.0,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(12.0),
-                    bottomLeft: Radius.circular(12.0),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(12.0),
+                      bottomLeft: Radius.circular(12.0),
+                    ),
+                    color: todo.category == 'Personal'
+                        ? isDarkMode
+                            ? flexSchemeDark(ref).primary
+                            : flexSchemeLight(ref).primary
+                        : todo.category == 'Work'
+                            ? isDarkMode
+                                ? flexSchemeDark(ref).secondary
+                                : flexSchemeLight(ref).secondary
+                            : todo.category == 'Study'
+                                ? isDarkMode
+                                    ? flexSchemeDark(ref).tertiary
+                                    : flexSchemeLight(ref).tertiary
+                                : flexSchemeLight(ref).primary,
                   ),
-                  color: todo.category == 'Personal'
-                      ? isDarkMode
-                          ? flexSchemeDark(ref).primary
-                          : flexSchemeLight(ref).primary
-                      : todo.category == 'Work'
-                          ? isDarkMode
-                              ? flexSchemeDark(ref).secondary
-                              : flexSchemeLight(ref).secondary
-                          : todo.category == 'Study'
-                              ? isDarkMode
-                                  ? flexSchemeDark(ref).tertiary
-                                  : flexSchemeLight(ref).tertiary
-                              : flexSchemeLight(ref).primary,
                 ),
               ),
               Expanded(
+                flex: 15,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      ListTile(
-                        onTap: () {
-                          ref
-                              .read(todoListProvider.notifier)
-                              .toggleCompleted(todo.id!);
-                        },
-                        contentPadding: EdgeInsets.zero,
-                        title: Text(
-                          todo.title,
-                          maxLines: 1,
-                          overflow: TextOverflow.fade,
-                          style: TextStyle(
-                            fontSize: 22.0,
-                            color: todo.isCompleted
-                                ? ref.watch(isDarkModeProvider)
-                                    ? flexSchemeDark(ref).outline
-                                    : flexSchemeLight(ref).outline
-                                : null,
-                            decoration: todo.isCompleted
-                                ? TextDecoration.lineThrough
-                                : null,
+                      Flexible(
+                        child: ListTile(
+                          onTap: () {
+                            ref
+                                .read(todoListProvider.notifier)
+                                .toggleCompleted(todo.id!);
+                          },
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(
+                            todo.title,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 22.0,
+                              color: todo.isCompleted
+                                  ? ref.watch(isDarkModeProvider)
+                                      ? flexSchemeDark(ref).outline
+                                      : flexSchemeLight(ref).outline
+                                  : null,
+                              decoration: todo.isCompleted
+                                  ? TextDecoration.lineThrough
+                                  : null,
+                            ),
                           ),
-                        ),
-                        subtitle: Text(
-                          todo.description ?? 'No Description',
-                          maxLines: 3,
-                          overflow: TextOverflow.fade,
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            color: todo.isCompleted
-                                ? ref.watch(isDarkModeProvider)
-                                    ? flexSchemeDark(ref).outline
-                                    : flexSchemeLight(ref).outline
-                                : null,
-                            decoration: todo.isCompleted
-                                ? TextDecoration.lineThrough
-                                : null,
+                          subtitle: Text(
+                            todo.description ?? 'No Description',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: todo.isCompleted
+                                  ? ref.watch(isDarkModeProvider)
+                                      ? flexSchemeDark(ref).outline
+                                      : flexSchemeLight(ref).outline
+                                  : null,
+                              decoration: todo.isCompleted
+                                  ? TextDecoration.lineThrough
+                                  : null,
+                            ),
                           ),
+                          trailing: todo.isCompleted
+                              ? FaIcon(
+                                  FontAwesomeIcons.circleCheck,
+                                  color: ref.watch(isDarkModeProvider)
+                                      ? flexSchemeDark(ref).primary
+                                      : flexSchemeLight(ref).primary,
+                                )
+                              : const FaIcon(FontAwesomeIcons.circle),
                         ),
-                        trailing: todo.isCompleted
-                            ? FaIcon(
-                                FontAwesomeIcons.circleCheck,
-                                color: ref.watch(isDarkModeProvider)
-                                    ? flexSchemeDark(ref).primary
-                                    : flexSchemeLight(ref).primary,
-                              )
-                            : const FaIcon(FontAwesomeIcons.circle),
                       ),
-                      const Divider(thickness: 4.0),
+                      const SizedBox(height: 8.0),
+                      const Divider(thickness: 2.0),
+                      const SizedBox(height: 4.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(todo.category ?? 'No Category'),
-                          Row(
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: <Widget>[
-                              Text(todo.dueDate ?? 'No Due Date'),
-                              const SizedBox(width: 8.0),
-                              Text(todo.dueTime ?? 'No Due Time'),
+                              Text('Created: ${todo.createdDate!}'),
+                              Text(
+                                'Due: ${todo.dueDate!}',
+                              ),
                             ],
                           ),
                         ],
                       ),
+                      const SizedBox(height: 16.0),
                     ],
                   ),
                 ),

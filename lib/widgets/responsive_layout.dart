@@ -13,7 +13,7 @@ class ResponsiveLayout extends StatelessWidget {
           child: ConstrainedBox(
             constraints: BoxConstraints(
               maxWidth:
-                  constraints.maxWidth > 800.0 ? 800.0 : constraints.maxWidth,
+                  constraints.maxWidth > 720.0 ? 720.0 : constraints.maxWidth,
             ),
             child: child,
           ),

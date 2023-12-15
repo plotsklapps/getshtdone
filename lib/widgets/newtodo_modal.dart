@@ -7,10 +7,12 @@ import 'package:getsh_tdone/providers/category_provider.dart';
 import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/description_provider.dart';
 import 'package:getsh_tdone/providers/iscompleted_provider.dart';
+import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/providers/time_provider.dart';
 import 'package:getsh_tdone/providers/title_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/services/logger.dart';
+import 'package:getsh_tdone/theme/theme.dart';
 import 'package:intl/intl.dart';
 
 class NewTodoModal extends ConsumerStatefulWidget {
@@ -149,6 +151,7 @@ class NewTaskCategoryChoiceSegmentedButtonState
     extends ConsumerState<NewTaskCategoryChoiceSegmentedButton> {
   @override
   Widget build(BuildContext context) {
+    Color selectedColor = flexSchemeLight(ref).primary;
     return Expanded(
       child: SegmentedButton<Categories>(
         selected: ref.watch(categoryProvider),
@@ -167,6 +170,33 @@ class NewTaskCategoryChoiceSegmentedButtonState
                 .updateCategory(Categories.study, ref);
           }
         },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              if (states.contains(MaterialState.selected)) {
+                if (ref.watch(categoryProvider).contains(Categories.personal)) {
+                  selectedColor = ref.watch(isDarkModeProvider)
+                      ? flexSchemeDark(ref).primary
+                      : flexSchemeLight(ref).primary;
+                } else if (ref
+                    .watch(categoryProvider)
+                    .contains(Categories.work)) {
+                  selectedColor = ref.watch(isDarkModeProvider)
+                      ? flexSchemeDark(ref).secondary
+                      : flexSchemeLight(ref).secondary;
+                } else if (ref
+                    .watch(categoryProvider)
+                    .contains(Categories.study)) {
+                  selectedColor = ref.watch(isDarkModeProvider)
+                      ? flexSchemeDark(ref).tertiary
+                      : flexSchemeLight(ref).tertiary;
+                }
+                return selectedColor;
+              }
+              return Colors.transparent;
+            },
+          ),
+        ),
         emptySelectionAllowed: true,
         segments: const <ButtonSegment<Categories>>[
           ButtonSegment<Categories>(

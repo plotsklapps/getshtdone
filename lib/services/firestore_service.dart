@@ -8,6 +8,7 @@ import 'package:logger/logger.dart';
 
 class FirestoreService {
   FirestoreService(this.ref);
+
   final WidgetRef ref;
 
   Future<void> addTodo(Todo newTodo) async {

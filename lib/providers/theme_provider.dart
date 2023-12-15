@@ -1,3 +1,4 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,4 +16,18 @@ final StateProvider<ThemeMode> themeModeProvider = StateProvider<ThemeMode>((
   } else {
     return ThemeMode.light;
   }
+});
+
+final StateProvider<FlexScheme> flexSchemeProvider =
+    StateProvider<FlexScheme>((StateProviderRef<FlexScheme> ref) {
+  if (ref.watch(isGreenSchemeProvider)) {
+    return FlexScheme.money;
+  } else {
+    return FlexScheme.espresso;
+  }
+});
+
+final StateProvider<bool> isGreenSchemeProvider =
+    StateProvider<bool>((StateProviderRef<bool> ref) {
+  return true;
 });

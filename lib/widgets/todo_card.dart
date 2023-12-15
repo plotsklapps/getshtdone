@@ -59,8 +59,8 @@ class TodoCard extends ConsumerWidget {
                               : flexSchemeLight.secondary
                           : todo.category == 'Study'
                               ? isDarkMode
-                                  ? flexSchemeDark.onErrorContainer
-                                  : flexSchemeLight.onErrorContainer
+                                  ? flexSchemeDark.tertiary
+                                  : flexSchemeLight.tertiary
                               : flexSchemeLight.primary,
                 ),
               ),

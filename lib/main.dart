@@ -20,7 +20,7 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Get Sh_t Done',
-      theme: ref.watch(isDarkModeProvider) ? themeDark : themeLight,
+      theme: ref.watch(isDarkModeProvider) ? themeDark(ref) : themeLight(ref),
       themeMode: ref.watch(themeModeProvider),
       home: const SplashScreen(),
     );

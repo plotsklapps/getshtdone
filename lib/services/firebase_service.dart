@@ -75,6 +75,7 @@ class FirebaseService {
         'photoURL': ref.watch(photoURLProvider),
         'email': ref.watch(emailProvider),
         'darkMode': ref.watch(isDarkModeProvider),
+        'isGreenScheme': ref.watch(isGreenSchemeProvider),
         'creationDate': ref.watch(creationDateProvider),
         'lastSignInDate': ref.watch(lastSignInDateProvider),
       });
@@ -153,6 +154,8 @@ class FirebaseService {
                   documentSnapshot['photoURL'] as String;
               ref.read(isDarkModeProvider.notifier).state =
                   documentSnapshot['darkMode'] as bool;
+              ref.read(isGreenSchemeProvider.notifier).state =
+                  documentSnapshot['isGreenScheme'] as bool;
               ref.read(creationDateProvider.notifier).state =
                   documentSnapshot['creationDate'] as String;
               ref.read(lastSignInDateProvider.notifier).state =
@@ -387,6 +390,34 @@ class FirebaseService {
     } catch (error) {
       // If anything goes wrong:
       Logs.themeModeChangeFailed();
+      onError(error);
+      rethrow;
+    }
+  }
+
+  Future<void> updateThemeColor(
+    void Function(Object error) onError,
+    void Function(String success) onSuccess,
+  ) async {
+    try {
+      final bool updatedFlexScheme = ref.watch(isGreenSchemeProvider);
+      final User? currentUser = ref.read(firebaseProvider).currentUser;
+
+      await ref
+          .read(firestoreProvider)
+          .collection('users')
+          .doc(currentUser!.uid)
+          .update(
+        <String, dynamic>{
+          'isGreenScheme': updatedFlexScheme,
+        },
+      );
+      // If all goes well:
+      Logs.themeColorChangeComplete();
+      onSuccess('Successfully updated theme color.');
+    } catch (error) {
+      // If anything goes wrong:
+      Logs.themeColorChangeFailed();
       onError(error);
       rethrow;
     }

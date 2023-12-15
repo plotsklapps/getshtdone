@@ -85,6 +85,27 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
                 : const FaIcon(FontAwesomeIcons.sun),
           ),
 
+          // Change themecolor ListTile.
+          ListTile(
+            onTap: () {
+              ref.read(isGreenSchemeProvider.notifier).state =
+                  !ref.watch(isGreenSchemeProvider);
+              FirebaseService(ref).updateThemeColor((Object error) {
+                // If anything goes wrong:
+                showErrorSnack(context, error);
+              }, (String success) {
+                // If all goes well: Do nothing.
+              });
+            },
+            title: ref.watch(isGreenSchemeProvider)
+                ? const Text('Green Money')
+                : const Text('Espresso'),
+            subtitle: const Text('Change the app colors'),
+            trailing: ref.watch(isGreenSchemeProvider)
+                ? const FaIcon(FontAwesomeIcons.moneyBills)
+                : const FaIcon(FontAwesomeIcons.mugHot),
+          ),
+
           // Sign out listtile.
           ListTile(
             onTap: () async {

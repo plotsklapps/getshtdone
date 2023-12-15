@@ -77,6 +77,14 @@ class Logs {
     Logger().w('Theme mode change failed');
   }
 
+  static void themeColorChangeComplete() {
+    Logger().i('Theme color changed');
+  }
+
+  static void themeColorChangeFailed() {
+    Logger().w('Theme color change failed');
+  }
+
   static void addTodoComplete() {
     Logger().i('Todo is added to Firestore');
   }

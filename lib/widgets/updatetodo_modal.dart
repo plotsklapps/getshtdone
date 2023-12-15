@@ -383,8 +383,8 @@ class UpdateTaskSaveButton extends StatelessWidget {
                   ),
                   behavior: SnackBarBehavior.floating,
                   backgroundColor: ref.watch(isDarkModeProvider)
-                      ? flexSchemeDark.error
-                      : flexSchemeLight.error,
+                      ? flexSchemeDark(ref).error
+                      : flexSchemeLight(ref).error,
                 ),
               );
             }

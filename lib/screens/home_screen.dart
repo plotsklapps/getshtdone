@@ -341,8 +341,8 @@ This feature is a work in progress...''',
                       backgroundColor: ref.watch(
                         isDarkModeProvider,
                       )
-                          ? flexSchemeDark.error
-                          : flexSchemeLight.error,
+                          ? flexSchemeDark(ref).error
+                          : flexSchemeLight(ref).error,
                     ),
                     child: Text(
                       'DELETE',
@@ -350,8 +350,8 @@ This feature is a work in progress...''',
                         color: ref.watch(
                           isDarkModeProvider,
                         )
-                            ? flexSchemeDark.onError
-                            : flexSchemeLight.onError,
+                            ? flexSchemeDark(ref).onError
+                            : flexSchemeLight(ref).onError,
                       ),
                     ),
                   ),
@@ -378,8 +378,8 @@ class TodoCardBackgroundShare extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12.0),
         side: BorderSide(
           color: ref.watch(isDarkModeProvider)
-              ? flexSchemeDark.primary
-              : flexSchemeLight.primary,
+              ? flexSchemeDark(ref).primary
+              : flexSchemeLight(ref).primary,
           width: 4.0,
         ),
       ),
@@ -400,8 +400,8 @@ class TodoCardBackgroundShare extends ConsumerWidget {
               FaIcon(
                 FontAwesomeIcons.share,
                 color: ref.watch(isDarkModeProvider)
-                    ? flexSchemeDark.primary
-                    : flexSchemeLight.primary,
+                    ? flexSchemeDark(ref).primary
+                    : flexSchemeLight(ref).primary,
               ),
             ],
           ),
@@ -424,8 +424,8 @@ class TodoCardBackgroundDelete extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12.0),
         side: BorderSide(
           color: ref.watch(isDarkModeProvider)
-              ? flexSchemeDark.error
-              : flexSchemeLight.error,
+              ? flexSchemeDark(ref).error
+              : flexSchemeLight(ref).error,
           width: 4.0,
         ),
       ),
@@ -445,8 +445,8 @@ class TodoCardBackgroundDelete extends ConsumerWidget {
               FaIcon(
                 FontAwesomeIcons.trash,
                 color: ref.watch(isDarkModeProvider)
-                    ? flexSchemeDark.error
-                    : flexSchemeLight.error,
+                    ? flexSchemeDark(ref).error
+                    : flexSchemeLight(ref).error,
               ),
             ],
           ),

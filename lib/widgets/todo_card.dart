@@ -34,8 +34,8 @@ class TodoCard extends ConsumerWidget {
           borderRadius: BorderRadius.circular(12.0),
           side: BorderSide(
             color: ref.watch(isDarkModeProvider)
-                ? flexSchemeDark.primary
-                : flexSchemeLight.primary,
+                ? flexSchemeDark(ref).primary
+                : flexSchemeLight(ref).primary,
           ),
         ),
         child: SizedBox(
@@ -51,17 +51,17 @@ class TodoCard extends ConsumerWidget {
                   ),
                   color: todo.category == 'Personal'
                       ? isDarkMode
-                          ? flexSchemeDark.primary
-                          : flexSchemeLight.primary
+                          ? flexSchemeDark(ref).primary
+                          : flexSchemeLight(ref).primary
                       : todo.category == 'Work'
                           ? isDarkMode
-                              ? flexSchemeDark.secondary
-                              : flexSchemeLight.secondary
+                              ? flexSchemeDark(ref).secondary
+                              : flexSchemeLight(ref).secondary
                           : todo.category == 'Study'
                               ? isDarkMode
-                                  ? flexSchemeDark.tertiary
-                                  : flexSchemeLight.tertiary
-                              : flexSchemeLight.primary,
+                                  ? flexSchemeDark(ref).tertiary
+                                  : flexSchemeLight(ref).tertiary
+                              : flexSchemeLight(ref).primary,
                 ),
               ),
               Expanded(
@@ -85,8 +85,8 @@ class TodoCard extends ConsumerWidget {
                             fontSize: 22.0,
                             color: todo.isCompleted
                                 ? ref.watch(isDarkModeProvider)
-                                    ? flexSchemeDark.outline
-                                    : flexSchemeLight.outline
+                                    ? flexSchemeDark(ref).outline
+                                    : flexSchemeLight(ref).outline
                                 : null,
                             decoration: todo.isCompleted
                                 ? TextDecoration.lineThrough
@@ -101,8 +101,8 @@ class TodoCard extends ConsumerWidget {
                             fontSize: 14.0,
                             color: todo.isCompleted
                                 ? ref.watch(isDarkModeProvider)
-                                    ? flexSchemeDark.outline
-                                    : flexSchemeLight.outline
+                                    ? flexSchemeDark(ref).outline
+                                    : flexSchemeLight(ref).outline
                                 : null,
                             decoration: todo.isCompleted
                                 ? TextDecoration.lineThrough
@@ -113,8 +113,8 @@ class TodoCard extends ConsumerWidget {
                             ? FaIcon(
                                 FontAwesomeIcons.circleCheck,
                                 color: ref.watch(isDarkModeProvider)
-                                    ? flexSchemeDark.primary
-                                    : flexSchemeLight.primary,
+                                    ? flexSchemeDark(ref).primary
+                                    : flexSchemeLight(ref).primary,
                               )
                             : const FaIcon(FontAwesomeIcons.circle),
                       ),

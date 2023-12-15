@@ -56,8 +56,8 @@ class SmileyIconRow extends ConsumerWidget {
                   decoration: BoxDecoration(
                     color: icon == selectedSmiley
                         ? ref.watch(isDarkModeProvider)
-                            ? flexSchemeDark.primary
-                            : flexSchemeLight.primary
+                            ? flexSchemeDark(ref).primary
+                            : flexSchemeLight(ref).primary
                         : null,
                     borderRadius: BorderRadius.circular(24.0),
                   ),

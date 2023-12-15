@@ -123,7 +123,7 @@ class UsernameModalState extends ConsumerState<UsernameModal> {
       SnackBar(
         content: Text(error.toString()),
         behavior: SnackBarBehavior.floating,
-        backgroundColor: flexSchemeLight.error,
+        backgroundColor: flexSchemeLight(ref).error,
       ),
     );
   }

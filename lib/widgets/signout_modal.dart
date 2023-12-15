@@ -91,8 +91,8 @@ class SignoutModalState extends ConsumerState<SignoutModal> {
         content: Text(error.toString()),
         behavior: SnackBarBehavior.floating,
         backgroundColor: ref.watch(isDarkModeProvider)
-            ? flexSchemeDark.error
-            : flexSchemeLight.error,
+            ? flexSchemeDark(ref).error
+            : flexSchemeLight(ref).error,
       ),
     );
   }

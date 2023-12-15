@@ -165,8 +165,8 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
                                 child: CircularProgressIndicator(
                                   valueColor: AlwaysStoppedAnimation<Color>(
                                     ref.watch(isDarkModeProvider)
-                                        ? flexSchemeDark.onPrimary
-                                        : flexSchemeLight.onPrimary,
+                                        ? flexSchemeDark(ref).onPrimary
+                                        : flexSchemeLight(ref).onPrimary,
                                   ),
                                 ),
                               )

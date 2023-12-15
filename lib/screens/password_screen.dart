@@ -90,12 +90,14 @@ class PasswordScreenState extends ConsumerState<PasswordScreen> {
                         },
                         child: isResetting
                             ? Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
                                 child: CircularProgressIndicator(
                                   valueColor: AlwaysStoppedAnimation<Color>(
-                                      ref.watch(isDarkModeProvider)
-                                          ? flexSchemeDark.onPrimary
-                                          : flexSchemeLight.onPrimary,),
+                                    ref.watch(isDarkModeProvider)
+                                        ? flexSchemeDark(ref).onPrimary
+                                        : flexSchemeLight(ref).onPrimary,
+                                  ),
                                 ),
                               )
                             : const Text(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 
-class AvatarListTile extends StatelessWidget {
+class AvatarListTile extends ConsumerWidget {
   const AvatarListTile({
     required this.assetPath,
     super.key,
@@ -13,12 +13,12 @@ class AvatarListTile extends StatelessWidget {
   final WidgetRef? ref;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          color: flexSchemeLight.primary,
+          color: flexSchemeLight(ref).primary,
           width: 2.0,
         ),
       ),

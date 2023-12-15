@@ -160,8 +160,8 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
         content: Text('$error'),
         behavior: SnackBarBehavior.floating,
         backgroundColor: ref.watch(isDarkModeProvider)
-            ? flexSchemeDark.error
-            : flexSchemeDark.error,
+            ? flexSchemeDark(ref).error
+            : flexSchemeDark(ref).error,
       ),
     );
   }
@@ -182,8 +182,8 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
             'Please sign in to get access.'),
         behavior: SnackBarBehavior.floating,
         backgroundColor: ref.watch(isDarkModeProvider)
-            ? flexSchemeDark.error
-            : flexSchemeDark.error,
+            ? flexSchemeDark(ref).error
+            : flexSchemeDark(ref).error,
       ),
     );
   }

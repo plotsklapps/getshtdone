@@ -24,7 +24,7 @@ class TodoErrorCard extends ConsumerWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
-          color: flexSchemeDark.tertiary,
+          color: flexSchemeDark(ref).tertiary,
         ),
       ),
       child: Row(
@@ -36,7 +36,7 @@ class TodoErrorCard extends ConsumerWidget {
                 topLeft: Radius.circular(12.0),
                 bottomLeft: Radius.circular(12.0),
               ),
-              color: flexSchemeDark.tertiary,
+              color: flexSchemeDark(ref).tertiary,
             ),
           ),
           Expanded(

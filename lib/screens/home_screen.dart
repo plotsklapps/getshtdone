@@ -38,6 +38,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
 
     return SafeArea(
       child: Scaffold(
+        extendBody: true,
         body: ResponsiveLayout(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -124,72 +125,44 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
         bottomNavigationBar: BottomAppBar(
+          notchMargin: 12.0,
           shape: const CircularNotchedRectangle(),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              IconButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Work in progress!',
+          child: ResponsiveLayout(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                IconButton(
+                  onPressed: () {
+                    showModalBottomSheet<Widget>(
+                      context: context,
+                      showDragHandle: true,
+                      isScrollControlled: true,
+                      builder: (BuildContext context) {
+                        return const UserSettingsModal();
+                      },
+                    );
+                  },
+                  icon: FaIcon(
+                    ref.watch(smileyProvider),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Work in progress!',
+                        ),
+                        behavior: SnackBarBehavior.floating,
                       ),
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                },
-                icon: const FaIcon(
-                  FontAwesomeIcons.starOfLife,
+                    );
+                  },
+                  icon: const Icon(
+                    FontAwesomeIcons.sort,
+                  ),
                 ),
-              ),
-              IconButton(
-                onPressed: () {
-                  showModalBottomSheet<Widget>(
-                    context: context,
-                    showDragHandle: true,
-                    isScrollControlled: true,
-                    builder: (BuildContext context) {
-                      return const UserSettingsModal();
-                    },
-                  );
-                },
-                icon: FaIcon(
-                  ref.watch(smileyProvider),
-                ),
-              ),
-              const SizedBox(width: 32.0),
-              IconButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Work in progress!',
-                      ),
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                },
-                icon: const FaIcon(
-                  FontAwesomeIcons.hand,
-                ),
-              ),
-              IconButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Work in progress!',
-                      ),
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                },
-                icon: const Icon(
-                  FontAwesomeIcons.sort,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton(

@@ -33,9 +33,14 @@ class TodoCard extends ConsumerWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
           side: BorderSide(
-            color: ref.watch(isDarkModeProvider)
-                ? flexSchemeDark(ref).primary
-                : flexSchemeLight(ref).primary,
+            color: todo.isCompleted
+                ? ref.watch(isDarkModeProvider)
+                    ? flexSchemeDark(ref).primary
+                    : flexSchemeLight(ref).primary
+                : ref.watch(isDarkModeProvider)
+                    ? flexSchemeDark(ref).outline
+                    : flexSchemeLight(ref).outline,
+            width: 2.0,
           ),
         ),
         child: IntrinsicHeight(
@@ -72,11 +77,6 @@ class TodoCard extends ConsumerWidget {
                     children: <Widget>[
                       Flexible(
                         child: ListTile(
-                          onTap: () {
-                            ref
-                                .read(todoListProvider.notifier)
-                                .toggleCompleted(todo.id!);
-                          },
                           contentPadding: EdgeInsets.zero,
                           title: Text(
                             todo.title,
@@ -111,13 +111,31 @@ class TodoCard extends ConsumerWidget {
                             ),
                           ),
                           trailing: todo.isCompleted
-                              ? FaIcon(
-                                  FontAwesomeIcons.circleCheck,
-                                  color: ref.watch(isDarkModeProvider)
-                                      ? flexSchemeDark(ref).primary
-                                      : flexSchemeLight(ref).primary,
+                              ? GestureDetector(
+                                  onTap: () {
+                                    ref
+                                        .read(todoListProvider.notifier)
+                                        .toggleCompleted(todo.id!);
+                                  },
+                                  child: FaIcon(
+                                    FontAwesomeIcons.circleCheck,
+                                    color: ref.watch(isDarkModeProvider)
+                                        ? flexSchemeDark(ref).primary
+                                        : flexSchemeLight(ref).primary,
+                                    size: 32.0,
+                                  ),
                                 )
-                              : const FaIcon(FontAwesomeIcons.circle),
+                              : GestureDetector(
+                                  onTap: () {
+                                    ref
+                                        .read(todoListProvider.notifier)
+                                        .toggleCompleted(todo.id!);
+                                  },
+                                  child: const FaIcon(
+                                    FontAwesomeIcons.circle,
+                                    size: 32.0,
+                                  ),
+                                ),
                         ),
                       ),
                       const SizedBox(height: 8.0),

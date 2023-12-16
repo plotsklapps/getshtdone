@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/models/todo_model.dart';
 import 'package:getsh_tdone/providers/category_provider.dart';
 import 'package:getsh_tdone/providers/date_provider.dart';
@@ -88,7 +89,7 @@ class NewTodoModalState extends ConsumerState<NewTodoModal> {
                   ref.read(titleProvider.notifier).state = newTitle;
                 },
                 decoration: const InputDecoration(
-                  labelText: 'New TODO Title',
+                  labelText: 'New Task Title',
                 ),
               ),
               const SizedBox(height: 8.0),
@@ -99,7 +100,7 @@ class NewTodoModalState extends ConsumerState<NewTodoModal> {
                 },
                 maxLines: 3,
                 decoration: const InputDecoration(
-                  labelText: 'New TODO Description',
+                  labelText: 'New Task Description',
                 ),
               ),
               const SizedBox(height: 16.0),
@@ -110,7 +111,13 @@ class NewTodoModalState extends ConsumerState<NewTodoModal> {
                 ],
               ),
               const SizedBox(height: 12.0),
-              const NewTaskDatePickerButton(),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  NewTaskDatePickerButton(),
+                ],
+              ),
+              const SizedBox(height: 8.0),
               Row(
                 children: <Widget>[
                   const NewTaskCancelButton(),
@@ -237,8 +244,8 @@ class NewTaskDatePickerButton extends ConsumerWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Icon(Icons.edit_calendar_rounded),
-            const SizedBox(width: 8.0),
+            const FaIcon(FontAwesomeIcons.flagCheckered),
+            const SizedBox(width: 16.0),
             Text(ref.watch(dueDateProvider)),
           ],
         ),
@@ -255,14 +262,14 @@ class NewTaskCancelButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: FilledButton(
+      child: OutlinedButton(
         onPressed: () {
           Navigator.pop(context);
         },
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(Icons.delete_rounded),
+            FaIcon(FontAwesomeIcons.trash),
             SizedBox(width: 8.0),
             Text('Cancel'),
           ],
@@ -318,13 +325,9 @@ class NewTaskSaveButton extends StatelessWidget {
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(
-              Icons.save_rounded,
-            ),
+            FaIcon(FontAwesomeIcons.solidFloppyDisk),
             SizedBox(width: 8.0),
-            Text(
-              'Save',
-            ),
+            Text('Save'),
           ],
         ),
       ),

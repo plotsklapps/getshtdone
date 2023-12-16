@@ -192,9 +192,8 @@ class FirebaseService {
   ) async {
     ref.read(displayNameProvider.notifier).state = 'SNEAK PEEKER';
     ref.read(isSneakPeekerProvider.notifier).state = true;
-    ref.read(photoURLProvider.notifier).state = 'facegrintonguesquintregular';
-    ref.read(smileyProvider.notifier).state =
-        FontAwesomeIcons.solidFaceGrinTongueSquint;
+    ref.read(photoURLProvider.notifier).state = 'handpeaceregular';
+    ref.read(smileyProvider.notifier).state = FontAwesomeIcons.handPeace;
     Logs.sneakPeekComplete();
     onSuccess('Enjoy your sneak peek. Your data will not be stored.');
   }
@@ -428,6 +427,7 @@ class FirebaseService {
     ref
       ..invalidate(firebaseProvider)
       ..invalidate(firestoreProvider)
+      ..invalidate(todoListProvider)
       ..invalidate(categoryProvider)
       ..invalidate(dateProvider)
       ..invalidate(createdDateProvider)

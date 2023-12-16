@@ -125,11 +125,12 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
         bottomNavigationBar: BottomAppBar(
+          height: 64.0,
           notchMargin: 12.0,
           shape: const CircularNotchedRectangle(),
           child: ResponsiveLayout(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 IconButton(
                   onPressed: () {

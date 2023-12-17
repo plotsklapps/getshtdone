@@ -3,38 +3,38 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:getsh_tdone/models/todo_model.dart';
+import 'package:getsh_tdone/models/task_model.dart';
 import 'package:getsh_tdone/providers/category_provider.dart';
 import 'package:getsh_tdone/providers/firestore_provider.dart';
 import 'package:getsh_tdone/providers/sortingmethod_provider.dart';
 import 'package:getsh_tdone/services/logger.dart';
 
-final StateNotifierProvider<TodoListNotifier, AsyncValue<List<Todo>>>
-    todoListProvider =
-    StateNotifierProvider<TodoListNotifier, AsyncValue<List<Todo>>>(
-  (StateNotifierProviderRef<TodoListNotifier, AsyncValue<List<Todo>>> ref) {
-    return TodoListNotifier(ref);
+final StateNotifierProvider<TaskListNotifier, AsyncValue<List<Task>>>
+    taskListProvider =
+    StateNotifierProvider<TaskListNotifier, AsyncValue<List<Task>>>(
+  (StateNotifierProviderRef<TaskListNotifier, AsyncValue<List<Task>>> ref) {
+    return TaskListNotifier(ref);
   },
 );
 
-class TodoListNotifier extends StateNotifier<AsyncValue<List<Todo>>> {
-  TodoListNotifier(this.ref) : super(const AsyncValue<List<Todo>>.loading()) {
-    fetchTodos();
+class TaskListNotifier extends StateNotifier<AsyncValue<List<Task>>> {
+  TaskListNotifier(this.ref) : super(const AsyncValue<List<Task>>.loading()) {
+    fetchTasks();
     ref.onDispose(() {
-      todoSubscription?.cancel();
+      taskSubscription?.cancel();
     });
   }
 
-  final StateNotifierProviderRef<TodoListNotifier, AsyncValue<List<Todo>>> ref;
-  StreamSubscription<QuerySnapshot<Object?>>? todoSubscription;
+  final StateNotifierProviderRef<TaskListNotifier, AsyncValue<List<Task>>> ref;
+  StreamSubscription<QuerySnapshot<Object?>>? taskSubscription;
 
   void toggleCompleted(String id) {
-    state.whenData((List<Todo> todos) {
-      state = AsyncValue<List<Todo>>.data(
-        todos.map((Todo todo) {
-          if (todo.id == id) {
-            final Todo updatedTodo =
-                todo.copyWith(isCompleted: !todo.isCompleted);
+    state.whenData((List<Task> tasks) {
+      state = AsyncValue<List<Task>>.data(
+        tasks.map((Task task) {
+          if (task.id == id) {
+            final Task updatedTask =
+                task.copyWith(isCompleted: !task.isCompleted);
             final User? currentUser = FirebaseAuth.instance.currentUser;
             if (currentUser != null && currentUser.emailVerified) {
               try {
@@ -42,24 +42,24 @@ class TodoListNotifier extends StateNotifier<AsyncValue<List<Todo>>> {
                     .read(firestoreProvider)
                     .collection('users')
                     .doc(currentUser.uid)
-                    .collection('todoCollection')
+                    .collection('taskCollection')
                     .doc(id)
-                    .update(updatedTodo.toMap());
-                Logs.toggleTodoComplete();
+                    .update(updatedTask.toMap());
+                Logs.toggleTaskComplete();
               } catch (error) {
-                Logs.toggleTodoFailed();
+                Logs.toggleTaskFailed();
               }
             }
-            return updatedTodo;
+            return updatedTask;
           } else {
-            return todo;
+            return task;
           }
         }).toList(),
       );
     });
   }
 
-  void fetchTodos() {
+  void fetchTasks() {
     // Get the current user from Firebase Auth
     final User? currentUser = FirebaseAuth.instance.currentUser;
 
@@ -76,42 +76,42 @@ class TodoListNotifier extends StateNotifier<AsyncValue<List<Todo>>> {
           .read(firestoreProvider)
           .collection('users')
           .doc(currentUser.uid)
-          .collection('todoCollection');
+          .collection('taskCollection');
 
-      // If the category is not 'All', filter the todos by that category
+      // If the category is not 'All', filter the tasks by that category
       if (category != 'all') {
         query = query.where('category', isEqualTo: category);
       }
 
-      // If the sorting method is 'dueDate' or 'creationDate', sort the todos by that field
+      // If the sorting method is 'dueDate' or 'creationDate', sort the tasks by that field
       if (sortingMethod == 'dueDate' || sortingMethod == 'creationDate') {
         query = query.orderBy(sortingMethod, descending: false);
       }
 
       // Listen to the Firestore query and update the state whenever the query results change
-      todoSubscription = query.snapshots().listen(
+      taskSubscription = query.snapshots().listen(
         (QuerySnapshot<Map<String, dynamic>> snapshot) {
-          // Map the Firestore documents to Todo objects
-          final List<Todo> todos = snapshot.docs
+          // Map the Firestore documents to Task objects
+          final List<Task> tasks = snapshot.docs
               .map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
-            return Todo.fromSnapshot(doc);
+            return Task.fromSnapshot(doc);
           }).toList();
 
-          // Update the state with the filtered and sorted todos
-          state = AsyncValue<List<Todo>>.data(todos);
+          // Update the state with the filtered and sorted tasks
+          state = AsyncValue<List<Task>>.data(tasks);
         },
         onError: (Object error, StackTrace stackTrace) {
           // If there's an error, update the state with the error
-          state = AsyncValue<List<Todo>>.error(error, stackTrace);
+          state = AsyncValue<List<Task>>.error(error, stackTrace);
         },
       );
     } else {
-      // If the user is not logged in or their email is not verified, update the state with an empty list of todos
-      state = const AsyncValue<List<Todo>>.data(<Todo>[]);
+      // If the user is not logged in or their email is not verified, update the state with an empty list of tasks
+      state = const AsyncValue<List<Task>>.data(<Task>[]);
     }
   }
 
   void cancelSubscription() {
-    todoSubscription?.cancel();
+    taskSubscription?.cancel();
   }
 }

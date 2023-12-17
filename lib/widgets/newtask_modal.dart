@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:getsh_tdone/models/todo_model.dart';
+import 'package:getsh_tdone/models/task_model.dart';
 import 'package:getsh_tdone/providers/category_provider.dart';
 import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/description_provider.dart';
@@ -16,18 +16,18 @@ import 'package:getsh_tdone/services/logger.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 import 'package:intl/intl.dart';
 
-class NewTodoModal extends ConsumerStatefulWidget {
-  const NewTodoModal({
+class NewTaskModal extends ConsumerStatefulWidget {
+  const NewTaskModal({
     super.key,
   });
 
   @override
-  ConsumerState<NewTodoModal> createState() {
-    return NewTodoModalState();
+  ConsumerState<NewTaskModal> createState() {
+    return NewTaskModalState();
   }
 }
 
-class NewTodoModalState extends ConsumerState<NewTodoModal> {
+class NewTaskModalState extends ConsumerState<NewTaskModal> {
   late TextEditingController titleController;
   late TextEditingController descriptionController;
 
@@ -168,28 +168,28 @@ class NewTaskCategoryChoiceSegmentedButtonState
         : flexSchemeLight(ref).primary;
     return Expanded(
       child: SegmentedButton<Categories>(
-        selected: ref.watch(newTodoCategoryProvider),
+        selected: ref.watch(newTaskCategoryProvider),
         onSelectionChanged: (Set<Categories> newSelection) {
-          ref.read(newTodoCategoryProvider.notifier).state = newSelection;
+          ref.read(newTaskCategoryProvider.notifier).state = newSelection;
         },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
               if (states.contains(MaterialState.selected)) {
                 if (ref
-                    .watch(newTodoCategoryProvider)
+                    .watch(newTaskCategoryProvider)
                     .contains(Categories.personal)) {
                   selectedColor = ref.watch(isDarkModeProvider)
                       ? flexSchemeDark(ref).primary
                       : flexSchemeLight(ref).primary;
                 } else if (ref
-                    .watch(newTodoCategoryProvider)
+                    .watch(newTaskCategoryProvider)
                     .contains(Categories.work)) {
                   selectedColor = ref.watch(isDarkModeProvider)
                       ? flexSchemeDark(ref).secondary
                       : flexSchemeLight(ref).secondary;
                 } else if (ref
-                    .watch(newTodoCategoryProvider)
+                    .watch(newTaskCategoryProvider)
                     .contains(Categories.study)) {
                   selectedColor = ref.watch(isDarkModeProvider)
                       ? flexSchemeDark(ref).tertiary
@@ -303,12 +303,12 @@ class NewTaskSaveButton extends StatelessWidget {
       child: FilledButton(
         onPressed: () async {
           if (!ref.watch(isSneakPeekerProvider)) {
-            await FirestoreService(ref).addTodo(
-              Todo(
+            await FirestoreService(ref).addTask(
+              Task(
                 title: ref.watch(titleProvider),
                 description: ref.watch(descriptionProvider),
                 category: ref
-                    .watch(newTodoCategoryProvider)
+                    .watch(newTaskCategoryProvider)
                     .first
                     .toString()
                     .split('.')
@@ -323,11 +323,11 @@ class NewTaskSaveButton extends StatelessWidget {
             ref
               ..invalidate(titleProvider)
               ..invalidate(descriptionProvider)
-              ..invalidate(newTodoCategoryProvider)
+              ..invalidate(newTaskCategoryProvider)
               ..invalidate(createdDateProvider)
               ..invalidate(dueDateProvider)
               ..invalidate(isCompletedProvider);
-            Logs.addTodoComplete();
+            Logs.addTaskComplete();
             if (mounted) {
               Navigator.pop(context);
             }

@@ -85,27 +85,27 @@ class Logs {
     Logger().w('Theme color change failed');
   }
 
-  static void addTodoComplete() {
-    Logger().i('Todo is added to Firestore');
+  static void addTaskComplete() {
+    Logger().i('Task is added to Firestore');
   }
 
-  static void addTodoFailed() {
-    Logger().w('Todo addition to Firestore failed');
+  static void addTaskFailed() {
+    Logger().w('Task addition to Firestore failed');
   }
 
-  static void toggleTodoComplete() {
-    Logger().i('Todo is toggled in Firestore');
+  static void toggleTaskComplete() {
+    Logger().i('Task is toggled in Firestore');
   }
 
-  static void toggleTodoFailed() {
-    Logger().w('Todo toggle in Firestore failed');
+  static void toggleTaskFailed() {
+    Logger().w('Task toggle in Firestore failed');
   }
 
-  static void updateTodoComplete() {
-    Logger().i('Todo is updated in Firestore');
+  static void updateTaskComplete() {
+    Logger().i('Task is updated in Firestore');
   }
 
-  static void updateTodoFailed() {
-    Logger().w('Todo update in Firestore failed');
+  static void updateTaskFailed() {
+    Logger().w('Task update in Firestore failed');
   }
 }

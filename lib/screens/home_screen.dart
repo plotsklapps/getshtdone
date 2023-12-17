@@ -3,19 +3,19 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:getsh_tdone/models/todo_model.dart';
+import 'package:getsh_tdone/models/task_model.dart';
 import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/smiley_provider.dart';
+import 'package:getsh_tdone/providers/tasklist_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
-import 'package:getsh_tdone/providers/todolist_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/theme/theme.dart';
-import 'package:getsh_tdone/widgets/newtodo_modal.dart';
+import 'package:getsh_tdone/widgets/newtask_modal.dart';
 import 'package:getsh_tdone/widgets/responsive_layout.dart';
 import 'package:getsh_tdone/widgets/sortingmethod_modal.dart';
-import 'package:getsh_tdone/widgets/todo_card.dart';
-import 'package:getsh_tdone/widgets/todoerror_card.dart';
-import 'package:getsh_tdone/widgets/todoloading_card.dart';
+import 'package:getsh_tdone/widgets/task_card.dart';
+import 'package:getsh_tdone/widgets/taskerror_card.dart';
+import 'package:getsh_tdone/widgets/taskloading_card.dart';
 import 'package:getsh_tdone/widgets/usersettings_modal.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -30,7 +30,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 class HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    final AsyncValue<List<Todo>> todoList = ref.watch(todoListProvider);
+    final AsyncValue<List<Task>> taskList = ref.watch(taskListProvider);
 
     return SafeArea(
       child: Scaffold(
@@ -58,8 +58,8 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
             child: Column(
               children: <Widget>[
                 Flexible(
-                  child: todoList.when(
-                    data: (List<Todo> todoList) {
+                  child: taskList.when(
+                    data: (List<Task> taskList) {
                       return ScrollConfiguration(
                         behavior: const ScrollBehavior().copyWith(
                           dragDevices: <PointerDeviceKind>{
@@ -72,19 +72,19 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                         child: ListView.builder(
                           shrinkWrap: true,
                           physics: const BouncingScrollPhysics(),
-                          itemCount: todoList.length,
+                          itemCount: taskList.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Dismissible(
-                              key: Key(todoList[index].id!),
-                              background: const TodoCardBackgroundDelete(),
+                              key: Key(taskList[index].id!),
+                              background: const TaskCardBackgroundDelete(),
                               secondaryBackground:
-                                  const TodoCardBackgroundShare(),
+                                  const TaskCardBackgroundShare(),
                               confirmDismiss: (DismissDirection direction) {
                                 if (direction == DismissDirection.startToEnd) {
                                   return showDeleteTaskModal(
                                     context,
                                     ref,
-                                    todoList,
+                                    taskList,
                                     index,
                                   );
                                 } else {
@@ -94,8 +94,8 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                                   );
                                 }
                               },
-                              child: TodoCard(
-                                todoList[index],
+                              child: TaskCard(
+                                taskList[index],
                               ),
                             );
                           },
@@ -103,10 +103,10 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                       );
                     },
                     error: (Object error, StackTrace stackTrace) {
-                      return TodoErrorCard(error, stackTrace);
+                      return TaskErrorCard(error, stackTrace);
                     },
                     loading: () {
-                      return const TodoLoadingCard();
+                      return const TaskLoadingCard();
                     },
                   ),
                 ),
@@ -201,7 +201,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
               showDragHandle: true,
               isScrollControlled: true,
               builder: (BuildContext context) {
-                return const NewTodoModal();
+                return const NewTaskModal();
               },
             );
           },
@@ -286,7 +286,7 @@ This feature is a work in progress...''',
   Future<bool?> showDeleteTaskModal(
     BuildContext context,
     WidgetRef ref,
-    List<Todo> todoList,
+    List<Task> taskList,
     int index,
   ) {
     return showModalBottomSheet<bool>(
@@ -330,8 +330,8 @@ This feature is a work in progress...''',
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      FirestoreService(ref).deleteTodo(
-                        todoList[index].id!,
+                      FirestoreService(ref).deleteTask(
+                        taskList[index].id!,
                       );
                       Navigator.pop(context);
                     },
@@ -363,8 +363,8 @@ This feature is a work in progress...''',
   }
 }
 
-class TodoCardBackgroundShare extends ConsumerWidget {
-  const TodoCardBackgroundShare({
+class TaskCardBackgroundShare extends ConsumerWidget {
+  const TaskCardBackgroundShare({
     super.key,
   });
 
@@ -409,8 +409,8 @@ class TodoCardBackgroundShare extends ConsumerWidget {
   }
 }
 
-class TodoCardBackgroundDelete extends ConsumerWidget {
-  const TodoCardBackgroundDelete({
+class TaskCardBackgroundDelete extends ConsumerWidget {
+  const TaskCardBackgroundDelete({
     super.key,
   });
 

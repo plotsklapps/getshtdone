@@ -13,9 +13,9 @@ import 'package:getsh_tdone/providers/iscompleted_provider.dart';
 import 'package:getsh_tdone/providers/photourl_provider.dart';
 import 'package:getsh_tdone/providers/smiley_provider.dart';
 import 'package:getsh_tdone/providers/sneakpeek_provider.dart';
+import 'package:getsh_tdone/providers/tasklist_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/providers/title_provider.dart';
-import 'package:getsh_tdone/providers/todolist_provider.dart';
 import 'package:getsh_tdone/services/logger.dart';
 
 // Custom class FirebaseService which takes a WidgetRef as a parameter.
@@ -79,19 +79,17 @@ class FirebaseService {
         'lastSignInDate': ref.watch(lastSignInDateProvider),
       });
 
-      // Create subcollection for todos.
+      // Create subcollection for tasks.
       await ref
           .read(firestoreProvider)
           .collection('users')
           .doc(userCredential.user?.uid)
-          .collection('todoCollection')
+          .collection('task')
           .doc()
           .set(<String, dynamic>{
         'id': '0',
-        'title': 'My first todo',
-        'description':
-            'Get your sh_t done.\nSwipe right to delete, swipe left to share '
-                'or long press to edit.',
+        'title': 'My first task',
+        'description': 'Get your sh_t done...',
         'category': 'personal',
         'createdDate': ref.watch(createdDateProvider),
         'dueDate': ref.watch(dueDateProvider),
@@ -166,9 +164,9 @@ class FirebaseService {
             }
           });
 
-          // Fetch the todos from Firestore and store them in the
-          // todoListProvider.
-          ref.read(todoListProvider.notifier).fetchTodos();
+          // Fetch the tasks from Firestore and store them in the
+          // taskListProvider.
+          ref.read(taskListProvider.notifier).fetchTasks();
 
           // If all goes well:
           Logs.loginComplete();
@@ -237,7 +235,7 @@ class FirebaseService {
     try {
       if (!ref.watch(isSneakPeekerProvider)) {
         // Cancel the Firestore listener.
-        ref.read(todoListProvider.notifier).cancelSubscription();
+        ref.read(taskListProvider.notifier).cancelSubscription();
         // Sign out from Firebase Auth.
         await ref.read(firebaseProvider).signOut().then((_) {
           final User? currentUser = ref.read(firebaseProvider).currentUser;
@@ -253,7 +251,7 @@ class FirebaseService {
         });
       } else {
         // Cancel the Firestore listener.
-        ref.read(todoListProvider.notifier).cancelSubscription();
+        ref.read(taskListProvider.notifier).cancelSubscription();
         invalidateAllProviders();
         Logs.signOutComplete();
         onSuccess('Successfully signed out!');
@@ -435,7 +433,7 @@ class FirebaseService {
     ref
       ..invalidate(firebaseProvider)
       ..invalidate(firestoreProvider)
-      ..invalidate(todoListProvider)
+      ..invalidate(taskListProvider)
       ..invalidate(categoryProvider)
       ..invalidate(dateProvider)
       ..invalidate(createdDateProvider)

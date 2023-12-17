@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/theme/theme.dart';
+import 'package:logger/logger.dart';
 
-class TodoLoadingCard extends ConsumerWidget {
-  const TodoLoadingCard({
+class TaskErrorCard extends ConsumerWidget {
+  const TaskErrorCard(
+    this.error,
+    this.stackTrace, {
     super.key,
   });
 
+  final Object error;
+  final StackTrace stackTrace;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Logger().e(error, stackTrace: stackTrace);
     return Container(
       height: 140.0,
       decoration: BoxDecoration(
@@ -29,28 +37,38 @@ class TodoLoadingCard extends ConsumerWidget {
               color: flexSchemeDark(ref).tertiary,
             ),
           ),
-          const Expanded(
+          Expanded(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.0),
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   ListTile(
                     contentPadding: EdgeInsets.zero,
-                    title: Text('Loading...'),
-                    subtitle: Text('Please wait...'),
-                    trailing: CircularProgressIndicator(),
+                    title: Text(
+                      error.toString(),
+                      maxLines: 1,
+                      overflow: TextOverflow.fade,
+                    ),
+                    subtitle: const Text(
+                      'Something went wrong...',
+                      maxLines: 3,
+                      overflow: TextOverflow.fade,
+                    ),
+                    trailing: const FaIcon(
+                      FontAwesomeIcons.triangleExclamation,
+                    ),
                   ),
-                  Divider(thickness: 4.0),
-                  Row(
+                  const Divider(thickness: 4.0),
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
-                          Text('Created: LOADING...'),
+                          Text('Created: ERROR'),
                           Text(
-                            'Due: LOADING...',
+                            'Due: ERROR',
                           ),
                         ],
                       ),

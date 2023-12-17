@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:getsh_tdone/models/todo_model.dart';
+import 'package:getsh_tdone/models/task_model.dart';
+import 'package:getsh_tdone/providers/tasklist_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
-import 'package:getsh_tdone/providers/todolist_provider.dart';
 import 'package:getsh_tdone/theme/theme.dart';
-import 'package:getsh_tdone/widgets/updatetodo_modal.dart';
+import 'package:getsh_tdone/widgets/updatetask_modal.dart';
 
-class TodoCard extends ConsumerWidget {
-  const TodoCard(
-    this.todo, {
+class TaskCard extends ConsumerWidget {
+  const TaskCard(
+    this.task, {
     super.key,
   });
-  final Todo todo;
+  final Task task;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,7 +24,7 @@ class TodoCard extends ConsumerWidget {
           showDragHandle: true,
           isScrollControlled: true,
           builder: (BuildContext context) {
-            return UpdateTodoModal(todo);
+            return UpdateTaskModal(task);
           },
         );
       },
@@ -33,7 +33,7 @@ class TodoCard extends ConsumerWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
           side: BorderSide(
-            color: todo.isCompleted
+            color: task.isCompleted
                 ? ref.watch(isDarkModeProvider)
                     ? flexSchemeDark(ref).primary
                     : flexSchemeLight(ref).primary
@@ -53,15 +53,15 @@ class TodoCard extends ConsumerWidget {
                       topLeft: Radius.circular(12.0),
                       bottomLeft: Radius.circular(12.0),
                     ),
-                    color: todo.category == 'personal'
+                    color: task.category == 'personal'
                         ? isDarkMode
                             ? flexSchemeDark(ref).primary
                             : flexSchemeLight(ref).primary
-                        : todo.category == 'work'
+                        : task.category == 'work'
                             ? isDarkMode
                                 ? flexSchemeDark(ref).secondary
                                 : flexSchemeLight(ref).secondary
-                            : todo.category == 'study'
+                            : task.category == 'study'
                                 ? isDarkMode
                                     ? flexSchemeDark(ref).tertiary
                                     : flexSchemeLight(ref).tertiary
@@ -79,43 +79,43 @@ class TodoCard extends ConsumerWidget {
                         child: ListTile(
                           contentPadding: EdgeInsets.zero,
                           title: Text(
-                            todo.title,
+                            task.title,
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 22.0,
-                              color: todo.isCompleted
+                              color: task.isCompleted
                                   ? ref.watch(isDarkModeProvider)
                                       ? flexSchemeDark(ref).outline
                                       : flexSchemeLight(ref).outline
                                   : null,
-                              decoration: todo.isCompleted
+                              decoration: task.isCompleted
                                   ? TextDecoration.lineThrough
                                   : null,
                             ),
                           ),
                           subtitle: Text(
-                            todo.description ?? 'No Description',
+                            task.description ?? 'No Description',
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 14.0,
-                              color: todo.isCompleted
+                              color: task.isCompleted
                                   ? ref.watch(isDarkModeProvider)
                                       ? flexSchemeDark(ref).outline
                                       : flexSchemeLight(ref).outline
                                   : null,
-                              decoration: todo.isCompleted
+                              decoration: task.isCompleted
                                   ? TextDecoration.lineThrough
                                   : null,
                             ),
                           ),
-                          trailing: todo.isCompleted
+                          trailing: task.isCompleted
                               ? GestureDetector(
                                   onTap: () {
                                     ref
-                                        .read(todoListProvider.notifier)
-                                        .toggleCompleted(todo.id!);
+                                        .read(taskListProvider.notifier)
+                                        .toggleCompleted(task.id!);
                                   },
                                   child: FaIcon(
                                     FontAwesomeIcons.circleCheck,
@@ -128,8 +128,8 @@ class TodoCard extends ConsumerWidget {
                               : GestureDetector(
                                   onTap: () {
                                     ref
-                                        .read(todoListProvider.notifier)
-                                        .toggleCompleted(todo.id!);
+                                        .read(taskListProvider.notifier)
+                                        .toggleCompleted(task.id!);
                                   },
                                   child: const FaIcon(
                                     FontAwesomeIcons.circle,
@@ -144,13 +144,13 @@ class TodoCard extends ConsumerWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(todo.category ?? 'No Category'),
+                          Text(task.category ?? 'No Category'),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: <Widget>[
-                              Text('Created: ${todo.createdDate!}'),
+                              Text('Created: ${task.createdDate!}'),
                               Text(
-                                'Due: ${todo.dueDate!}',
+                                'Due: ${task.dueDate!}',
                               ),
                             ],
                           ),

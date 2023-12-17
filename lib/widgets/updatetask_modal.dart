@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:getsh_tdone/models/todo_model.dart';
+import 'package:getsh_tdone/models/task_model.dart';
 import 'package:getsh_tdone/providers/category_provider.dart';
 import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/description_provider.dart';
@@ -14,33 +14,33 @@ import 'package:getsh_tdone/services/logger.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 import 'package:intl/intl.dart';
 
-class UpdateTodoModal extends ConsumerStatefulWidget {
-  const UpdateTodoModal(
-    this.todo, {
+class UpdateTaskModal extends ConsumerStatefulWidget {
+  const UpdateTaskModal(
+    this.task, {
     super.key,
   });
 
-  final Todo todo;
+  final Task task;
 
   @override
-  ConsumerState<UpdateTodoModal> createState() {
-    return UpdateTodoModalState();
+  ConsumerState<UpdateTaskModal> createState() {
+    return UpdateTaskModalState();
   }
 }
 
-class UpdateTodoModalState extends ConsumerState<UpdateTodoModal> {
+class UpdateTaskModalState extends ConsumerState<UpdateTaskModal> {
   late TextEditingController titleController;
   late TextEditingController descriptionController;
 
   @override
   void initState() {
     super.initState();
-    titleController = TextEditingController(text: widget.todo.title);
+    titleController = TextEditingController(text: widget.task.title);
     descriptionController =
-        TextEditingController(text: widget.todo.description);
+        TextEditingController(text: widget.task.description);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(titleProvider.notifier).state = widget.todo.title;
-      ref.read(descriptionProvider.notifier).state = widget.todo.description!;
+      ref.read(titleProvider.notifier).state = widget.task.title;
+      ref.read(descriptionProvider.notifier).state = widget.task.description!;
     });
   }
 
@@ -78,7 +78,7 @@ class UpdateTodoModalState extends ConsumerState<UpdateTodoModal> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    'Update your TODO',
+                    'Update your Task',
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
@@ -96,7 +96,7 @@ class UpdateTodoModalState extends ConsumerState<UpdateTodoModal> {
                   ref.read(titleProvider.notifier).state = updatedTitle;
                 },
                 decoration: const InputDecoration(
-                  labelText: 'Update TODO Title',
+                  labelText: 'Update Task Title',
                 ),
               ),
               const SizedBox(height: 8.0),
@@ -108,14 +108,14 @@ class UpdateTodoModalState extends ConsumerState<UpdateTodoModal> {
                 },
                 maxLines: 3,
                 decoration: const InputDecoration(
-                  labelText: 'Update TODO Description',
+                  labelText: 'Update Task Description',
                 ),
               ),
               const SizedBox(height: 16.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  UpdateTaskCategoryChoiceSegmentedButton(widget.todo),
+                  UpdateTaskCategoryChoiceSegmentedButton(widget.task),
                 ],
               ),
               const SizedBox(height: 12.0),
@@ -126,11 +126,11 @@ class UpdateTodoModalState extends ConsumerState<UpdateTodoModal> {
                   const SizedBox(width: 16.0),
                   UpdateTaskSaveButton(
                     ref: ref,
-                    id: widget.todo.id!,
-                    oldTitle: widget.todo.title,
-                    oldDescription: widget.todo.description,
-                    oldCreatedDate: widget.todo.createdDate,
-                    oldDueDate: widget.todo.dueDate,
+                    id: widget.task.id!,
+                    oldTitle: widget.task.title,
+                    oldDescription: widget.task.description,
+                    oldCreatedDate: widget.task.createdDate,
+                    oldDueDate: widget.task.dueDate,
                     titleController: titleController,
                     descriptionController: descriptionController,
                     mounted: mounted,
@@ -146,9 +146,9 @@ class UpdateTodoModalState extends ConsumerState<UpdateTodoModal> {
 }
 
 class UpdateTaskCategoryChoiceSegmentedButton extends ConsumerStatefulWidget {
-  const UpdateTaskCategoryChoiceSegmentedButton(this.todo, {super.key});
+  const UpdateTaskCategoryChoiceSegmentedButton(this.task, {super.key});
 
-  final Todo todo;
+  final Task task;
 
   @override
   ConsumerState<UpdateTaskCategoryChoiceSegmentedButton> createState() {
@@ -163,11 +163,11 @@ class UpdateTaskCategoryChoiceSegmentedButtonState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Categories initialCategory;
-      if (widget.todo.category == 'Personal') {
+      if (widget.task.category == 'Personal') {
         initialCategory = Categories.personal;
-      } else if (widget.todo.category == 'Work') {
+      } else if (widget.task.category == 'Work') {
         initialCategory = Categories.work;
-      } else if (widget.todo.category == 'Study') {
+      } else if (widget.task.category == 'Study') {
         initialCategory = Categories.study;
       } else {
         initialCategory = Categories.personal;
@@ -308,8 +308,8 @@ class UpdateTaskSaveButton extends StatelessWidget {
       child: FilledButton(
         onPressed: () async {
           try {
-            await FirestoreService(ref).updateTodo(
-              Todo(
+            await FirestoreService(ref).updateTask(
+              Task(
                 id: id,
                 title: ref.watch(titleProvider),
                 description: ref.watch(descriptionProvider),
@@ -328,17 +328,17 @@ class UpdateTaskSaveButton extends StatelessWidget {
               ..invalidate(createdDateProvider)
               ..invalidate(dueDateProvider)
               ..invalidate(isCompletedProvider);
-            Logs.updateTodoComplete();
+            Logs.updateTaskComplete();
             if (mounted) {
               Navigator.pop(context);
             }
           } catch (error) {
-            Logs.updateTodoFailed();
+            Logs.updateTaskFailed();
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    'Failed to update TODO: $error',
+                    'Failed to update Task: $error',
                   ),
                   behavior: SnackBarBehavior.floating,
                   backgroundColor: ref.watch(isDarkModeProvider)

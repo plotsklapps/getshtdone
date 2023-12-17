@@ -32,7 +32,7 @@ final StateProvider<String> categoryStringProvider =
   return 'all';
 });
 
-final StateProvider<Set<Categories>> newTodoCategoryProvider =
+final StateProvider<Set<Categories>> newTaskCategoryProvider =
     StateProvider<Set<Categories>>((StateProviderRef<Set<Categories>> ref) {
   return <Categories>{Categories.all};
 });

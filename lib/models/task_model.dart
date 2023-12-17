@@ -4,7 +4,7 @@ import 'package:uuid/uuid.dart';
 // Create a Uuid instance to generate unique id's for each new task.
 Uuid uuid = const Uuid();
 
-class Todo {
+class Task {
   String? id;
   final String title;
   String? description;
@@ -15,7 +15,7 @@ class Todo {
 
   // Constructor for the task class.
   // If an ID is not provided, a new UUID is generated
-  Todo({
+  Task({
     required this.title,
     required this.isCompleted,
     this.description,
@@ -27,7 +27,7 @@ class Todo {
 
   // Create a new task object that is a COPY of the current task object, but
   // with some fields potentially replaced with new values.
-  Todo copyWith({
+  Task copyWith({
     String? title,
     String? description,
     String? category,
@@ -35,7 +35,7 @@ class Todo {
     String? dueDate,
     bool? isCompleted,
   }) {
-    return Todo(
+    return Task(
       id: id, // Keep the same id
       title: title ?? this.title,
       description: description ?? this.description,
@@ -62,8 +62,8 @@ class Todo {
 
   // Method to create a new task object from a Firestore DocumentSnapshot.
   // This is useful when retrieving the task from Firestore.
-  factory Todo.fromSnapshot(DocumentSnapshot<Object?> doc) {
-    return Todo(
+  factory Task.fromSnapshot(DocumentSnapshot<Object?> doc) {
+    return Task(
       id: doc.id,
       title: doc['title'] as String,
       description: doc['description'] as String?,

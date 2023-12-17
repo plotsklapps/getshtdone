@@ -84,7 +84,7 @@ class FirebaseService {
           .read(firestoreProvider)
           .collection('users')
           .doc(userCredential.user?.uid)
-          .collection('task')
+          .collection('taskCollection')
           .doc()
           .set(<String, dynamic>{
         'id': '0',

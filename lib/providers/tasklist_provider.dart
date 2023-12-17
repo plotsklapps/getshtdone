@@ -60,16 +60,16 @@ class TaskListNotifier extends StateNotifier<AsyncValue<List<Task>>> {
   }
 
   void fetchTasks() {
-    // Get the current user from Firebase Auth
+    // Get the current user from Firebase Auth.
     final User? currentUser = FirebaseAuth.instance.currentUser;
 
-    // Get the current sorting method from the sortingMethodProvider
+    // Get the current sorting method from the sortingMethodProvider.
     final String sortingMethod = ref.watch(sortingMethodProvider);
 
-    // Get the current category from the categoryStringProvider
+    // Get the current category from the categoryStringProvider.
     final String category = ref.watch(categoryStringProvider);
 
-    // Check if the user is logged in and their email is verified
+    // Check if the user is logged in and their email is verified.
     if (currentUser != null && currentUser.emailVerified) {
       // Start building the Firestore query
       Query<Map<String, dynamic>> query = ref
@@ -78,17 +78,19 @@ class TaskListNotifier extends StateNotifier<AsyncValue<List<Task>>> {
           .doc(currentUser.uid)
           .collection('taskCollection');
 
-      // If the category is not 'All', filter the tasks by that category
+      // If the category is not 'All', filter the tasks by that category.
       if (category != 'all') {
         query = query.where('category', isEqualTo: category);
       }
 
-      // If the sorting method is 'dueDate' or 'creationDate', sort the tasks by that field
+      // If the sorting method is 'dueDate' or 'creationDate', sort the tasks
+      // by that field.
       if (sortingMethod == 'dueDate' || sortingMethod == 'creationDate') {
         query = query.orderBy(sortingMethod, descending: false);
       }
 
-      // Listen to the Firestore query and update the state whenever the query results change
+      // Listen to the Firestore query and update the state whenever the query
+      // results change.
       taskSubscription = query.snapshots().listen(
         (QuerySnapshot<Map<String, dynamic>> snapshot) {
           // Map the Firestore documents to Task objects

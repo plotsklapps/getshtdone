@@ -16,6 +16,7 @@ import 'package:getsh_tdone/widgets/sortingmethod_modal.dart';
 import 'package:getsh_tdone/widgets/task_card.dart';
 import 'package:getsh_tdone/widgets/taskerror_card.dart';
 import 'package:getsh_tdone/widgets/taskloading_card.dart';
+import 'package:getsh_tdone/widgets/updatetask_modal.dart';
 import 'package:getsh_tdone/widgets/usersettings_modal.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -78,7 +79,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                               key: Key(taskList[index].id!),
                               background: const TaskCardBackgroundDelete(),
                               secondaryBackground:
-                                  const TaskCardBackgroundShare(),
+                                  const TaskCardBackGroundEdit(),
                               confirmDismiss: (DismissDirection direction) {
                                 if (direction == DismissDirection.startToEnd) {
                                   return showDeleteTaskModal(
@@ -88,9 +89,11 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                                     index,
                                   );
                                 } else {
-                                  return showShareTaskModal(
+                                  return showUpdateTaskModal(
                                     context,
                                     ref,
+                                    taskList,
+                                    index,
                                   );
                                 }
                               },
@@ -215,70 +218,18 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Future<bool?> showShareTaskModal(BuildContext context, WidgetRef ref) {
+  Future<bool?> showUpdateTaskModal(
+    BuildContext context,
+    WidgetRef ref,
+    List<Task> taskList,
+    int index,
+  ) {
     return showModalBottomSheet<bool>(
       context: context,
       showDragHandle: true,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return Padding(
-          padding: EdgeInsets.fromLTRB(
-            24.0,
-            0.0,
-            24.0,
-            MediaQuery.of(context).viewInsets.bottom + 16.0,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'Share this task?',
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              const Divider(),
-              const SizedBox(height: 16.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  OutlinedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('CANCEL'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            '''
-This feature is a work in progress...''',
-                          ),
-                          duration: Duration(
-                            seconds: 2,
-                          ),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      'SHARE',
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
+        return UpdateTaskModal(taskList[index]);
       },
     );
   }
@@ -363,8 +314,8 @@ This feature is a work in progress...''',
   }
 }
 
-class TaskCardBackgroundShare extends ConsumerWidget {
-  const TaskCardBackgroundShare({
+class TaskCardBackGroundEdit extends ConsumerWidget {
+  const TaskCardBackGroundEdit({
     super.key,
   });
 
@@ -396,7 +347,7 @@ class TaskCardBackgroundShare extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               FaIcon(
-                FontAwesomeIcons.share,
+                FontAwesomeIcons.solidPenToSquare,
                 color: ref.watch(isDarkModeProvider)
                     ? flexSchemeDark(ref).primary
                     : flexSchemeLight(ref).primary,

@@ -8,6 +8,7 @@ import 'package:getsh_tdone/providers/category_provider.dart';
 import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/description_provider.dart';
 import 'package:getsh_tdone/providers/iscompleted_provider.dart';
+import 'package:getsh_tdone/providers/sneakpeek_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/providers/title_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
@@ -298,28 +299,43 @@ class NewTaskSaveButton extends StatelessWidget {
     return Expanded(
       child: FilledButton(
         onPressed: () async {
-          await FirestoreService(ref).addTodo(
-            Todo(
-              title: ref.watch(titleProvider),
-              description: ref.watch(descriptionProvider),
-              category: ref.watch(categoryStringProvider),
-              createdDate: ref.watch(createdDateProvider),
-              dueDate: ref.watch(dueDateProvider),
-              isCompleted: false,
-            ),
-          );
-          titleController.clear();
-          descriptionController.clear();
-          ref
-            ..invalidate(titleProvider)
-            ..invalidate(descriptionProvider)
-            ..invalidate(categoryProvider)
-            ..invalidate(createdDateProvider)
-            ..invalidate(dueDateProvider)
-            ..invalidate(isCompletedProvider);
-          Logs.addTodoComplete();
-          if (mounted) {
+          if (!ref.watch(isSneakPeekerProvider)) {
+            await FirestoreService(ref).addTodo(
+              Todo(
+                title: ref.watch(titleProvider),
+                description: ref.watch(descriptionProvider),
+                category: ref.watch(categoryStringProvider),
+                createdDate: ref.watch(createdDateProvider),
+                dueDate: ref.watch(dueDateProvider),
+                isCompleted: false,
+              ),
+            );
+            titleController.clear();
+            descriptionController.clear();
+            ref
+              ..invalidate(titleProvider)
+              ..invalidate(descriptionProvider)
+              ..invalidate(categoryProvider)
+              ..invalidate(createdDateProvider)
+              ..invalidate(dueDateProvider)
+              ..invalidate(isCompletedProvider);
+            Logs.addTodoComplete();
+            if (mounted) {
+              Navigator.pop(context);
+            }
+          } else {
             Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text(
+                    'You are currently in sneak peek mode. Currently GSD does '
+                    'not support saving a new task without having an account'),
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: ref.watch(isDarkModeProvider)
+                    ? flexSchemeDark(ref).error
+                    : flexSchemeLight(ref).error,
+              ),
+            );
           }
         },
         child: const Row(

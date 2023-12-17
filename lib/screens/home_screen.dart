@@ -39,34 +39,27 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         extendBody: true,
+        appBar: AppBar(
+          toolbarHeight: 64.0,
+          automaticallyImplyLeading: false,
+          title: ListTile(
+            title: const Text(
+              'Get Sh_t Done',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            subtitle: Text(
+              ref.watch(dateProvider),
+            ),
+          ),
+        ),
         body: ResponsiveLayout(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
               children: <Widget>[
-                const SizedBox(height: 16.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        const Text(
-                          'Get Sh_t Done',
-                          style: TextStyle(
-                            fontSize: 32.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(ref.watch(dateProvider)),
-                      ],
-                    ),
-                  ],
-                ),
-                const Divider(
-                  thickness: 4.0,
-                ),
-                const SizedBox(height: 8.0),
                 Flexible(
                   child: todoList.when(
                     data: (List<Todo> todoList) {

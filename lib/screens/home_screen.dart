@@ -12,6 +12,7 @@ import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 import 'package:getsh_tdone/widgets/newtodo_modal.dart';
 import 'package:getsh_tdone/widgets/responsive_layout.dart';
+import 'package:getsh_tdone/widgets/sortingmethod_modal.dart';
 import 'package:getsh_tdone/widgets/todo_card.dart';
 import 'package:getsh_tdone/widgets/todoerror_card.dart';
 import 'package:getsh_tdone/widgets/todoloading_card.dart';
@@ -174,13 +175,13 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                     IconButton(
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Sorting your tasks is a work in progress!',
-                            ),
-                            behavior: SnackBarBehavior.floating,
-                          ),
+                        showModalBottomSheet<Widget>(
+                          context: context,
+                          showDragHandle: true,
+                          isScrollControlled: true,
+                          builder: (BuildContext context) {
+                            return const SortingMethodModal();
+                          },
                         );
                       },
                       icon: const Icon(

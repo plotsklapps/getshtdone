@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getsh_tdone/models/todo_model.dart';
 import 'package:getsh_tdone/providers/firestore_provider.dart';
+import 'package:getsh_tdone/providers/sortingmethod_provider.dart';
 import 'package:getsh_tdone/services/logger.dart';
 
 final StateNotifierProvider<TodoListNotifier, AsyncValue<List<Todo>>>
@@ -59,16 +60,22 @@ class TodoListNotifier extends StateNotifier<AsyncValue<List<Todo>>> {
 
   void fetchTodos() {
     final User? currentUser = FirebaseAuth.instance.currentUser;
+    final String sortingMethod = ref.watch(sortingMethodProvider);
 
     if (currentUser != null && currentUser.emailVerified) {
-      todoSubscription = ref
+      Query<Map<String, dynamic>> query = ref
           .read(firestoreProvider)
           .collection('users')
           .doc(currentUser.uid)
-          .collection('todoCollection')
-          .orderBy('dueDate', descending: true)
-          .snapshots()
-          .listen(
+          .collection('todoCollection');
+
+      if (<String>['Personal', 'Work', 'Study'].contains(sortingMethod)) {
+        query = query.where('category', isEqualTo: sortingMethod);
+      } else {
+        query = query.orderBy(sortingMethod, descending: false);
+      }
+
+      todoSubscription = query.snapshots().listen(
         (QuerySnapshot<Map<String, dynamic>> snapshot) {
           final List<Todo> todos = snapshot.docs
               .map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {

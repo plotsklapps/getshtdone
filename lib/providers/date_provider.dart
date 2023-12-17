@@ -17,7 +17,7 @@ final AutoDisposeStateProvider<String> createdDateProvider =
   AutoDisposeStateProviderRef<String> ref,
 ) {
   final DateTime creationDate = DateTime.now();
-  final String formattedDate = DateFormat('dd/MM/yyyy').format(creationDate);
+  final String formattedDate = DateFormat('yyyy/MM/dd').format(creationDate);
   return formattedDate;
 });
 
@@ -27,7 +27,7 @@ final AutoDisposeStateProvider<String> dueDateProvider =
   AutoDisposeStateProviderRef<String> ref,
 ) {
   final String createdDate = ref.watch(createdDateProvider);
-  final DateFormat format = DateFormat('dd/MM/yyyy');
+  final DateFormat format = DateFormat('yyyy/MM/dd');
   final DateTime dueDate = format.parse(createdDate);
   final DateTime dueDatePlusWeek = dueDate.add(const Duration(days: 7));
   final String formattedDate = format.format(dueDatePlusWeek);
@@ -42,7 +42,7 @@ final AutoDisposeStateProvider<String> creationDateProvider =
   final User? user = ref.watch(firebaseProvider).currentUser;
   final DateTime? creationDate = user?.metadata.creationTime;
   if (creationDate != null) {
-    final String formattedDate = DateFormat('dd-MM-yyyy').format(creationDate);
+    final String formattedDate = DateFormat('yyyy/MM/dd').format(creationDate);
     return formattedDate;
   } else {
     return 'NEVER';
@@ -58,7 +58,7 @@ final AutoDisposeStateProvider<String> lastSignInDateProvider =
   final DateTime? lastSignInDate = user?.metadata.lastSignInTime;
   if (lastSignInDate != null) {
     final String formattedDate =
-        DateFormat('dd-MM-yyyy').format(lastSignInDate);
+        DateFormat('yyyy/MM/dd').format(lastSignInDate);
     return formattedDate;
   } else {
     return 'NEVER';

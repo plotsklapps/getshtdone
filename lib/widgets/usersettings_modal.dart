@@ -46,9 +46,14 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
           // Profile ListTile.
           ListTile(
             onTap: () async {
-              if (ref.watch(isSneakPeekerProvider) == true) {
+              // If user is a sneak peeker, close the modal and show a snack.
+              if (ref.watch(isSneakPeekerProvider)) {
+                Navigator.pop(context);
                 showSneakPeekerSnack(context);
-              } else {
+              }
+              // If user is not a sneak peeker, show the second modal to change
+              // the username.
+              else {
                 await showModalBottomSheet<BottomSheet>(
                   context: context,
                   isScrollControlled: true,
@@ -67,14 +72,19 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
           // Change thememode ListTile.
           ListTile(
             onTap: () {
+              // Whether the user is a sneak peeker or not, change the theme.
               ref.read(isDarkModeProvider.notifier).state =
                   !ref.watch(isDarkModeProvider);
-              FirebaseService(ref).updateThemeMode((Object error) {
-                // If anything goes wrong:
-                showErrorSnack(context, error);
-              }, (String success) {
-                // If all goes well: Do nothing.
-              });
+              // If the user is not a sneak peeker, update the theme in the
+              // Firestore database as well.
+              if (!ref.watch(isSneakPeekerProvider)) {
+                FirebaseService(ref).updateThemeMode((Object error) {
+                  // If anything goes wrong:
+                  showErrorSnack(context, error);
+                }, (String success) {
+                  // If all goes well: Do nothing.
+                });
+              }
             },
             title: ref.watch(isDarkModeProvider)
                 ? const Text('Dark Mode')
@@ -88,14 +98,19 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
           // Change themecolor ListTile.
           ListTile(
             onTap: () {
+              // Whether the user is a sneak peeker or not, change the color.
               ref.read(isGreenSchemeProvider.notifier).state =
                   !ref.watch(isGreenSchemeProvider);
-              FirebaseService(ref).updateThemeColor((Object error) {
-                // If anything goes wrong:
-                showErrorSnack(context, error);
-              }, (String success) {
-                // If all goes well: Do nothing.
-              });
+              // If the user is not a sneak peeker, update the color in the
+              // Firestore database as well.
+              if (!ref.watch(isSneakPeekerProvider)) {
+                FirebaseService(ref).updateThemeColor((Object error) {
+                  // If anything goes wrong:
+                  showErrorSnack(context, error);
+                }, (String success) {
+                  // If all goes well: Do nothing.
+                });
+              }
             },
             title: ref.watch(isGreenSchemeProvider)
                 ? const Text('Green Money')
@@ -161,7 +176,7 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
         behavior: SnackBarBehavior.floating,
         backgroundColor: ref.watch(isDarkModeProvider)
             ? flexSchemeDark(ref).error
-            : flexSchemeDark(ref).error,
+            : flexSchemeLight(ref).error,
       ),
     );
   }
@@ -183,7 +198,7 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
         behavior: SnackBarBehavior.floating,
         backgroundColor: ref.watch(isDarkModeProvider)
             ? flexSchemeDark(ref).error
-            : flexSchemeDark(ref).error,
+            : flexSchemeLight(ref).error,
       ),
     );
   }

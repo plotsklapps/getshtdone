@@ -218,6 +218,8 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
+  // TODO(plotsklapps): Continue here...
+
   Future<bool?> showUpdateTaskModal(
     BuildContext context,
     WidgetRef ref,

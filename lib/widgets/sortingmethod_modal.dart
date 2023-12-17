@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:getsh_tdone/providers/category_provider.dart';
 import 'package:getsh_tdone/providers/sortingmethod_provider.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 
@@ -60,7 +61,9 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
             title: const Text('By \'Personal\''),
             subtitle: const Text('Show only personal tasks'),
             onTap: () {
-              ref.read(sortingMethodProvider.notifier).state = 'Personal';
+              ref
+                  .read(categoryProvider.notifier)
+                  .updateCategory(Categories.personal, ref);
               Navigator.pop(context);
             },
           ),
@@ -69,7 +72,9 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
             title: const Text('By \'Work\''),
             subtitle: const Text('Show only work tasks'),
             onTap: () {
-              ref.read(sortingMethodProvider.notifier).state = 'Work';
+              ref
+                  .read(categoryProvider.notifier)
+                  .updateCategory(Categories.work, ref);
               Navigator.pop(context);
             },
           ),
@@ -78,7 +83,9 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
             title: const Text('By \'Study\''),
             subtitle: const Text('Show only study tasks'),
             onTap: () {
-              ref.read(sortingMethodProvider.notifier).state = 'Study';
+              ref
+                  .read(categoryProvider.notifier)
+                  .updateCategory(Categories.study, ref);
               Navigator.pop(context);
             },
           ),
@@ -91,6 +98,9 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
                     onPressed: () {
                       ref.read(sortingMethodProvider.notifier).state =
                           'dueDate';
+                      ref
+                          .read(categoryProvider.notifier)
+                          .updateCategory(Categories.all, ref);
                       Navigator.pop(context);
                     },
                     child: const Text('Remove all sorts'),

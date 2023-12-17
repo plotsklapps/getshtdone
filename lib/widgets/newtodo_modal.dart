@@ -54,6 +54,7 @@ class NewTodoModalState extends ConsumerState<NewTodoModal> {
         24.0,
         MediaQuery.of(context).viewInsets.bottom + 16.0,
       ),
+      // ScrollConfiguration allows the user to use any device to scroll.
       child: ScrollConfiguration(
         behavior: const ScrollBehavior().copyWith(
           dragDevices: <PointerDeviceKind>{
@@ -87,6 +88,7 @@ class NewTodoModalState extends ConsumerState<NewTodoModal> {
               TextField(
                 controller: titleController,
                 onChanged: (String newTitle) {
+                  // Store the new title in the state.
                   ref.read(titleProvider.notifier).state = newTitle;
                 },
                 decoration: const InputDecoration(
@@ -97,6 +99,7 @@ class NewTodoModalState extends ConsumerState<NewTodoModal> {
               TextField(
                 controller: descriptionController,
                 onChanged: (String newDescription) {
+                  // Store the new description in the state.
                   ref.read(descriptionProvider.notifier).state = newDescription;
                 },
                 maxLines: 3,
@@ -108,6 +111,8 @@ class NewTodoModalState extends ConsumerState<NewTodoModal> {
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  // Widget that allows the user to select the category of the
+                  // new task (Defaults to 'All').
                   NewTaskCategoryChoiceSegmentedButton(),
                 ],
               ),
@@ -115,14 +120,20 @@ class NewTodoModalState extends ConsumerState<NewTodoModal> {
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  // Widget that allows the user to select the due date of the
+                  // new task (Defaults to createdDate (today) + 7 days).
                   NewTaskDatePickerButton(),
                 ],
               ),
               const SizedBox(height: 8.0),
               Row(
                 children: <Widget>[
+                  // Widget that allows the user to cancel the creation of the
+                  // new task.
                   const NewTaskCancelButton(),
                   const SizedBox(width: 16.0),
+                  // Widget that allows the user to save the new task to
+                  // Firestore database.
                   NewTaskSaveButton(
                     ref: ref,
                     titleController: titleController,
@@ -152,41 +163,33 @@ class NewTaskCategoryChoiceSegmentedButtonState
     extends ConsumerState<NewTaskCategoryChoiceSegmentedButton> {
   @override
   Widget build(BuildContext context) {
-    Color selectedColor = flexSchemeLight(ref).primary;
+    Color selectedColor = ref.watch(isDarkModeProvider)
+        ? flexSchemeDark(ref).primary
+        : flexSchemeLight(ref).primary;
     return Expanded(
       child: SegmentedButton<Categories>(
-        selected: ref.watch(categoryProvider),
+        selected: ref.watch(newTodoCategoryProvider),
         onSelectionChanged: (Set<Categories> newSelection) {
-          if (newSelection.contains(Categories.personal)) {
-            ref
-                .read(categoryProvider.notifier)
-                .updateCategory(Categories.personal, ref);
-          } else if (newSelection.contains(Categories.work)) {
-            ref
-                .read(categoryProvider.notifier)
-                .updateCategory(Categories.work, ref);
-          } else if (newSelection.contains(Categories.study)) {
-            ref
-                .read(categoryProvider.notifier)
-                .updateCategory(Categories.study, ref);
-          }
+          ref.read(newTodoCategoryProvider.notifier).state = newSelection;
         },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
               if (states.contains(MaterialState.selected)) {
-                if (ref.watch(categoryProvider).contains(Categories.personal)) {
+                if (ref
+                    .watch(newTodoCategoryProvider)
+                    .contains(Categories.personal)) {
                   selectedColor = ref.watch(isDarkModeProvider)
                       ? flexSchemeDark(ref).primary
                       : flexSchemeLight(ref).primary;
                 } else if (ref
-                    .watch(categoryProvider)
+                    .watch(newTodoCategoryProvider)
                     .contains(Categories.work)) {
                   selectedColor = ref.watch(isDarkModeProvider)
                       ? flexSchemeDark(ref).secondary
                       : flexSchemeLight(ref).secondary;
                 } else if (ref
-                    .watch(categoryProvider)
+                    .watch(newTodoCategoryProvider)
                     .contains(Categories.study)) {
                   selectedColor = ref.watch(isDarkModeProvider)
                       ? flexSchemeDark(ref).tertiary
@@ -304,7 +307,12 @@ class NewTaskSaveButton extends StatelessWidget {
               Todo(
                 title: ref.watch(titleProvider),
                 description: ref.watch(descriptionProvider),
-                category: ref.watch(categoryStringProvider),
+                category: ref
+                    .watch(newTodoCategoryProvider)
+                    .first
+                    .toString()
+                    .split('.')
+                    .last,
                 createdDate: ref.watch(createdDateProvider),
                 dueDate: ref.watch(dueDateProvider),
                 isCompleted: false,
@@ -315,7 +323,7 @@ class NewTaskSaveButton extends StatelessWidget {
             ref
               ..invalidate(titleProvider)
               ..invalidate(descriptionProvider)
-              ..invalidate(categoryProvider)
+              ..invalidate(newTodoCategoryProvider)
               ..invalidate(createdDateProvider)
               ..invalidate(dueDateProvider)
               ..invalidate(isCompletedProvider);

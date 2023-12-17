@@ -92,7 +92,7 @@ class FirebaseService {
         'description':
             'Get your sh_t done.\nSwipe right to delete, swipe left to share '
                 'or long press to edit.',
-        'category': 'Personal',
+        'category': 'personal',
         'createdDate': ref.watch(createdDateProvider),
         'dueDate': ref.watch(dueDateProvider),
         'isCompleted': false,

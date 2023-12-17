@@ -49,7 +49,6 @@ class SplashScreenState extends ConsumerState<SplashScreen> {
         progressTimer.cancel();
         Logs.userUnknown();
         // User is unknown: set sneak peeker bool to true.
-        ref.read(isSneakPeekerProvider.notifier).state = true;
         Navigation.navigateToLoginScreen(context);
       }
     });

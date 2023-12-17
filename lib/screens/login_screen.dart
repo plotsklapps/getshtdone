@@ -152,24 +152,16 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     TextButton(
                       onPressed: () {
-                        setState(() {
-                          isLoggingIn = true;
-                        });
                         // Sneak peek user. Show snackbar on success
                         // or error.
                         FirebaseService(ref).sneakPeek(
                             // If everything goes well:
                             (String success) {
-                          setState(() {
-                            isLoggingIn = false;
-                          });
                           Navigation.navigateToHomeScreen(context);
                           showSuccessSnack(context, success);
                         });
                       },
-                      child: isLoggingIn
-                          ? const CircularProgressIndicator()
-                          : const Text('SNEAK PEEK'),
+                      child: const Text('SNEAK PEEK'),
                     ),
                   ],
                 ),

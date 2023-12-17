@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum Categories { study, work, personal }
+enum Categories { all, personal, work, study }
 
 final AutoDisposeStateNotifierProvider<CategoryNotifier, Set<Categories>>
     categoryProvider =
@@ -11,21 +11,28 @@ final AutoDisposeStateNotifierProvider<CategoryNotifier, Set<Categories>>
 );
 
 class CategoryNotifier extends StateNotifier<Set<Categories>> {
-  CategoryNotifier() : super(<Categories>{Categories.personal});
+  CategoryNotifier() : super(<Categories>{Categories.all});
 
   void updateCategory(Categories category, WidgetRef ref) {
     state = <Categories>{category};
     if (state.contains(Categories.personal)) {
-      ref.read(categoryStringProvider.notifier).state = 'Personal';
+      ref.read(categoryStringProvider.notifier).state = 'personal';
     } else if (state.contains(Categories.work)) {
-      ref.read(categoryStringProvider.notifier).state = 'Work';
+      ref.read(categoryStringProvider.notifier).state = 'work';
     } else if (state.contains(Categories.study)) {
-      ref.read(categoryStringProvider.notifier).state = 'Study';
+      ref.read(categoryStringProvider.notifier).state = 'study';
+    } else {
+      ref.read(categoryStringProvider.notifier).state = 'all';
     }
   }
 }
 
 final StateProvider<String> categoryStringProvider =
     StateProvider<String>((StateProviderRef<String> ref) {
-  return 'Personal';
+  return 'all';
+});
+
+final StateProvider<Set<Categories>> newTodoCategoryProvider =
+    StateProvider<Set<Categories>>((StateProviderRef<Set<Categories>> ref) {
+  return <Categories>{Categories.all};
 });

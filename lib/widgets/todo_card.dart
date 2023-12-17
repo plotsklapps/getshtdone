@@ -53,15 +53,15 @@ class TodoCard extends ConsumerWidget {
                       topLeft: Radius.circular(12.0),
                       bottomLeft: Radius.circular(12.0),
                     ),
-                    color: todo.category == 'Personal'
+                    color: todo.category == 'personal'
                         ? isDarkMode
                             ? flexSchemeDark(ref).primary
                             : flexSchemeLight(ref).primary
-                        : todo.category == 'Work'
+                        : todo.category == 'work'
                             ? isDarkMode
                                 ? flexSchemeDark(ref).secondary
                                 : flexSchemeLight(ref).secondary
-                            : todo.category == 'Study'
+                            : todo.category == 'study'
                                 ? isDarkMode
                                     ? flexSchemeDark(ref).tertiary
                                     : flexSchemeLight(ref).tertiary

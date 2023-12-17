@@ -30,7 +30,7 @@ class SignoutModalState extends ConsumerState<SignoutModal> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           const Text(
-            'GO BACK TO LOG IN',
+            'Are you sure?',
             style: TextStyle(
               fontSize: 24.0,
               fontWeight: FontWeight.bold,
@@ -43,8 +43,18 @@ class SignoutModalState extends ConsumerState<SignoutModal> {
           Row(
             children: <Widget>[
               Expanded(
+                child: OutlinedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('CANCEL'),
+                ),
+              ),
+              const SizedBox(width: 16.0),
+              Expanded(
                 child: ElevatedButton(
                   onPressed: () async {
+                    Navigator.pop(context);
                     if (!isSigningOut) {
                       setState(() {
                         isSigningOut = true;
@@ -64,21 +74,26 @@ class SignoutModalState extends ConsumerState<SignoutModal> {
                       isSigningOut = false;
                     });
                   },
-                  child: isSigningOut
-                      ? const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8.0),
-                          child: CircularProgressIndicator(),
-                        )
-                      : const Text('SIGN OUT'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ref.watch(
+                      isDarkModeProvider,
+                    )
+                        ? flexSchemeDark(ref).error
+                        : flexSchemeLight(ref).error,
+                  ),
+                  child: Text(
+                    'SIGN OUT',
+                    style: TextStyle(
+                      color: ref.watch(
+                        isDarkModeProvider,
+                      )
+                          ? flexSchemeDark(ref).onError
+                          : flexSchemeLight(ref).onError,
+                    ),
+                  ),
                 ),
               ),
             ],
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('CANCEL'),
           ),
         ],
       ),

@@ -54,6 +54,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
               ref.watch(dateProvider),
             ),
           ),
+          centerTitle: true,
         ),
         body: ResponsiveLayout(
           child: Padding(

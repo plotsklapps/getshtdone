@@ -46,7 +46,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
             title: const Text(
               'Get Sh_t Done',
               style: TextStyle(
-                fontSize: 18.0,
+                fontSize: 20.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -123,37 +123,75 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
           shape: const CircularNotchedRectangle(),
           child: ResponsiveLayout(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                IconButton(
-                  onPressed: () {
-                    showModalBottomSheet<Widget>(
-                      context: context,
-                      showDragHandle: true,
-                      isScrollControlled: true,
-                      builder: (BuildContext context) {
-                        return const UserSettingsModal();
+                Row(
+                  children: <Widget>[
+                    IconButton(
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content:
+                                Text('Feature is being made up as we speak...'),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
                       },
-                    );
-                  },
-                  icon: FaIcon(
-                    ref.watch(smileyProvider),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Work in progress!',
-                        ),
-                        behavior: SnackBarBehavior.floating,
+                      icon: const FaIcon(
+                        FontAwesomeIcons.circleQuestion,
                       ),
-                    );
-                  },
-                  icon: const Icon(
-                    FontAwesomeIcons.sort,
-                  ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        showModalBottomSheet<Widget>(
+                          context: context,
+                          showDragHandle: true,
+                          isScrollControlled: true,
+                          builder: (BuildContext context) {
+                            return const UserSettingsModal();
+                          },
+                        );
+                      },
+                      icon: FaIcon(
+                        ref.watch(smileyProvider),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 64.0),
+                Row(
+                  children: <Widget>[
+                    IconButton(
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Pomodoro timer is coming!',
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        FontAwesomeIcons.stopwatch20,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Sorting your tasks is a work in progress!',
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        FontAwesomeIcons.sort,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

@@ -235,21 +235,27 @@ class FirebaseService {
     void Function(String success) onSuccess,
   ) async {
     try {
-      // Cancel the Firestore listener.
-      ref.read(todoListProvider.notifier).cancelSubscription();
-      // Sign out from Firebase Auth.
-      await ref.read(firebaseProvider).signOut().then((_) {
-        final User? currentUser = ref.read(firebaseProvider).currentUser;
-        if (currentUser == null) {
-          // If all goes well:
-          invalidateAllProviders();
-          Logs.signOutComplete();
-          onSuccess('Successfully signed out!');
-        } else {
-          // If anything goes wrong:
-          Logs.signOutFailed();
-        }
-      });
+      if (!ref.watch(isSneakPeekerProvider)) {
+        // Cancel the Firestore listener.
+        ref.read(todoListProvider.notifier).cancelSubscription();
+        // Sign out from Firebase Auth.
+        await ref.read(firebaseProvider).signOut().then((_) {
+          final User? currentUser = ref.read(firebaseProvider).currentUser;
+          if (currentUser == null) {
+            // If all goes well:
+            invalidateAllProviders();
+            Logs.signOutComplete();
+            onSuccess('Successfully signed out!');
+          } else {
+            // If anything goes wrong:
+            Logs.signOutFailed();
+          }
+        });
+      } else {
+        invalidateAllProviders();
+        Logs.signOutComplete();
+        onSuccess('Successfully signed out!');
+      }
     } catch (error) {
       // If anything goes wrong:
       Logs.signOutFailed();

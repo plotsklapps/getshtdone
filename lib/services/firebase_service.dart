@@ -252,6 +252,8 @@ class FirebaseService {
           }
         });
       } else {
+        // Cancel the Firestore listener.
+        ref.read(todoListProvider.notifier).cancelSubscription();
         invalidateAllProviders();
         Logs.signOutComplete();
         onSuccess('Successfully signed out!');

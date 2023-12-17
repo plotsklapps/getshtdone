@@ -28,11 +28,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class HomeScreenState extends ConsumerState<HomeScreen> {
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final AsyncValue<List<Todo>> todoList = ref.watch(todoListProvider);
 
@@ -58,7 +53,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         body: ResponsiveLayout(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            padding: const EdgeInsets.fromLTRB(18.0, 12.0, 18.0, 12.0),
             child: Column(
               children: <Widget>[
                 Flexible(

@@ -66,6 +66,7 @@ class TodoListNotifier extends StateNotifier<AsyncValue<List<Todo>>> {
           .collection('users')
           .doc(currentUser.uid)
           .collection('todoCollection')
+          .orderBy('dueDate', descending: true)
           .snapshots()
           .listen(
         (QuerySnapshot<Map<String, dynamic>> snapshot) {

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getsh_tdone/providers/firebase_provider.dart';
+import 'package:getsh_tdone/providers/sortingmethod_provider.dart';
 import 'package:intl/intl.dart';
 
 // Provider for the current date. Formats it to a String.
@@ -63,4 +64,31 @@ final AutoDisposeStateProvider<String> lastSignInDateProvider =
   } else {
     return 'NEVER';
   }
+});
+
+enum DateFilter { dueDate, createdDate }
+
+final StateNotifierProvider<DateFilterNotifier, Set<DateFilter>>
+    dateFilterProvider =
+    StateNotifierProvider<DateFilterNotifier, Set<DateFilter>>(
+        (StateNotifierProviderRef<DateFilterNotifier, Set<DateFilter>> ref) {
+  return DateFilterNotifier();
+});
+
+class DateFilterNotifier extends StateNotifier<Set<DateFilter>> {
+  DateFilterNotifier() : super(<DateFilter>{DateFilter.dueDate});
+
+  void updateDateFilter(DateFilter dateFilter, WidgetRef ref) {
+    state = <DateFilter>{dateFilter};
+    if (state.contains(DateFilter.createdDate)) {
+      ref.read(sortingMethodProvider.notifier).state = 'createdDate';
+    } else {
+      ref.read(sortingMethodProvider.notifier).state = 'dueDate';
+    }
+  }
+}
+
+final StateProvider<Set<DateFilter>> sortDateCategoryProvider =
+    StateProvider<Set<DateFilter>>((StateProviderRef<Set<DateFilter>> ref) {
+  return <DateFilter>{DateFilter.dueDate};
 });

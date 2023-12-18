@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/providers/category_provider.dart';
+import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/sortingmethod_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/theme/theme.dart';
@@ -25,7 +25,7 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
         16.0,
         8.0,
         16.0,
-        MediaQuery.of(context).viewInsets.bottom,
+        MediaQuery.of(context).viewInsets.bottom + 16.0,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -44,59 +44,74 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
               SortTaskCategoryChoiceSegmentedButton(),
             ],
           ),
-          const SizedBox(height: 8.0),
-          ListTile(
-            leading: const FaIcon(FontAwesomeIcons.arrowDownWideShort),
-            title: const Text('By due date (default)'),
-            subtitle: const Text('Show the most urgent tasks first'),
-            onTap: () {
-              ref.read(sortingMethodProvider.notifier).state = 'dueDate';
-              Navigator.pop(context);
-            },
+          const SizedBox(height: 16.0),
+          const Row(
+            children: <Widget>[
+              SortTaskDateChoiceSegmentedButton(),
+            ],
           ),
-          ListTile(
-            leading: const FaIcon(FontAwesomeIcons.arrowDownWideShort),
-            title: const Text('By creation date'),
-            subtitle: const Text('Show the newest tasks first'),
-            onTap: () {
-              ref.read(sortingMethodProvider.notifier).state = 'createdDate';
-              Navigator.pop(context);
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      ref.read(sortingMethodProvider.notifier).state =
-                          'dueDate';
-                      ref
-                          .read(categoryProvider.notifier)
-                          .updateCategory(Categories.all, ref);
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Remove all sorts'),
-                  ),
+          const SizedBox(height: 16.0),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {
+                    ref.read(sortingMethodProvider.notifier).state = 'dueDate';
+                    ref
+                        .read(categoryProvider.notifier)
+                        .updateCategory(Categories.all, ref);
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Remove all sorts'),
                 ),
-                const SizedBox(width: 16.0),
-                Expanded(
-                  child: FilledButton(
-                    onPressed: () async {
-                      // TODO(plotsklapps): Continue here!
-                      Navigator.pop(context);
-                    },
-                    child: isSaving
-                        ? const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.0),
-                            child: CircularProgressIndicator(),
-                          )
-                        : const Text('OK'),
-                  ),
+              ),
+              const SizedBox(width: 16.0),
+              Expanded(
+                child: FilledButton(
+                  onPressed: () async {
+                    // When the user presses OK, update the sorting method
+                    // according to the sortTaskCategoryProvider that was
+                    // updated in the SortTaskCategoryChoiceSegmentedButton.
+                    Categories category = Categories.all;
+                    DateFilter dateFilter = DateFilter.dueDate;
+                    if (ref
+                        .watch(sortTaskCategoryProvider)
+                        .contains(Categories.personal)) {
+                      category = Categories.personal;
+                    } else if (ref
+                        .watch(sortTaskCategoryProvider)
+                        .contains(Categories.work)) {
+                      category = Categories.work;
+                    } else if (ref
+                        .watch(sortTaskCategoryProvider)
+                        .contains(Categories.study)) {
+                      category = Categories.study;
+                    } else if (ref
+                        .watch(sortDateCategoryProvider)
+                        .contains(DateFilter.dueDate)) {
+                      dateFilter = DateFilter.dueDate;
+                    } else if (ref
+                        .watch(sortDateCategoryProvider)
+                        .contains(DateFilter.createdDate)) {
+                      dateFilter = DateFilter.createdDate;
+                    }
+                    ref
+                        .read(categoryProvider.notifier)
+                        .updateCategory(category, ref);
+                    ref
+                        .read(dateFilterProvider.notifier)
+                        .updateDateFilter(dateFilter, ref);
+                    Navigator.pop(context);
+                  },
+                  child: isSaving
+                      ? const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8.0),
+                          child: CircularProgressIndicator(),
+                        )
+                      : const Text('OK'),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
@@ -143,12 +158,17 @@ class SortTaskCategoryChoiceSegmentedButtonState
       child: SegmentedButton<Categories>(
         selected: ref.watch(sortTaskCategoryProvider),
         onSelectionChanged: (Set<Categories> newSortSelection) {
+          // When the selection changes, store the value of the newSortSelection
+          // in the sortTaskCategoryProvider, SEPARATE from the categoryProvider
+          // so that the category is only picked here in this modal and not
+          // sorted immediately.
           ref.read(sortTaskCategoryProvider.notifier).state = newSortSelection;
         },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
               if (states.contains(MaterialState.selected)) {
+                // Change the color of the button when it's selected.
                 if (ref
                     .watch(sortTaskCategoryProvider)
                     .contains(Categories.personal)) {
@@ -187,6 +207,72 @@ class SortTaskCategoryChoiceSegmentedButtonState
           ButtonSegment<Categories>(
             value: Categories.study,
             label: Text('Study'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SortTaskDateChoiceSegmentedButton extends ConsumerStatefulWidget {
+  const SortTaskDateChoiceSegmentedButton({super.key});
+
+  @override
+  ConsumerState<SortTaskDateChoiceSegmentedButton> createState() {
+    return SortTaskDateChoiceSegmentedButtonState();
+  }
+}
+
+class SortTaskDateChoiceSegmentedButtonState
+    extends ConsumerState<SortTaskDateChoiceSegmentedButton> {
+  @override
+  Widget build(BuildContext context) {
+    final bool isDarkMode = ref.watch(isDarkModeProvider);
+    Color selectedColor =
+        isDarkMode ? flexSchemeDark(ref).primary : flexSchemeLight(ref).primary;
+    return Expanded(
+      child: SegmentedButton<DateFilter>(
+        selected: ref.watch(sortDateCategoryProvider),
+        onSelectionChanged: (Set<DateFilter> newSortSelection) {
+          // When the selection changes, store the value of the newSortSelection
+          // in the sortTaskCategoryProvider, SEPARATE from the categoryProvider
+          // so that the category is only picked here in this modal and not
+          // sorted immediately.
+          ref.read(sortDateCategoryProvider.notifier).state = newSortSelection;
+        },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              if (states.contains(MaterialState.selected)) {
+                // Change the color of the button when it's selected.
+                if (ref
+                    .watch(sortDateCategoryProvider)
+                    .contains(DateFilter.dueDate)) {
+                  selectedColor = ref.watch(isDarkModeProvider)
+                      ? flexSchemeDark(ref).primary
+                      : flexSchemeLight(ref).primary;
+                } else if (ref
+                    .watch(sortDateCategoryProvider)
+                    .contains(DateFilter.createdDate)) {
+                  selectedColor = ref.watch(isDarkModeProvider)
+                      ? flexSchemeDark(ref).primary
+                      : flexSchemeLight(ref).primary;
+                }
+                return selectedColor;
+              }
+              return Colors.transparent;
+            },
+          ),
+        ),
+        emptySelectionAllowed: true,
+        segments: const <ButtonSegment<DateFilter>>[
+          ButtonSegment<DateFilter>(
+            value: DateFilter.dueDate,
+            label: Text('Due Date'),
+          ),
+          ButtonSegment<DateFilter>(
+            value: DateFilter.createdDate,
+            label: Text('Created Date'),
           ),
         ],
       ),

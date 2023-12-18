@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 
 class TaskLoadingCard extends ConsumerWidget {
@@ -9,58 +10,78 @@ class TaskLoadingCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      height: 140.0,
-      decoration: BoxDecoration(
+    final bool isDarkMode = ref.watch(isDarkModeProvider);
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16.0),
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(
-          color: flexSchemeDark(ref).tertiary,
+        side: BorderSide(
+          color: isDarkMode
+              ? flexSchemeDark(ref).tertiary
+              : flexSchemeLight(ref).tertiary,
+          width: 2.0,
         ),
       ),
-      child: Row(
-        children: <Widget>[
-          Container(
-            width: 20.0,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12.0),
-                bottomLeft: Radius.circular(12.0),
-              ),
-              color: flexSchemeDark(ref).tertiary,
-            ),
-          ),
-          const Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text('Loading...'),
-                    subtitle: Text('Please wait...'),
-                    trailing: CircularProgressIndicator(),
+      child: IntrinsicHeight(
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(12.0),
+                    bottomLeft: Radius.circular(12.0),
                   ),
-                  Divider(thickness: 4.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: <Widget>[
-                          Text('Created: LOADING...'),
-                          Text(
-                            'Due: LOADING...',
-                          ),
-                        ],
+                  color: isDarkMode
+                      ? flexSchemeDark(ref).tertiary
+                      : flexSchemeLight(ref).tertiary,
+                ),
+              ),
+            ),
+            const Expanded(
+              flex: 15,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  children: <Widget>[
+                    Flexible(
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(
+                          'Loading...',
+                          style: TextStyle(fontSize: 22.0),
+                        ),
+                        subtitle: Text(
+                          'Please wait...',
+                          style: TextStyle(fontSize: 14.0),
+                        ),
+                        trailing: CircularProgressIndicator(),
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    SizedBox(height: 8.0),
+                    Divider(thickness: 4.0),
+                    SizedBox(height: 4.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text('Category: LOADING...'),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            Text('Created: LOADING...'),
+                            Text(
+                              'Due: LOADING...',
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

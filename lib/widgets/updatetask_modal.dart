@@ -276,7 +276,7 @@ class UpdateTaskDatePickerButton extends ConsumerWidget {
           ).then((DateTime? datePicked) {
             if (datePicked != null) {
               final String formattedDate =
-                  DateFormat('dd/MM/yyyy').format(datePicked);
+                  DateFormat('yyyy/MM/dd').format(datePicked);
               ref.read(dueDateProvider.notifier).state = formattedDate;
               return null;
             }

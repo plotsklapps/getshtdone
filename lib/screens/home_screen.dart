@@ -39,17 +39,19 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
         appBar: AppBar(
           toolbarHeight: 64.0,
           automaticallyImplyLeading: false,
-          title: ListTile(
-            title: const Text(
-              'Get Sh_t Done',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Text(
+                'Get Sh_t Done',
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            subtitle: Text(
-              ref.watch(dateProvider),
-            ),
+              const SizedBox(width: 32.0),
+              Text(ref.watch(dateProvider)),
+            ],
           ),
           centerTitle: true,
         ),
@@ -77,8 +79,11 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                           itemBuilder: (BuildContext context, int index) {
                             return Dismissible(
                               key: Key(taskList[index].id!),
+                              // Swiping to the right is for deleting the task.
                               background: const TaskCardBackgroundDelete(),
                               secondaryBackground:
+                                  // Swiping to the left is for editing the
+                                  // task.
                                   const TaskCardBackGroundEdit(),
                               confirmDismiss: (DismissDirection direction) {
                                 if (direction == DismissDirection.startToEnd) {

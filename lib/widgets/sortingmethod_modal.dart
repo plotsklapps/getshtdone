@@ -52,7 +52,7 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
           ),
           const SizedBox(height: 16.0),
           Row(
-            children: <Widget>[
+            children: [
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
@@ -62,7 +62,32 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
                         .updateCategory(Categories.all, ref);
                     Navigator.pop(context);
                   },
-                  child: const Text('Remove all sorts'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ref.watch(isDarkModeProvider)
+                        ? flexSchemeDark(ref).error
+                        : flexSchemeLight(ref).error,
+                  ),
+                  child: Text(
+                    'Remove all sorts',
+                    style: TextStyle(
+                      color: ref.watch(isDarkModeProvider)
+                          ? flexSchemeDark(ref).onError
+                          : flexSchemeLight(ref).onError,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16.0),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Cancel'),
                 ),
               ),
               const SizedBox(width: 16.0),
@@ -114,25 +139,6 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
             ],
           ),
         ],
-      ),
-    );
-  }
-
-  void showErrorSnack(BuildContext context, Object error) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(error.toString()),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: flexSchemeLight(ref).error,
-      ),
-    );
-  }
-
-  void showSuccessSnack(BuildContext context, String success) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(success),
-        behavior: SnackBarBehavior.floating,
       ),
     );
   }

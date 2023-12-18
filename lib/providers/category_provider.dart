@@ -36,3 +36,13 @@ final StateProvider<Set<Categories>> newTaskCategoryProvider =
     StateProvider<Set<Categories>>((StateProviderRef<Set<Categories>> ref) {
   return <Categories>{Categories.all};
 });
+
+final StateProvider<Set<Categories>> updateTaskCategoryProvider =
+    StateProvider<Set<Categories>>((StateProviderRef<Set<Categories>> ref) {
+  return <Categories>{Categories.all};
+});
+
+final StateProvider<Set<Categories>> sortTaskCategoryProvider =
+    StateProvider<Set<Categories>>((StateProviderRef<Set<Categories>> ref) {
+  return <Categories>{Categories.all};
+});

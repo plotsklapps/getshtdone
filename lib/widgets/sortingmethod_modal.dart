@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/providers/category_provider.dart';
 import 'package:getsh_tdone/providers/sortingmethod_provider.dart';
+import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 
 class SortingMethodModal extends ConsumerStatefulWidget {
@@ -38,6 +39,12 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
           ),
           const Divider(thickness: 4.0),
           const SizedBox(height: 8.0),
+          const Row(
+            children: <Widget>[
+              SortTaskCategoryChoiceSegmentedButton(),
+            ],
+          ),
+          const SizedBox(height: 8.0),
           ListTile(
             leading: const FaIcon(FontAwesomeIcons.arrowDownWideShort),
             title: const Text('By due date (default)'),
@@ -53,39 +60,6 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
             subtitle: const Text('Show the newest tasks first'),
             onTap: () {
               ref.read(sortingMethodProvider.notifier).state = 'createdDate';
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: const FaIcon(FontAwesomeIcons.arrowDownWideShort),
-            title: const Text('By \'Personal\''),
-            subtitle: const Text('Show only personal tasks'),
-            onTap: () {
-              ref
-                  .read(categoryProvider.notifier)
-                  .updateCategory(Categories.personal, ref);
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: const FaIcon(FontAwesomeIcons.arrowDownWideShort),
-            title: const Text('By \'Work\''),
-            subtitle: const Text('Show only work tasks'),
-            onTap: () {
-              ref
-                  .read(categoryProvider.notifier)
-                  .updateCategory(Categories.work, ref);
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: const FaIcon(FontAwesomeIcons.arrowDownWideShort),
-            title: const Text('By \'Study\''),
-            subtitle: const Text('Show only study tasks'),
-            onTap: () {
-              ref
-                  .read(categoryProvider.notifier)
-                  .updateCategory(Categories.study, ref);
               Navigator.pop(context);
             },
           ),
@@ -110,6 +84,7 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
                 Expanded(
                   child: FilledButton(
                     onPressed: () async {
+                      // TODO(plotsklapps): Continue here!
                       Navigator.pop(context);
                     },
                     child: isSaving
@@ -143,6 +118,77 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
       SnackBar(
         content: Text(success),
         behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+}
+
+class SortTaskCategoryChoiceSegmentedButton extends ConsumerStatefulWidget {
+  const SortTaskCategoryChoiceSegmentedButton({super.key});
+
+  @override
+  ConsumerState<SortTaskCategoryChoiceSegmentedButton> createState() {
+    return SortTaskCategoryChoiceSegmentedButtonState();
+  }
+}
+
+class SortTaskCategoryChoiceSegmentedButtonState
+    extends ConsumerState<SortTaskCategoryChoiceSegmentedButton> {
+  @override
+  Widget build(BuildContext context) {
+    final bool isDarkMode = ref.watch(isDarkModeProvider);
+    Color selectedColor =
+        isDarkMode ? flexSchemeDark(ref).primary : flexSchemeLight(ref).primary;
+    return Expanded(
+      child: SegmentedButton<Categories>(
+        selected: ref.watch(sortTaskCategoryProvider),
+        onSelectionChanged: (Set<Categories> newSortSelection) {
+          ref.read(sortTaskCategoryProvider.notifier).state = newSortSelection;
+        },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              if (states.contains(MaterialState.selected)) {
+                if (ref
+                    .watch(sortTaskCategoryProvider)
+                    .contains(Categories.personal)) {
+                  selectedColor = ref.watch(isDarkModeProvider)
+                      ? flexSchemeDark(ref).primary
+                      : flexSchemeLight(ref).primary;
+                } else if (ref
+                    .watch(sortTaskCategoryProvider)
+                    .contains(Categories.work)) {
+                  selectedColor = ref.watch(isDarkModeProvider)
+                      ? flexSchemeDark(ref).secondary
+                      : flexSchemeLight(ref).secondary;
+                } else if (ref
+                    .watch(sortTaskCategoryProvider)
+                    .contains(Categories.study)) {
+                  selectedColor = ref.watch(isDarkModeProvider)
+                      ? flexSchemeDark(ref).tertiary
+                      : flexSchemeLight(ref).tertiary;
+                }
+                return selectedColor;
+              }
+              return Colors.transparent;
+            },
+          ),
+        ),
+        emptySelectionAllowed: true,
+        segments: const <ButtonSegment<Categories>>[
+          ButtonSegment<Categories>(
+            value: Categories.personal,
+            label: Text('Personal'),
+          ),
+          ButtonSegment<Categories>(
+            value: Categories.work,
+            label: Text('Work'),
+          ),
+          ButtonSegment<Categories>(
+            value: Categories.study,
+            label: Text('Study'),
+          ),
+        ],
       ),
     );
   }

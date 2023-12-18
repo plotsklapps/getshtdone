@@ -163,9 +163,9 @@ class NewTaskCategoryChoiceSegmentedButtonState
     extends ConsumerState<NewTaskCategoryChoiceSegmentedButton> {
   @override
   Widget build(BuildContext context) {
-    Color selectedColor = ref.watch(isDarkModeProvider)
-        ? flexSchemeDark(ref).primary
-        : flexSchemeLight(ref).primary;
+    final bool isDarkMode = ref.watch(isDarkModeProvider);
+    Color selectedColor =
+        isDarkMode ? flexSchemeDark(ref).primary : flexSchemeLight(ref).primary;
     return Expanded(
       child: SegmentedButton<Categories>(
         selected: ref.watch(newTaskCategoryProvider),
@@ -179,19 +179,19 @@ class NewTaskCategoryChoiceSegmentedButtonState
                 if (ref
                     .watch(newTaskCategoryProvider)
                     .contains(Categories.personal)) {
-                  selectedColor = ref.watch(isDarkModeProvider)
+                  selectedColor = isDarkMode
                       ? flexSchemeDark(ref).primary
                       : flexSchemeLight(ref).primary;
                 } else if (ref
                     .watch(newTaskCategoryProvider)
                     .contains(Categories.work)) {
-                  selectedColor = ref.watch(isDarkModeProvider)
+                  selectedColor = isDarkMode
                       ? flexSchemeDark(ref).secondary
                       : flexSchemeLight(ref).secondary;
                 } else if (ref
                     .watch(newTaskCategoryProvider)
                     .contains(Categories.study)) {
-                  selectedColor = ref.watch(isDarkModeProvider)
+                  selectedColor = isDarkMode
                       ? flexSchemeDark(ref).tertiary
                       : flexSchemeLight(ref).tertiary;
                 }

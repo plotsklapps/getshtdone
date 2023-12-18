@@ -52,7 +52,7 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
             title: const Text('By creation date'),
             subtitle: const Text('Show the newest tasks first'),
             onTap: () {
-              ref.read(sortingMethodProvider.notifier).state = 'creationDate';
+              ref.read(sortingMethodProvider.notifier).state = 'createdDate';
               Navigator.pop(context);
             },
           ),

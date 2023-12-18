@@ -85,7 +85,7 @@ class TaskListNotifier extends StateNotifier<AsyncValue<List<Task>>> {
 
       // If the sorting method is 'dueDate' or 'creationDate', sort the tasks
       // by that field.
-      if (sortingMethod == 'dueDate' || sortingMethod == 'creationDate') {
+      if (sortingMethod == 'dueDate' || sortingMethod == 'createdDate') {
         query = query.orderBy(sortingMethod, descending: false);
       }
 

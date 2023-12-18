@@ -218,8 +218,6 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  // TODO(plotsklapps): Continue here...
-
   Future<bool?> showUpdateTaskModal(
     BuildContext context,
     WidgetRef ref,
@@ -231,7 +229,66 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
       showDragHandle: true,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return UpdateTaskModal(taskList[index]);
+        return Padding(
+          padding: EdgeInsets.fromLTRB(
+            24.0,
+            0.0,
+            24.0,
+            MediaQuery.of(context).viewInsets.bottom + 16.0,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Edit this task?',
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(),
+              const SizedBox(height: 16.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('CANCEL'),
+                    ),
+                  ),
+                  const SizedBox(width: 16.0),
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: () async {
+                        Navigator.pop(context);
+                        await showModalBottomSheet<Widget>(
+                          context: context,
+                          showDragHandle: true,
+                          isScrollControlled: true,
+                          builder: (BuildContext context) {
+                            return UpdateTaskModal(taskList[index]);
+                          },
+                        );
+                      },
+                      child: const Text(
+                        'EDIT',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
       },
     );
   }
@@ -275,34 +332,39 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  OutlinedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('CANCEL'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      FirestoreService(ref).deleteTask(
-                        taskList[index].id!,
-                      );
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: ref.watch(
-                        isDarkModeProvider,
-                      )
-                          ? flexSchemeDark(ref).error
-                          : flexSchemeLight(ref).error,
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('CANCEL'),
                     ),
-                    child: Text(
-                      'DELETE',
-                      style: TextStyle(
-                        color: ref.watch(
+                  ),
+                  const SizedBox(width: 16.0),
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: () {
+                        FirestoreService(ref).deleteTask(
+                          taskList[index].id!,
+                        );
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ref.watch(
                           isDarkModeProvider,
                         )
-                            ? flexSchemeDark(ref).onError
-                            : flexSchemeLight(ref).onError,
+                            ? flexSchemeDark(ref).error
+                            : flexSchemeLight(ref).error,
+                      ),
+                      child: Text(
+                        'DELETE',
+                        style: TextStyle(
+                          color: ref.watch(
+                            isDarkModeProvider,
+                          )
+                              ? flexSchemeDark(ref).onError
+                              : flexSchemeLight(ref).onError,
+                        ),
                       ),
                     ),
                   ),

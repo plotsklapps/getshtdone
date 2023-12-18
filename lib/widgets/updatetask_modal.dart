@@ -35,9 +35,13 @@ class UpdateTaskModalState extends ConsumerState<UpdateTaskModal> {
   @override
   void initState() {
     super.initState();
+    // Set the initial values of the text controllers to the current values of
+    // the task.
     titleController = TextEditingController(text: widget.task.title);
     descriptionController =
         TextEditingController(text: widget.task.description);
+    // Set the initial values of the providers to the current values of the
+    // task.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(titleProvider.notifier).state = widget.task.title;
       ref.read(descriptionProvider.notifier).state = widget.task.description!;
@@ -93,6 +97,7 @@ class UpdateTaskModalState extends ConsumerState<UpdateTaskModal> {
               TextField(
                 controller: titleController,
                 onChanged: (String updatedTitle) {
+                  // Store the updated title in the state.
                   ref.read(titleProvider.notifier).state = updatedTitle;
                 },
                 decoration: const InputDecoration(
@@ -103,6 +108,7 @@ class UpdateTaskModalState extends ConsumerState<UpdateTaskModal> {
               TextField(
                 controller: descriptionController,
                 onChanged: (String updatedDescription) {
+                  // Store the updated description in the state.
                   ref.read(descriptionProvider.notifier).state =
                       updatedDescription;
                 },
@@ -115,15 +121,28 @@ class UpdateTaskModalState extends ConsumerState<UpdateTaskModal> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  // Widget that allows the user to select the category of the
+                  // task (Default to old category).
                   UpdateTaskCategoryChoiceSegmentedButton(widget.task),
                 ],
               ),
               const SizedBox(height: 12.0),
-              const UpdateTaskDatePickerButton(),
               Row(
                 children: <Widget>[
+                  // Widget that allows the user to select the due date of the
+                  // task (Defaults to old due date).
+                  UpdateTaskDatePickerButton(widget.task.dueDate),
+                ],
+              ),
+              const SizedBox(height: 8.0),
+              Row(
+                children: <Widget>[
+                  // Widget that allows the user to cancel the creation of the
+                  // updated task.
                   const UpdateTaskCancelButton(),
                   const SizedBox(width: 16.0),
+                  // Widget that allows the user to save the updated task to
+                  // Firestore database.
                   UpdateTaskSaveButton(
                     ref: ref,
                     id: widget.task.id!,
@@ -178,24 +197,44 @@ class UpdateTaskCategoryChoiceSegmentedButtonState
 
   @override
   Widget build(BuildContext context) {
+    Color selectedColor = ref.watch(isDarkModeProvider)
+        ? flexSchemeDark(ref).primary
+        : flexSchemeLight(ref).primary;
     return Expanded(
       child: SegmentedButton<Categories>(
-        selected: ref.watch(categoryProvider),
+        selected: ref.watch(newTaskCategoryProvider),
         onSelectionChanged: (Set<Categories> updatedSelection) {
-          if (updatedSelection.contains(Categories.personal)) {
-            ref
-                .read(categoryProvider.notifier)
-                .updateCategory(Categories.personal, ref);
-          } else if (updatedSelection.contains(Categories.work)) {
-            ref
-                .read(categoryProvider.notifier)
-                .updateCategory(Categories.work, ref);
-          } else if (updatedSelection.contains(Categories.study)) {
-            ref
-                .read(categoryProvider.notifier)
-                .updateCategory(Categories.study, ref);
-          }
+          ref.read(newTaskCategoryProvider.notifier).state = updatedSelection;
         },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              if (states.contains(MaterialState.selected)) {
+                if (ref
+                    .watch(newTaskCategoryProvider)
+                    .contains(Categories.personal)) {
+                  selectedColor = ref.watch(isDarkModeProvider)
+                      ? flexSchemeDark(ref).primary
+                      : flexSchemeLight(ref).primary;
+                } else if (ref
+                    .watch(newTaskCategoryProvider)
+                    .contains(Categories.work)) {
+                  selectedColor = ref.watch(isDarkModeProvider)
+                      ? flexSchemeDark(ref).secondary
+                      : flexSchemeLight(ref).secondary;
+                } else if (ref
+                    .watch(newTaskCategoryProvider)
+                    .contains(Categories.study)) {
+                  selectedColor = ref.watch(isDarkModeProvider)
+                      ? flexSchemeDark(ref).tertiary
+                      : flexSchemeLight(ref).tertiary;
+                }
+                return selectedColor;
+              }
+              return Colors.transparent;
+            },
+          ),
+        ),
         emptySelectionAllowed: true,
         segments: const <ButtonSegment<Categories>>[
           ButtonSegment<Categories>(
@@ -217,9 +256,12 @@ class UpdateTaskCategoryChoiceSegmentedButtonState
 }
 
 class UpdateTaskDatePickerButton extends ConsumerWidget {
-  const UpdateTaskDatePickerButton({
+  const UpdateTaskDatePickerButton(
+    this.dueDate, {
     super.key,
   });
+
+  final String? dueDate;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -245,7 +287,7 @@ class UpdateTaskDatePickerButton extends ConsumerWidget {
           children: <Widget>[
             const Icon(Icons.edit_calendar_rounded),
             const SizedBox(width: 8.0),
-            Text(ref.watch(dueDateProvider)),
+            Text(dueDate ?? 'No due date set'),
           ],
         ),
       ),

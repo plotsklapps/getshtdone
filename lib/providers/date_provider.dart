@@ -81,9 +81,9 @@ class DateFilterNotifier extends StateNotifier<Set<DateFilter>> {
   void updateDateFilter(DateFilter dateFilter, WidgetRef ref) {
     state = <DateFilter>{dateFilter};
     if (state.contains(DateFilter.createdDate)) {
-      ref.read(sortingMethodProvider.notifier).state = 'createdDate';
+      ref.read(sortByDateProvider.notifier).state = 'createdDate';
     } else {
-      ref.read(sortingMethodProvider.notifier).state = 'dueDate';
+      ref.read(sortByDateProvider.notifier).state = 'dueDate';
     }
   }
 }

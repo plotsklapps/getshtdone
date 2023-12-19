@@ -64,7 +64,7 @@ class TaskListNotifier extends StateNotifier<AsyncValue<List<Task>>> {
     final User? currentUser = FirebaseAuth.instance.currentUser;
 
     // Get the current sorting method from the sortingMethodProvider.
-    final String sortingMethod = ref.watch(sortingMethodProvider);
+    final String sortingMethod = ref.watch(sortByDateProvider);
 
     // Get the current sort order from the sortOrderProvider.
     final bool isDescending = ref.watch(isDescendingProvider);

@@ -6,7 +6,6 @@ import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/sortingmethod_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/theme/theme.dart';
-import 'package:logger/logger.dart';
 
 class SortingMethodModal extends ConsumerStatefulWidget {
   const SortingMethodModal({super.key});
@@ -54,14 +53,14 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
           ),
           const SizedBox(height: 16.0),
           const Row(
-            children: [
+            children: <Widget>[
               SortTaskAscendingChoiceSegmentedButton(),
             ],
           ),
           const SizedBox(height: 16.0),
           Row(
             children: <Widget>[
-              SortTaskRemoveAllSortsButton(ref: ref),
+              RemoveAllSorts(ref: ref),
             ],
           ),
           const SizedBox(height: 12.0),
@@ -84,6 +83,7 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
                     // updated in the SortTaskCategoryChoiceSegmentedButton.
                     Categories category = Categories.all;
                     DateFilter dateFilter = DateFilter.dueDate;
+                    SortOrder sortOrder = SortOrder.ascending;
                     if (ref
                         .watch(sortTaskCategoryProvider)
                         .contains(Categories.personal)) {
@@ -111,6 +111,9 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
                     ref
                         .read(dateFilterProvider.notifier)
                         .updateDateFilter(dateFilter, ref);
+                    ref
+                        .read(sortOrderProvider.notifier)
+                        .updateSortOrder(sortOrder, ref);
                     Navigator.pop(context);
                   },
                   child: isSaving
@@ -218,44 +221,13 @@ class SortTaskDateChoiceSegmentedButtonState
     extends ConsumerState<SortTaskDateChoiceSegmentedButton> {
   @override
   Widget build(BuildContext context) {
-    final bool isDarkMode = ref.watch(isDarkModeProvider);
-    Color selectedColor =
-        isDarkMode ? flexSchemeDark(ref).primary : flexSchemeLight(ref).primary;
     return Expanded(
       child: SegmentedButton<DateFilter>(
         selected: ref.watch(sortDateCategoryProvider),
-        onSelectionChanged: (Set<DateFilter> newSortSelection) {
-          // When the selection changes, store the value of the newSortSelection
-          // in the sortTaskCategoryProvider, SEPARATE from the categoryProvider
-          // so that the category is only picked here in this modal and not
-          // sorted immediately.
-          ref.read(sortDateCategoryProvider.notifier).state = newSortSelection;
+        onSelectionChanged: (Set<DateFilter> newSortDateSelection) {
+          ref.read(sortDateCategoryProvider.notifier).state =
+              newSortDateSelection;
         },
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.resolveWith<Color>(
-            (Set<MaterialState> states) {
-              if (states.contains(MaterialState.selected)) {
-                // Change the color of the button when it's selected.
-                if (ref
-                    .watch(sortDateCategoryProvider)
-                    .contains(DateFilter.dueDate)) {
-                  selectedColor = ref.watch(isDarkModeProvider)
-                      ? flexSchemeDark(ref).primary
-                      : flexSchemeLight(ref).primary;
-                } else if (ref
-                    .watch(sortDateCategoryProvider)
-                    .contains(DateFilter.createdDate)) {
-                  selectedColor = ref.watch(isDarkModeProvider)
-                      ? flexSchemeDark(ref).primary
-                      : flexSchemeLight(ref).primary;
-                }
-                return selectedColor;
-              }
-              return Colors.transparent;
-            },
-          ),
-        ),
-        emptySelectionAllowed: true,
         segments: const <ButtonSegment<DateFilter>>[
           ButtonSegment<DateFilter>(
             value: DateFilter.dueDate,
@@ -284,52 +256,13 @@ class SortTaskAscendingChoiceSegmentedButtonState
     extends ConsumerState<SortTaskAscendingChoiceSegmentedButton> {
   @override
   Widget build(BuildContext context) {
-    final bool isDarkMode = ref.watch(isDarkModeProvider);
-    Color selectedColor =
-        isDarkMode ? flexSchemeDark(ref).primary : flexSchemeLight(ref).primary;
     return Expanded(
       child: SegmentedButton<SortOrder>(
-        selected: ref.watch(sortOrderProvider),
+        selected: ref.watch(sortOrderCategoryProvider),
         onSelectionChanged: (Set<SortOrder> newSortOrderSelection) {
-          if (newSortOrderSelection.contains(SortOrder.ascending)) {
-            ref.read(sortOrderProvider.notifier).updateSortOrder(
-                  SortOrder.ascending,
-                  ref,
-                );
-            Logger().w(ref.watch(isDescendingProvider));
-          } else {
-            ref.read(sortOrderProvider.notifier).updateSortOrder(
-                  SortOrder.descending,
-                  ref,
-                );
-            Logger().w(ref.watch(isDescendingProvider));
-          }
+          ref.read(sortOrderCategoryProvider.notifier).state =
+              newSortOrderSelection;
         },
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.resolveWith<Color>(
-            (Set<MaterialState> states) {
-              if (states.contains(MaterialState.selected)) {
-                // Change the color of the button when it's selected.
-                if (ref
-                    .watch(sortOrderProvider)
-                    .contains(SortOrder.ascending)) {
-                  selectedColor = ref.watch(isDarkModeProvider)
-                      ? flexSchemeDark(ref).primary
-                      : flexSchemeLight(ref).primary;
-                } else if (ref
-                    .watch(sortOrderProvider)
-                    .contains(SortOrder.descending)) {
-                  selectedColor = ref.watch(isDarkModeProvider)
-                      ? flexSchemeDark(ref).primary
-                      : flexSchemeLight(ref).primary;
-                }
-                return selectedColor;
-              }
-              return Colors.transparent;
-            },
-          ),
-        ),
-        emptySelectionAllowed: true,
         segments: const <ButtonSegment<SortOrder>>[
           ButtonSegment<SortOrder>(
             value: SortOrder.ascending,
@@ -345,8 +278,8 @@ class SortTaskAscendingChoiceSegmentedButtonState
   }
 }
 
-class SortTaskRemoveAllSortsButton extends StatelessWidget {
-  const SortTaskRemoveAllSortsButton({
+class RemoveAllSorts extends StatelessWidget {
+  const RemoveAllSorts({
     required this.ref,
     super.key,
   });
@@ -355,13 +288,20 @@ class SortTaskRemoveAllSortsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDarkMode = ref.watch(isDarkModeProvider);
     return Expanded(
       child: OutlinedButton(
         onPressed: () {
-          ref.read(sortingMethodProvider.notifier).state = 'dueDate';
           ref
-              .read(categoryProvider.notifier)
-              .updateCategory(Categories.all, ref);
+            ..invalidate(categoryProvider)
+            ..invalidate(categoryStringProvider)
+            ..invalidate(sortTaskCategoryProvider)
+            ..invalidate(dateFilterProvider)
+            ..invalidate(sortDateCategoryProvider)
+            ..invalidate(sortByDateProvider)
+            ..invalidate(isDescendingProvider)
+            ..invalidate(sortOrderProvider)
+            ..invalidate(sortOrderCategoryProvider);
           Navigator.pop(context);
         },
         child: Row(
@@ -369,7 +309,7 @@ class SortTaskRemoveAllSortsButton extends StatelessWidget {
           children: <Widget>[
             FaIcon(
               FontAwesomeIcons.trash,
-              color: ref.watch(isDarkModeProvider)
+              color: isDarkMode
                   ? flexSchemeDark(ref).error
                   : flexSchemeLight(ref).error,
             ),
@@ -377,7 +317,7 @@ class SortTaskRemoveAllSortsButton extends StatelessWidget {
             Text(
               'Remove all sorts',
               style: TextStyle(
-                color: ref.watch(isDarkModeProvider)
+                color: isDarkMode
                     ? flexSchemeDark(ref).error
                     : flexSchemeLight(ref).error,
               ),

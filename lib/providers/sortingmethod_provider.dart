@@ -1,8 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final StateProvider<String> sortingMethodProvider =
+final StateProvider<String> sortByDateProvider =
     StateProvider<String>((StateProviderRef<String> ref) {
   return 'dueDate';
+});
+
+final StateProvider<bool> isDescendingProvider =
+    StateProvider<bool>((StateProviderRef<bool> ref) {
+  return false;
 });
 
 enum SortOrder { ascending, descending }
@@ -27,7 +32,7 @@ class SortOrderNotifier extends StateNotifier<Set<SortOrder>> {
   }
 }
 
-final StateProvider<bool> isDescendingProvider =
-    StateProvider<bool>((StateProviderRef<bool> ref) {
-  return false;
+final StateProvider<Set<SortOrder>> sortOrderCategoryProvider =
+    StateProvider<Set<SortOrder>>((StateProviderRef<Set<SortOrder>> ref) {
+  return <SortOrder>{SortOrder.ascending};
 });

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/providers/category_provider.dart';
 import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/sortingmethod_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/theme/theme.dart';
+import 'package:logger/logger.dart';
 
 class SortingMethodModal extends ConsumerStatefulWidget {
   const SortingMethodModal({super.key});
@@ -51,35 +53,18 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
             ],
           ),
           const SizedBox(height: 16.0),
-          Row(
+          const Row(
             children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    ref.read(sortingMethodProvider.notifier).state = 'dueDate';
-                    ref
-                        .read(categoryProvider.notifier)
-                        .updateCategory(Categories.all, ref);
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: ref.watch(isDarkModeProvider)
-                        ? flexSchemeDark(ref).error
-                        : flexSchemeLight(ref).error,
-                  ),
-                  child: Text(
-                    'Remove all sorts',
-                    style: TextStyle(
-                      color: ref.watch(isDarkModeProvider)
-                          ? flexSchemeDark(ref).onError
-                          : flexSchemeLight(ref).onError,
-                    ),
-                  ),
-                ),
-              ),
+              SortTaskAscendingChoiceSegmentedButton(),
             ],
           ),
           const SizedBox(height: 16.0),
+          Row(
+            children: <Widget>[
+              SortTaskRemoveAllSortsButton(ref: ref),
+            ],
+          ),
+          const SizedBox(height: 12.0),
           Row(
             children: <Widget>[
               Expanded(
@@ -281,6 +266,124 @@ class SortTaskDateChoiceSegmentedButtonState
             label: Text('Created Date'),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class SortTaskAscendingChoiceSegmentedButton extends ConsumerStatefulWidget {
+  const SortTaskAscendingChoiceSegmentedButton({super.key});
+
+  @override
+  ConsumerState<SortTaskAscendingChoiceSegmentedButton> createState() {
+    return SortTaskAscendingChoiceSegmentedButtonState();
+  }
+}
+
+class SortTaskAscendingChoiceSegmentedButtonState
+    extends ConsumerState<SortTaskAscendingChoiceSegmentedButton> {
+  @override
+  Widget build(BuildContext context) {
+    final bool isDarkMode = ref.watch(isDarkModeProvider);
+    Color selectedColor =
+        isDarkMode ? flexSchemeDark(ref).primary : flexSchemeLight(ref).primary;
+    return Expanded(
+      child: SegmentedButton<SortOrder>(
+        selected: ref.watch(sortOrderProvider),
+        onSelectionChanged: (Set<SortOrder> newSortOrderSelection) {
+          if (newSortOrderSelection.contains(SortOrder.ascending)) {
+            ref.read(sortOrderProvider.notifier).updateSortOrder(
+                  SortOrder.ascending,
+                  ref,
+                );
+            Logger().w(ref.watch(isDescendingProvider));
+          } else {
+            ref.read(sortOrderProvider.notifier).updateSortOrder(
+                  SortOrder.descending,
+                  ref,
+                );
+            Logger().w(ref.watch(isDescendingProvider));
+          }
+        },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              if (states.contains(MaterialState.selected)) {
+                // Change the color of the button when it's selected.
+                if (ref
+                    .watch(sortOrderProvider)
+                    .contains(SortOrder.ascending)) {
+                  selectedColor = ref.watch(isDarkModeProvider)
+                      ? flexSchemeDark(ref).primary
+                      : flexSchemeLight(ref).primary;
+                } else if (ref
+                    .watch(sortOrderProvider)
+                    .contains(SortOrder.descending)) {
+                  selectedColor = ref.watch(isDarkModeProvider)
+                      ? flexSchemeDark(ref).primary
+                      : flexSchemeLight(ref).primary;
+                }
+                return selectedColor;
+              }
+              return Colors.transparent;
+            },
+          ),
+        ),
+        emptySelectionAllowed: true,
+        segments: const <ButtonSegment<SortOrder>>[
+          ButtonSegment<SortOrder>(
+            value: SortOrder.ascending,
+            label: Text('Ascending'),
+          ),
+          ButtonSegment<SortOrder>(
+            value: SortOrder.descending,
+            label: Text('Descending'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SortTaskRemoveAllSortsButton extends StatelessWidget {
+  const SortTaskRemoveAllSortsButton({
+    required this.ref,
+    super.key,
+  });
+
+  final WidgetRef ref;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: OutlinedButton(
+        onPressed: () {
+          ref.read(sortingMethodProvider.notifier).state = 'dueDate';
+          ref
+              .read(categoryProvider.notifier)
+              .updateCategory(Categories.all, ref);
+          Navigator.pop(context);
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            FaIcon(
+              FontAwesomeIcons.trash,
+              color: ref.watch(isDarkModeProvider)
+                  ? flexSchemeDark(ref).error
+                  : flexSchemeLight(ref).error,
+            ),
+            const SizedBox(width: 16.0),
+            Text(
+              'Remove all sorts',
+              style: TextStyle(
+                color: ref.watch(isDarkModeProvider)
+                    ? flexSchemeDark(ref).error
+                    : flexSchemeLight(ref).error,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

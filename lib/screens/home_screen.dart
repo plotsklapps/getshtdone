@@ -39,19 +39,22 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
         appBar: AppBar(
           toolbarHeight: 64.0,
           automaticallyImplyLeading: false,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Text(
-                'Get Sh_t Done',
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
+          title: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Text(
+                  'Get Sh_t Done',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 32.0),
-              Text(ref.watch(dateProvider)),
-            ],
+                const SizedBox(width: 24.0),
+                Text(ref.watch(dateProvider)),
+              ],
+            ),
           ),
           centerTitle: true,
         ),

@@ -66,6 +66,9 @@ class TaskListNotifier extends StateNotifier<AsyncValue<List<Task>>> {
     // Get the current sorting method from the sortingMethodProvider.
     final String sortingMethod = ref.watch(sortingMethodProvider);
 
+    // Get the current sort order from the sortOrderProvider.
+    final bool isDescending = ref.watch(isDescendingProvider);
+
     // Get the current category from the categoryStringProvider.
     final String category = ref.watch(categoryStringProvider);
 
@@ -86,7 +89,7 @@ class TaskListNotifier extends StateNotifier<AsyncValue<List<Task>>> {
       // If the sorting method is 'dueDate' or 'creationDate', sort the tasks
       // by that field.
       if (sortingMethod == 'dueDate' || sortingMethod == 'createdDate') {
-        query = query.orderBy(sortingMethod, descending: false);
+        query = query.orderBy(sortingMethod, descending: isDescending);
       }
 
       // Listen to the Firestore query and update the state whenever the query
@@ -108,7 +111,8 @@ class TaskListNotifier extends StateNotifier<AsyncValue<List<Task>>> {
         },
       );
     } else {
-      // If the user is not logged in or their email is not verified, update the state with an empty list of tasks
+      // If the user is not logged in or their email is not verified,
+      // update the state with an empty list of tasks.
       state = const AsyncValue<List<Task>>.data(<Task>[]);
     }
   }

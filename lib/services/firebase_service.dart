@@ -13,6 +13,7 @@ import 'package:getsh_tdone/providers/iscompleted_provider.dart';
 import 'package:getsh_tdone/providers/photourl_provider.dart';
 import 'package:getsh_tdone/providers/smiley_provider.dart';
 import 'package:getsh_tdone/providers/sneakpeek_provider.dart';
+import 'package:getsh_tdone/providers/sortingmethod_provider.dart';
 import 'package:getsh_tdone/providers/tasklist_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/providers/title_provider.dart';
@@ -450,6 +451,15 @@ class FirebaseService {
       ..invalidate(isCompletedProvider)
       ..invalidate(isDarkModeProvider)
       ..invalidate(isGreenSchemeProvider)
-      ..invalidate(themeModeProvider);
+      ..invalidate(themeModeProvider)
+      ..invalidate(categoryProvider)
+      ..invalidate(categoryStringProvider)
+      ..invalidate(sortTaskCategoryProvider)
+      ..invalidate(dateFilterProvider)
+      ..invalidate(sortDateCategoryProvider)
+      ..invalidate(sortByDateProvider)
+      ..invalidate(isDescendingProvider)
+      ..invalidate(sortOrderProvider)
+      ..invalidate(sortOrderCategoryProvider);
   }
 }

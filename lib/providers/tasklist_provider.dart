@@ -9,6 +9,10 @@ import 'package:getsh_tdone/providers/firestore_provider.dart';
 import 'package:getsh_tdone/providers/sortingmethod_provider.dart';
 import 'package:getsh_tdone/services/logger.dart';
 
+// The taskListProvider is a provider that manages a list of Task objects.
+// It can be in a loading state, a data state with a list of tasks, or an
+// error state. The state is controlled by the TaskListNotifier, which can
+// read other providers and update the state.
 final StateNotifierProvider<TaskListNotifier, AsyncValue<List<Task>>>
     taskListProvider =
     StateNotifierProvider<TaskListNotifier, AsyncValue<List<Task>>>(
@@ -30,14 +34,24 @@ class TaskListNotifier extends StateNotifier<AsyncValue<List<Task>>> {
 
   void toggleCompleted(String id) {
     state.whenData((List<Task> tasks) {
+      // The state is updated with a new AsyncValue that contains a list of
+      // tasks.
       state = AsyncValue<List<Task>>.data(
+        // The tasks are mapped to create a new list.
         tasks.map((Task task) {
+          // If the task id matches the provided id, the task is updated.
           if (task.id == id) {
+            // A new task is created with the isCompleted property toggled.
             final Task updatedTask =
                 task.copyWith(isCompleted: !task.isCompleted);
+            // The current user is retrieved from Firebase Auth.
             final User? currentUser = FirebaseAuth.instance.currentUser;
+            // If the user is not null and their email is verified, the task
+            // is updated in Firestore.
             if (currentUser != null && currentUser.emailVerified) {
               try {
+                // The task document in Firestore is updated with the new
+                // task data.
                 ref
                     .read(firestoreProvider)
                     .collection('users')
@@ -50,8 +64,11 @@ class TaskListNotifier extends StateNotifier<AsyncValue<List<Task>>> {
                 Logs.toggleTaskFailed();
               }
             }
+            // The updated task is returned to be included in the new task list.
             return updatedTask;
           } else {
+            // If the task id doesn't match the provided id, the original task
+            // is returned.
             return task;
           }
         }).toList(),
@@ -74,7 +91,7 @@ class TaskListNotifier extends StateNotifier<AsyncValue<List<Task>>> {
 
     // Check if the user is logged in and their email is verified.
     if (currentUser != null && currentUser.emailVerified) {
-      // Start building the Firestore query
+      // Start building the Firestore query.
       Query<Map<String, dynamic>> query = ref
           .read(firestoreProvider)
           .collection('users')
@@ -96,17 +113,17 @@ class TaskListNotifier extends StateNotifier<AsyncValue<List<Task>>> {
       // results change.
       taskSubscription = query.snapshots().listen(
         (QuerySnapshot<Map<String, dynamic>> snapshot) {
-          // Map the Firestore documents to Task objects
+          // Map the Firestore documents to Task objects.
           final List<Task> tasks = snapshot.docs
               .map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
             return Task.fromSnapshot(doc);
           }).toList();
 
-          // Update the state with the filtered and sorted tasks
+          // Update the state with the filtered and sorted tasks.
           state = AsyncValue<List<Task>>.data(tasks);
         },
         onError: (Object error, StackTrace stackTrace) {
-          // If there's an error, update the state with the error
+          // If there's an error, update the state with the error.
           state = AsyncValue<List<Task>>.error(error, stackTrace);
         },
       );
@@ -117,6 +134,8 @@ class TaskListNotifier extends StateNotifier<AsyncValue<List<Task>>> {
     }
   }
 
+  // There needs to be a way to cancel the Firestore subscription when the
+  // provider is disposed. This method cancels the subscription.
   void cancelSubscription() {
     taskSubscription?.cancel();
   }

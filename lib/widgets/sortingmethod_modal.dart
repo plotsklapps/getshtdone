@@ -6,6 +6,7 @@ import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/sortingmethod_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/theme/theme.dart';
+import 'package:logger/logger.dart';
 
 class SortingMethodModal extends ConsumerStatefulWidget {
   const SortingMethodModal({super.key});
@@ -78,33 +79,18 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
               Expanded(
                 child: FilledButton(
                   onPressed: () async {
+                    setState(() {
+                      isSaving = true;
+                    });
                     // When the user presses OK, update the sorting method
                     // according to the sortTaskCategoryProvider that was
                     // updated in the SortTaskCategoryChoiceSegmentedButton.
-                    Categories category = Categories.all;
-                    DateFilter dateFilter = DateFilter.dueDate;
-                    SortOrder sortOrder = SortOrder.ascending;
-                    if (ref
-                        .watch(sortTaskCategoryProvider)
-                        .contains(Categories.personal)) {
-                      category = Categories.personal;
-                    } else if (ref
-                        .watch(sortTaskCategoryProvider)
-                        .contains(Categories.work)) {
-                      category = Categories.work;
-                    } else if (ref
-                        .watch(sortTaskCategoryProvider)
-                        .contains(Categories.study)) {
-                      category = Categories.study;
-                    } else if (ref
-                        .watch(sortDateCategoryProvider)
-                        .contains(DateFilter.dueDate)) {
-                      dateFilter = DateFilter.dueDate;
-                    } else if (ref
-                        .watch(sortDateCategoryProvider)
-                        .contains(DateFilter.createdDate)) {
-                      dateFilter = DateFilter.createdDate;
-                    }
+                    Categories category =
+                        ref.watch(sortTaskCategoryProvider).first;
+                    DateFilter dateFilter =
+                        ref.watch(sortDateCategoryProvider).first;
+                    SortOrder sortOrder =
+                        ref.watch(sortOrderCategoryProvider).first;
                     ref
                         .read(categoryProvider.notifier)
                         .updateCategory(category, ref);
@@ -114,6 +100,9 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
                     ref
                         .read(sortOrderProvider.notifier)
                         .updateSortOrder(sortOrder, ref);
+                    setState(() {
+                      isSaving = false;
+                    });
                     Navigator.pop(context);
                   },
                   child: isSaving
@@ -121,7 +110,7 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
                           padding: EdgeInsets.symmetric(vertical: 8.0),
                           child: CircularProgressIndicator(),
                         )
-                      : const Text('OK'),
+                      : const Text('Sort'),
                 ),
               ),
             ],
@@ -262,6 +251,8 @@ class SortTaskAscendingChoiceSegmentedButtonState
         onSelectionChanged: (Set<SortOrder> newSortOrderSelection) {
           ref.read(sortOrderCategoryProvider.notifier).state =
               newSortOrderSelection;
+          Logger().w('After making choice: $newSortOrderSelection');
+          Logger().w(ref.watch(isDescendingProvider));
         },
         segments: const <ButtonSegment<SortOrder>>[
           ButtonSegment<SortOrder>(

@@ -140,13 +140,14 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content:
-                                Text('Feature is being made up as we speak...'),
+                                Text('Your checked off tasks will be stored '
+                                    'here...'),
                             behavior: SnackBarBehavior.floating,
                           ),
                         );
                       },
                       icon: const FaIcon(
-                        FontAwesomeIcons.circleQuestion,
+                        FontAwesomeIcons.checkDouble,
                       ),
                     ),
                     IconButton(

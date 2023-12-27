@@ -152,7 +152,6 @@ class UpdateTaskModalState extends ConsumerState<UpdateTaskModal> {
                     oldDueDate: widget.task.dueDate,
                     titleController: titleController,
                     descriptionController: descriptionController,
-                    mounted: mounted,
                   ),
                 ],
               ),
@@ -182,16 +181,18 @@ class UpdateTaskCategoryChoiceSegmentedButtonState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Categories initialCategory;
-      if (widget.task.category == 'Personal') {
+      if (widget.task.category == 'personal') {
         initialCategory = Categories.personal;
-      } else if (widget.task.category == 'Work') {
+      } else if (widget.task.category == 'work') {
         initialCategory = Categories.work;
-      } else if (widget.task.category == 'Study') {
+      } else if (widget.task.category == 'study') {
         initialCategory = Categories.study;
       } else {
         initialCategory = Categories.personal;
       }
-      ref.read(categoryProvider.notifier).updateCategory(initialCategory, ref);
+      ref.read(updateTaskCategoryProvider.notifier).state = <Categories>{
+        initialCategory,
+      };
     });
   }
 
@@ -202,28 +203,29 @@ class UpdateTaskCategoryChoiceSegmentedButtonState
         : flexSchemeLight(ref).primary;
     return Expanded(
       child: SegmentedButton<Categories>(
-        selected: ref.watch(newTaskCategoryProvider),
+        selected: ref.watch(updateTaskCategoryProvider),
         onSelectionChanged: (Set<Categories> updatedSelection) {
-          ref.read(newTaskCategoryProvider.notifier).state = updatedSelection;
+          ref.read(updateTaskCategoryProvider.notifier).state =
+              updatedSelection;
         },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
               if (states.contains(MaterialState.selected)) {
                 if (ref
-                    .watch(newTaskCategoryProvider)
+                    .watch(updateTaskCategoryProvider)
                     .contains(Categories.personal)) {
                   selectedColor = ref.watch(isDarkModeProvider)
                       ? flexSchemeDark(ref).primary
                       : flexSchemeLight(ref).primary;
                 } else if (ref
-                    .watch(newTaskCategoryProvider)
+                    .watch(updateTaskCategoryProvider)
                     .contains(Categories.work)) {
                   selectedColor = ref.watch(isDarkModeProvider)
                       ? flexSchemeDark(ref).secondary
                       : flexSchemeLight(ref).secondary;
                 } else if (ref
-                    .watch(newTaskCategoryProvider)
+                    .watch(updateTaskCategoryProvider)
                     .contains(Categories.study)) {
                   selectedColor = ref.watch(isDarkModeProvider)
                       ? flexSchemeDark(ref).tertiary
@@ -287,7 +289,7 @@ class UpdateTaskDatePickerButton extends ConsumerWidget {
           children: <Widget>[
             const Icon(Icons.edit_calendar_rounded),
             const SizedBox(width: 8.0),
-            Text(dueDate ?? 'No due date set'),
+            Text(ref.watch(dueDateProvider) ?? 'No due date set'),
           ],
         ),
       ),
@@ -326,7 +328,6 @@ class UpdateTaskSaveButton extends StatelessWidget {
     required this.id,
     required this.titleController,
     required this.descriptionController,
-    required this.mounted,
     super.key,
     this.oldTitle,
     this.oldDescription,
@@ -342,7 +343,6 @@ class UpdateTaskSaveButton extends StatelessWidget {
   final String? oldDueDate;
   final TextEditingController titleController;
   final TextEditingController descriptionController;
-  final bool mounted;
 
   @override
   Widget build(BuildContext context) {
@@ -355,8 +355,13 @@ class UpdateTaskSaveButton extends StatelessWidget {
                 id: id,
                 title: ref.watch(titleProvider),
                 description: ref.watch(descriptionProvider),
-                category: ref.watch(categoryStringProvider),
-                createdDate: ref.watch(createdDateProvider),
+                category: ref
+                    .watch(updateTaskCategoryProvider)
+                    .first
+                    .toString()
+                    .split('.')
+                    .last,
+                createdDate: oldCreatedDate,
                 dueDate: ref.watch(dueDateProvider),
                 isCompleted: false,
               ),
@@ -366,29 +371,25 @@ class UpdateTaskSaveButton extends StatelessWidget {
             ref
               ..invalidate(titleProvider)
               ..invalidate(descriptionProvider)
-              ..invalidate(categoryProvider)
+              ..invalidate(updateTaskCategoryProvider)
               ..invalidate(createdDateProvider)
               ..invalidate(dueDateProvider)
               ..invalidate(isCompletedProvider);
             Logs.updateTaskComplete();
-            if (mounted) {
-              Navigator.pop(context);
-            }
+            Navigator.pop(context);
           } catch (error) {
             Logs.updateTaskFailed();
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Failed to update Task: $error',
-                  ),
-                  behavior: SnackBarBehavior.floating,
-                  backgroundColor: ref.watch(isDarkModeProvider)
-                      ? flexSchemeDark(ref).error
-                      : flexSchemeLight(ref).error,
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Failed to update Task: $error',
                 ),
-              );
-            }
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: ref.watch(isDarkModeProvider)
+                    ? flexSchemeDark(ref).error
+                    : flexSchemeLight(ref).error,
+              ),
+            );
           }
         },
         child: const Row(

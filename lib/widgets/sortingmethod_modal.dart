@@ -85,11 +85,11 @@ class SortingMethodModalState extends ConsumerState<SortingMethodModal> {
                     // When the user presses OK, update the sorting method
                     // according to the sortTaskCategoryProvider that was
                     // updated in the SortTaskCategoryChoiceSegmentedButton.
-                    Categories category =
+                    final Categories category =
                         ref.watch(sortTaskCategoryProvider).first;
-                    DateFilter dateFilter =
+                    final DateFilter dateFilter =
                         ref.watch(sortDateCategoryProvider).first;
-                    SortOrder sortOrder =
+                    final SortOrder sortOrder =
                         ref.watch(sortOrderCategoryProvider).first;
                     ref
                         .read(categoryProvider.notifier)

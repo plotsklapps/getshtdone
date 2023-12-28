@@ -142,6 +142,16 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 const SizedBox(height: 8.0),
                 Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text('Passwordless Sign In'),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     TextButton(

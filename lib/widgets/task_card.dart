@@ -40,29 +40,29 @@ class TaskCardState extends ConsumerState<TaskCard> {
   @override
   Widget build(BuildContext context) {
     final bool isDarkMode = ref.watch(isDarkModeProvider);
-    return Stack(
-      children: <Widget>[
-        Card(
-          margin: const EdgeInsets.only(bottom: 16.0),
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16.0),
+      color: widget.task.isCompleted
+          ? isDarkMode
+              ? flexSchemeDark(ref).primaryContainer
+              : flexSchemeLight(ref).primaryContainer
+          : null,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        side: BorderSide(
           color: widget.task.isCompleted
               ? isDarkMode
-                  ? flexSchemeDark(ref).primaryContainer
-                  : flexSchemeLight(ref).primaryContainer
-              : null,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
-            side: BorderSide(
-              color: widget.task.isCompleted
-                  ? isDarkMode
-                      ? flexSchemeDark(ref).primary
-                      : flexSchemeLight(ref).primary
-                  : isDarkMode
-                      ? flexSchemeDark(ref).outline
-                      : flexSchemeLight(ref).outline,
-              width: 2.0,
-            ),
-          ),
-          child: IntrinsicHeight(
+                  ? flexSchemeDark(ref).primary
+                  : flexSchemeLight(ref).primary
+              : isDarkMode
+                  ? flexSchemeDark(ref).outline
+                  : flexSchemeLight(ref).outline,
+          width: 2.0,
+        ),
+      ),
+      child: Stack(
+        children: <Widget>[
+          IntrinsicHeight(
             child: Row(
               children: <Widget>[
                 Expanded(
@@ -183,15 +183,15 @@ class TaskCardState extends ConsumerState<TaskCard> {
               ],
             ),
           ),
-        ),
-        Align(
-          alignment: Alignment.topRight,
-          child: ConfettiWidget(
-            confettiController: confettiController,
-            blastDirectionality: BlastDirectionality.explosive,
+          Align(
+            alignment: Alignment.topRight,
+            child: ConfettiWidget(
+              confettiController: confettiController,
+              numberOfParticles: 20,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

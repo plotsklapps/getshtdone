@@ -142,10 +142,19 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 const SizedBox(height: 8.0),
                 Row(
-                  children: [
+                  children: <Widget>[
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'This feature is coming soon!',
+                              ),
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        },
                         child: const Text('Passwordless Sign In'),
                       ),
                     ),

@@ -44,6 +44,11 @@ class TaskCardState extends ConsumerState<TaskCard> {
       children: <Widget>[
         Card(
           margin: const EdgeInsets.only(bottom: 16.0),
+          color: widget.task.isCompleted
+              ? isDarkMode
+                  ? flexSchemeDark(ref).primaryContainer
+                  : flexSchemeLight(ref).primaryContainer
+              : null,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.0),
             side: BorderSide(
@@ -180,14 +185,10 @@ class TaskCardState extends ConsumerState<TaskCard> {
           ),
         ),
         Align(
+          alignment: Alignment.topRight,
           child: ConfettiWidget(
             confettiController: confettiController,
             blastDirectionality: BlastDirectionality.explosive,
-            maxBlastForce: 5.0,
-            minBlastForce: 2.0,
-            emissionFrequency: 0.05,
-            numberOfParticles: 80,
-            gravity: 1.0,
           ),
         ),
       ],

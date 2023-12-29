@@ -12,6 +12,7 @@ import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 import 'package:getsh_tdone/widgets/newtask_modal.dart';
 import 'package:getsh_tdone/widgets/responsive_layout.dart';
+import 'package:getsh_tdone/widgets/searchtask_modal.dart';
 import 'package:getsh_tdone/widgets/sortingmethod_modal.dart';
 import 'package:getsh_tdone/widgets/task_card.dart';
 import 'package:getsh_tdone/widgets/taskerror_card.dart';
@@ -146,17 +147,17 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                   children: <Widget>[
                     IconButton(
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content:
-                                Text('Your checked off tasks will be stored '
-                                    'here...'),
-                            behavior: SnackBarBehavior.floating,
-                          ),
+                        showModalBottomSheet<Widget>(
+                          context: context,
+                          showDragHandle: true,
+                          isScrollControlled: true,
+                          builder: (BuildContext context) {
+                            return const SearchTaskModal();
+                          },
                         );
                       },
                       icon: const FaIcon(
-                        FontAwesomeIcons.checkDouble,
+                        FontAwesomeIcons.searchengin,
                       ),
                     ),
                     IconButton(

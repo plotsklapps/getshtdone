@@ -151,7 +151,8 @@ class SortTaskCategoryChoiceSegmentedButtonState
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
               if (states.contains(MaterialState.selected)) {
-                // Change the color of the button when it's selected.
+                // Change the color of the button when it's selected, defaults
+                // to Categories.all and is secondaryContainer color.
                 if (ref
                     .watch(sortTaskCategoryProvider)
                     .contains(Categories.all)) {

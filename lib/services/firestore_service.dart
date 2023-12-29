@@ -55,4 +55,37 @@ class FirestoreService {
         .doc(id)
         .delete();
   }
+
+  Future<List<Task>> searchTask(String keyword) async {
+    final User? currentUser = ref.read(firebaseProvider).currentUser;
+    final CollectionReference<Map<String, dynamic>> taskCollection = ref
+        .read(firestoreProvider)
+        .collection('users')
+        .doc(currentUser?.uid)
+        .collection('taskCollection');
+
+    final QuerySnapshot<Map<String, dynamic>> titleQuerySnapshot =
+        await taskCollection
+            .orderBy('title')
+            .where('title', isEqualTo: keyword)
+            .get();
+
+    final QuerySnapshot<Map<String, dynamic>> descriptionQuerySnapshot =
+        await taskCollection
+            .orderBy('description')
+            .where('description', isEqualTo: keyword)
+            .get();
+
+    final List<Task> titleTasks =
+        titleQuerySnapshot.docs.map(Task.fromSnapshot).toList();
+
+    final List<Task> descriptionTasks =
+        descriptionQuerySnapshot.docs.map(Task.fromSnapshot).toList();
+
+    // Combine the results and remove duplicates
+    final List<Task> combinedTasks =
+        <Task>{...titleTasks, ...descriptionTasks}.toList();
+
+    return combinedTasks;
+  }
 }

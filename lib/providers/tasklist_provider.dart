@@ -22,6 +22,15 @@ final StateNotifierProvider<TaskListNotifier, AsyncValue<List<Task>>>
 );
 
 class TaskListNotifier extends StateNotifier<AsyncValue<List<Task>>> {
+  // The constructor initializes the state to a loading state using
+  // AsyncValue.loading(). This represents that the list of tasks is being
+  // loaded initially.
+  //
+  // The fetchTasks() method is called in the constructor to fetch the tasks
+  // from Firestore when this notifier is created.
+  //
+  // The onDispose callback is set to cancel the Firestore subscription when
+  // this notifier is disposed. This is to prevent memory leaks.
   TaskListNotifier(this.ref) : super(const AsyncValue<List<Task>>.loading()) {
     fetchTasks();
     ref.onDispose(() {

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/models/task_model.dart';
 import 'package:getsh_tdone/providers/date_provider.dart';
+import 'package:getsh_tdone/providers/issearchperformed_provider.dart';
 import 'package:getsh_tdone/providers/smiley_provider.dart';
 import 'package:getsh_tdone/providers/tasklist_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
@@ -32,6 +33,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 class HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final bool isSearchPerformed = ref.watch(isSearchPerformedProvider);
     final AsyncValue<List<Task>> taskList = ref.watch(taskListProvider);
 
     return SafeArea(
@@ -54,6 +56,24 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
                 const SizedBox(width: 24.0),
                 Text(ref.watch(dateProvider)),
+                if (isSearchPerformed)
+                  Row(
+                    children: <Widget>[
+                      const SizedBox(width: 24.0),
+                      IconButton(
+                        onPressed: () {
+                          ref.read(isSearchPerformedProvider.notifier).state =
+                              false;
+                          ref.read(taskListProvider.notifier).fetchTasks();
+                        },
+                        icon: const FaIcon(
+                          FontAwesomeIcons.trash,
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  const SizedBox(width: 24.0),
               ],
             ),
           ),
@@ -67,15 +87,6 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                 Flexible(
                   child: taskList.when(
                     data: (List<Task> taskList) {
-                      // taskList.sort((Task a, Task b) {
-                      //   if (a.isCompleted && !b.isCompleted) {
-                      //     return 1;
-                      //   } else if (!a.isCompleted && b.isCompleted) {
-                      //     return -1;
-                      //   } else {
-                      //     return 0;
-                      //   }
-                      // });
                       return ScrollConfiguration(
                         behavior: const ScrollBehavior().copyWith(
                           dragDevices: <PointerDeviceKind>{
@@ -157,7 +168,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                         );
                       },
                       icon: const FaIcon(
-                        FontAwesomeIcons.searchengin,
+                        FontAwesomeIcons.magnifyingGlass,
                       ),
                     ),
                     IconButton(

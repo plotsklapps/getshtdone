@@ -154,20 +154,26 @@ class SortTaskCategoryChoiceSegmentedButtonState
                 // Change the color of the button when it's selected.
                 if (ref
                     .watch(sortTaskCategoryProvider)
+                    .contains(Categories.all)) {
+                  selectedColor = isDarkMode
+                      ? flexSchemeDark(ref).secondaryContainer
+                      : flexSchemeLight(ref).secondaryContainer;
+                } else if (ref
+                    .watch(sortTaskCategoryProvider)
                     .contains(Categories.personal)) {
-                  selectedColor = ref.watch(isDarkModeProvider)
+                  selectedColor = isDarkMode
                       ? flexSchemeDark(ref).primary
                       : flexSchemeLight(ref).primary;
                 } else if (ref
                     .watch(sortTaskCategoryProvider)
                     .contains(Categories.work)) {
-                  selectedColor = ref.watch(isDarkModeProvider)
+                  selectedColor = isDarkMode
                       ? flexSchemeDark(ref).secondary
                       : flexSchemeLight(ref).secondary;
                 } else if (ref
                     .watch(sortTaskCategoryProvider)
                     .contains(Categories.study)) {
-                  selectedColor = ref.watch(isDarkModeProvider)
+                  selectedColor = isDarkMode
                       ? flexSchemeDark(ref).tertiary
                       : flexSchemeLight(ref).tertiary;
                 }
@@ -177,8 +183,11 @@ class SortTaskCategoryChoiceSegmentedButtonState
             },
           ),
         ),
-        emptySelectionAllowed: true,
         segments: const <ButtonSegment<Categories>>[
+          ButtonSegment<Categories>(
+            value: Categories.all,
+            label: Text('All'),
+          ),
           ButtonSegment<Categories>(
             value: Categories.personal,
             label: Text('Personal'),

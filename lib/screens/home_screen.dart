@@ -158,17 +158,17 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                   children: <Widget>[
                     IconButton(
                       onPressed: () {
-                        showModalBottomSheet<Widget>(
-                          context: context,
-                          showDragHandle: true,
-                          isScrollControlled: true,
-                          builder: (BuildContext context) {
-                            return const SearchTaskModal();
-                          },
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Pomodoro timer is coming!',
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                          ),
                         );
                       },
-                      icon: const FaIcon(
-                        FontAwesomeIcons.magnifyingGlass,
+                      icon: const Icon(
+                        FontAwesomeIcons.stopwatch20,
                       ),
                     ),
                     IconButton(
@@ -193,17 +193,17 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                   children: <Widget>[
                     IconButton(
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Pomodoro timer is coming!',
-                            ),
-                            behavior: SnackBarBehavior.floating,
-                          ),
+                        showModalBottomSheet<Widget>(
+                          context: context,
+                          showDragHandle: true,
+                          isScrollControlled: true,
+                          builder: (BuildContext context) {
+                            return const SearchTaskModal();
+                          },
                         );
                       },
-                      icon: const Icon(
-                        FontAwesomeIcons.stopwatch20,
+                      icon: const FaIcon(
+                        FontAwesomeIcons.magnifyingGlass,
                       ),
                     ),
                     IconButton(

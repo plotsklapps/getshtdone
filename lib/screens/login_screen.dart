@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:getsh_tdone/providers/email_provider.dart';
 import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/services/firebase_service.dart';
 import 'package:getsh_tdone/services/navigation.dart';
@@ -55,6 +56,10 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: 8.0),
                 TextField(
                   controller: emailController,
+                  onChanged: (String email) {
+                    final String trimmedEmail = email.trim();
+                    ref.read(emailProvider.notifier).state = trimmedEmail;
+                  },
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.email),
                     labelText: 'EMAIL',
@@ -141,25 +146,6 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                   ],
                 ),
                 const SizedBox(height: 8.0),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'This feature is coming soon!',
-                              ),
-                              behavior: SnackBarBehavior.floating,
-                            ),
-                          );
-                        },
-                        child: const Text('Passwordless Sign In'),
-                      ),
-                    ),
-                  ],
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[

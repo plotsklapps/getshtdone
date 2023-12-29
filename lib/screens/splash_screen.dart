@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getsh_tdone/providers/firebase_provider.dart';
 import 'package:getsh_tdone/providers/sneakpeek_provider.dart';
+import 'package:getsh_tdone/screens/login_screen.dart';
 import 'package:getsh_tdone/services/logger.dart';
 import 'package:getsh_tdone/services/navigation.dart';
 
@@ -49,7 +50,14 @@ class SplashScreenState extends ConsumerState<SplashScreen> {
         progressTimer.cancel();
         Logs.userUnknown();
         // User is unknown: set sneak peeker bool to true.
-        Navigation.navigateToLoginScreen(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute<Widget>(
+            builder: (BuildContext context) {
+              return const LoginScreen();
+            },
+          ),
+        );
       }
     });
   }

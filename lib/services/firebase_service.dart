@@ -462,18 +462,4 @@ class FirebaseService {
       ..invalidate(sortOrderProvider)
       ..invalidate(sortOrderCategoryProvider);
   }
-
-  // TODO(plotsklapps): Figure out how to handle the passwordless sign in.
-  ActionCodeSettings actionCodeSettings = ActionCodeSettings(
-      // URL you want to redirect back to. The domain (www.example.com) for this
-      // URL must be whitelisted in the Firebase Console.
-      url: 'https://www.example.com/finishSignUp?cartId=1234',
-      // This must be true
-      handleCodeInApp: true,
-      iOSBundleId: 'com.example.ios',
-      androidPackageName: 'com.example.android',
-      // installIfNotAvailable
-      androidInstallApp: true,
-      // minimumVersion
-      androidMinimumVersion: '12');
 }

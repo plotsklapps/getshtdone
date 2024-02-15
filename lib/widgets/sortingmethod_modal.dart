@@ -4,7 +4,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/providers/category_provider.dart';
 import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/sortingmethod_provider.dart';
-import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 import 'package:logger/logger.dart';
 
@@ -134,9 +133,9 @@ class SortTaskCategoryChoiceSegmentedButtonState
     extends ConsumerState<SortTaskCategoryChoiceSegmentedButton> {
   @override
   Widget build(BuildContext context) {
-    final bool isDarkMode = ref.watch(isDarkModeProvider);
+    final bool isDarkMode = sIsDark.value;
     Color selectedColor =
-        isDarkMode ? flexSchemeDark(ref).primary : flexSchemeLight(ref).primary;
+        isDarkMode ? cFlexSchemeDark().primary : cFlexSchemeLight().primary;
     return Expanded(
       child: SegmentedButton<Categories>(
         selected: ref.watch(sortTaskCategoryProvider),
@@ -157,26 +156,26 @@ class SortTaskCategoryChoiceSegmentedButtonState
                     .watch(sortTaskCategoryProvider)
                     .contains(Categories.all)) {
                   selectedColor = isDarkMode
-                      ? flexSchemeDark(ref).secondaryContainer
-                      : flexSchemeLight(ref).secondaryContainer;
+                      ? cFlexSchemeDark().secondaryContainer
+                      : cFlexSchemeLight().secondaryContainer;
                 } else if (ref
                     .watch(sortTaskCategoryProvider)
                     .contains(Categories.personal)) {
                   selectedColor = isDarkMode
-                      ? flexSchemeDark(ref).primary
-                      : flexSchemeLight(ref).primary;
+                      ? cFlexSchemeDark().primary
+                      : cFlexSchemeLight().primary;
                 } else if (ref
                     .watch(sortTaskCategoryProvider)
                     .contains(Categories.work)) {
                   selectedColor = isDarkMode
-                      ? flexSchemeDark(ref).secondary
-                      : flexSchemeLight(ref).secondary;
+                      ? cFlexSchemeDark().secondary
+                      : cFlexSchemeLight().secondary;
                 } else if (ref
                     .watch(sortTaskCategoryProvider)
                     .contains(Categories.study)) {
                   selectedColor = isDarkMode
-                      ? flexSchemeDark(ref).tertiary
-                      : flexSchemeLight(ref).tertiary;
+                      ? cFlexSchemeDark().tertiary
+                      : cFlexSchemeLight().tertiary;
                 }
                 return selectedColor;
               }
@@ -289,7 +288,7 @@ class RemoveAllSorts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDarkMode = ref.watch(isDarkModeProvider);
+    final bool isDarkMode = sIsDark.value;
     return Expanded(
       child: OutlinedButton(
         onPressed: () {
@@ -311,16 +310,16 @@ class RemoveAllSorts extends StatelessWidget {
             FaIcon(
               FontAwesomeIcons.trash,
               color: isDarkMode
-                  ? flexSchemeDark(ref).error
-                  : flexSchemeLight(ref).error,
+                  ? cFlexSchemeDark().error
+                  : cFlexSchemeLight().error,
             ),
             const SizedBox(width: 16.0),
             Text(
               'Remove all sorts',
               style: TextStyle(
                 color: isDarkMode
-                    ? flexSchemeDark(ref).error
-                    : flexSchemeLight(ref).error,
+                    ? cFlexSchemeDark().error
+                    : cFlexSchemeLight().error,
               ),
             ),
           ],

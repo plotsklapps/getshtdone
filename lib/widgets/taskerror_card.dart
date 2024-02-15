@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 import 'package:logger/logger.dart';
 
@@ -17,16 +16,15 @@ class TaskErrorCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bool isDarkMode = ref.watch(isDarkModeProvider);
+    final bool isDarkMode = sIsDark.value;
     Logger().e(error, stackTrace: stackTrace);
     return Card(
       margin: const EdgeInsets.only(bottom: 16.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
         side: BorderSide(
-          color: isDarkMode
-              ? flexSchemeDark(ref).error
-              : flexSchemeLight(ref).error,
+          color:
+              isDarkMode ? cFlexSchemeDark().error : cFlexSchemeLight().error,
           width: 2.0,
         ),
       ),
@@ -41,8 +39,8 @@ class TaskErrorCard extends ConsumerWidget {
                     bottomLeft: Radius.circular(12.0),
                   ),
                   color: isDarkMode
-                      ? flexSchemeDark(ref).error
-                      : flexSchemeLight(ref).error,
+                      ? cFlexSchemeDark().error
+                      : cFlexSchemeLight().error,
                 ),
               ),
             ),
@@ -63,8 +61,8 @@ class TaskErrorCard extends ConsumerWidget {
                           style: TextStyle(
                             fontSize: 18.0,
                             color: isDarkMode
-                                ? flexSchemeDark(ref).error
-                                : flexSchemeDark(ref).error,
+                                ? cFlexSchemeDark().error
+                                : cFlexSchemeDark().error,
                           ),
                         ),
                         subtitle: Text(
@@ -75,8 +73,8 @@ class TaskErrorCard extends ConsumerWidget {
                         trailing: FaIcon(
                           FontAwesomeIcons.triangleExclamation,
                           color: isDarkMode
-                              ? flexSchemeDark(ref).error
-                              : flexSchemeLight(ref).error,
+                              ? cFlexSchemeDark().error
+                              : cFlexSchemeLight().error,
                         ),
                       ),
                     ),

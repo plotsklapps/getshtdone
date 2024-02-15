@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/models/task_model.dart';
 import 'package:getsh_tdone/providers/tasklist_provider.dart';
-import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 
 class TaskCard extends ConsumerStatefulWidget {
@@ -39,24 +38,24 @@ class TaskCardState extends ConsumerState<TaskCard> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDarkMode = ref.watch(isDarkModeProvider);
+    final bool isDarkMode = sIsDark.value;
     return Card(
       margin: const EdgeInsets.only(bottom: 16.0),
       color: widget.task.isCompleted
           ? isDarkMode
-              ? flexSchemeDark(ref).primaryContainer
-              : flexSchemeLight(ref).primaryContainer
+              ? cFlexSchemeDark().primaryContainer
+              : cFlexSchemeLight().primaryContainer
           : null,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
         side: BorderSide(
           color: widget.task.isCompleted
               ? isDarkMode
-                  ? flexSchemeDark(ref).primary
-                  : flexSchemeLight(ref).primary
+                  ? cFlexSchemeDark().primary
+                  : cFlexSchemeLight().primary
               : isDarkMode
-                  ? flexSchemeDark(ref).outline
-                  : flexSchemeLight(ref).outline,
+                  ? cFlexSchemeDark().outline
+                  : cFlexSchemeLight().outline,
           width: 2.0,
         ),
       ),
@@ -74,17 +73,17 @@ class TaskCardState extends ConsumerState<TaskCard> {
                       ),
                       color: widget.task.category == 'personal'
                           ? isDarkMode
-                              ? flexSchemeDark(ref).primary
-                              : flexSchemeLight(ref).primary
+                              ? cFlexSchemeDark().primary
+                              : cFlexSchemeLight().primary
                           : widget.task.category == 'work'
                               ? isDarkMode
-                                  ? flexSchemeDark(ref).secondary
-                                  : flexSchemeLight(ref).secondary
+                                  ? cFlexSchemeDark().secondary
+                                  : cFlexSchemeLight().secondary
                               : widget.task.category == 'study'
                                   ? isDarkMode
-                                      ? flexSchemeDark(ref).tertiary
-                                      : flexSchemeLight(ref).tertiary
-                                  : flexSchemeLight(ref).primary,
+                                      ? cFlexSchemeDark().tertiary
+                                      : cFlexSchemeLight().tertiary
+                                  : cFlexSchemeLight().primary,
                     ),
                   ),
                 ),
@@ -105,8 +104,8 @@ class TaskCardState extends ConsumerState<TaskCard> {
                                 fontSize: 22.0,
                                 color: widget.task.isCompleted
                                     ? isDarkMode
-                                        ? flexSchemeDark(ref).outline
-                                        : flexSchemeLight(ref).outline
+                                        ? cFlexSchemeDark().outline
+                                        : cFlexSchemeLight().outline
                                     : null,
                                 decoration: widget.task.isCompleted
                                     ? TextDecoration.lineThrough
@@ -120,9 +119,9 @@ class TaskCardState extends ConsumerState<TaskCard> {
                               style: TextStyle(
                                 fontSize: 14.0,
                                 color: widget.task.isCompleted
-                                    ? ref.watch(isDarkModeProvider)
-                                        ? flexSchemeDark(ref).outline
-                                        : flexSchemeLight(ref).outline
+                                    ? sIsDark.value
+                                        ? cFlexSchemeDark().outline
+                                        : cFlexSchemeLight().outline
                                     : null,
                                 decoration: widget.task.isCompleted
                                     ? TextDecoration.lineThrough
@@ -138,9 +137,9 @@ class TaskCardState extends ConsumerState<TaskCard> {
                                     },
                                     child: FaIcon(
                                       FontAwesomeIcons.circleCheck,
-                                      color: ref.watch(isDarkModeProvider)
-                                          ? flexSchemeDark(ref).primary
-                                          : flexSchemeLight(ref).primary,
+                                      color: sIsDark.value
+                                          ? cFlexSchemeDark().primary
+                                          : cFlexSchemeLight().primary,
                                       size: 32.0,
                                     ),
                                   )
@@ -166,14 +165,14 @@ class TaskCardState extends ConsumerState<TaskCard> {
                           children: <Widget>[
                             Text(widget.task.category ?? 'No Category'),
                             Row(
-                              children: [
+                              children: <Widget>[
                                 IconButton(
-                                  onPressed: () {
-                                    showModalBottomSheet(
+                                  onPressed: () async {
+                                    await showModalBottomSheet<void>(
                                       showDragHandle: true,
                                       isScrollControlled: true,
                                       context: context,
-                                      builder: (context) {
+                                      builder: (BuildContext context) {
                                         return Column(
                                           mainAxisSize: MainAxisSize.min,
                                           crossAxisAlignment:
@@ -205,14 +204,16 @@ class TaskCardState extends ConsumerState<TaskCard> {
                                     );
                                   },
                                   icon: const FaIcon(
-                                      FontAwesomeIcons.arrowsToCircle),
+                                    FontAwesomeIcons.arrowsToCircle,
+                                  ),
                                 ),
                                 const SizedBox(width: 8.0),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: <Widget>[
                                     Text(
-                                        'Created: ${widget.task.createdDate!}'),
+                                      'Created: ${widget.task.createdDate!}',
+                                    ),
                                     Text(
                                       'Due: ${widget.task.dueDate!}',
                                     ),

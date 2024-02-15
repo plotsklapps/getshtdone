@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/providers/photourl_provider.dart';
-import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 
 final StateProvider<IconData> smileyProvider =
@@ -55,9 +54,9 @@ class SmileyIconRow extends ConsumerWidget {
                   duration: const Duration(milliseconds: 500),
                   decoration: BoxDecoration(
                     color: icon == selectedSmiley
-                        ? ref.watch(isDarkModeProvider)
-                            ? flexSchemeDark(ref).primary
-                            : flexSchemeLight(ref).primary
+                        ? sIsDark.value
+                            ? cFlexSchemeDark().primary
+                            : cFlexSchemeLight().primary
                         : null,
                     borderRadius: BorderRadius.circular(24.0),
                   ),

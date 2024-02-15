@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 
 class TaskLoadingCard extends ConsumerWidget {
@@ -10,15 +9,15 @@ class TaskLoadingCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bool isDarkMode = ref.watch(isDarkModeProvider);
+    final bool isDarkMode = sIsDark.value;
     return Card(
       margin: const EdgeInsets.only(bottom: 16.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
         side: BorderSide(
           color: isDarkMode
-              ? flexSchemeDark(ref).tertiary
-              : flexSchemeLight(ref).tertiary,
+              ? cFlexSchemeDark().tertiary
+              : cFlexSchemeLight().tertiary,
           width: 2.0,
         ),
       ),
@@ -33,8 +32,8 @@ class TaskLoadingCard extends ConsumerWidget {
                     bottomLeft: Radius.circular(12.0),
                   ),
                   color: isDarkMode
-                      ? flexSchemeDark(ref).tertiary
-                      : flexSchemeLight(ref).tertiary,
+                      ? cFlexSchemeDark().tertiary
+                      : cFlexSchemeLight().tertiary,
                 ),
               ),
             ),

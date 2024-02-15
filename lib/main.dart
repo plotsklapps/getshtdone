@@ -2,9 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getsh_tdone/firebase_options.dart';
-import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/screens/splash_screen.dart';
 import 'package:getsh_tdone/theme/theme.dart';
+import 'package:signals/signals_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,8 +20,9 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Get Sh_t Done',
-      theme: ref.watch(isDarkModeProvider) ? themeDark(ref) : themeLight(ref),
-      themeMode: ref.watch(themeModeProvider),
+      theme: sIsDark.watch(context)
+          ? cThemeDark.watch(context)
+          : cThemeLight.watch(context),
       home: const SplashScreen(),
     );
   }

@@ -7,7 +7,6 @@ import 'package:getsh_tdone/providers/category_provider.dart';
 import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/description_provider.dart';
 import 'package:getsh_tdone/providers/iscompleted_provider.dart';
-import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/providers/title_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/services/logger.dart';
@@ -198,9 +197,8 @@ class UpdateTaskCategoryChoiceSegmentedButtonState
 
   @override
   Widget build(BuildContext context) {
-    Color selectedColor = ref.watch(isDarkModeProvider)
-        ? flexSchemeDark(ref).primary
-        : flexSchemeLight(ref).primary;
+    Color selectedColor =
+        sIsDark.value ? cFlexSchemeDark().primary : cFlexSchemeLight().primary;
     return Expanded(
       child: SegmentedButton<Categories>(
         selected: ref.watch(updateTaskCategoryProvider),
@@ -215,21 +213,21 @@ class UpdateTaskCategoryChoiceSegmentedButtonState
                 if (ref
                     .watch(updateTaskCategoryProvider)
                     .contains(Categories.personal)) {
-                  selectedColor = ref.watch(isDarkModeProvider)
-                      ? flexSchemeDark(ref).primary
-                      : flexSchemeLight(ref).primary;
+                  selectedColor = sIsDark.value
+                      ? cFlexSchemeDark().primary
+                      : cFlexSchemeLight().primary;
                 } else if (ref
                     .watch(updateTaskCategoryProvider)
                     .contains(Categories.work)) {
-                  selectedColor = ref.watch(isDarkModeProvider)
-                      ? flexSchemeDark(ref).secondary
-                      : flexSchemeLight(ref).secondary;
+                  selectedColor = sIsDark.value
+                      ? cFlexSchemeDark().secondary
+                      : cFlexSchemeLight().secondary;
                 } else if (ref
                     .watch(updateTaskCategoryProvider)
                     .contains(Categories.study)) {
-                  selectedColor = ref.watch(isDarkModeProvider)
-                      ? flexSchemeDark(ref).tertiary
-                      : flexSchemeLight(ref).tertiary;
+                  selectedColor = sIsDark.value
+                      ? cFlexSchemeDark().tertiary
+                      : cFlexSchemeLight().tertiary;
                 }
                 return selectedColor;
               }
@@ -385,9 +383,9 @@ class UpdateTaskSaveButton extends StatelessWidget {
                   'Failed to update Task: $error',
                 ),
                 behavior: SnackBarBehavior.floating,
-                backgroundColor: ref.watch(isDarkModeProvider)
-                    ? flexSchemeDark(ref).error
-                    : flexSchemeLight(ref).error,
+                backgroundColor: sIsDark.value
+                    ? cFlexSchemeDark().error
+                    : cFlexSchemeLight().error,
               ),
             );
           }

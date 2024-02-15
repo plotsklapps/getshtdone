@@ -15,9 +15,9 @@ import 'package:getsh_tdone/providers/smiley_provider.dart';
 import 'package:getsh_tdone/providers/sneakpeek_provider.dart';
 import 'package:getsh_tdone/providers/sortingmethod_provider.dart';
 import 'package:getsh_tdone/providers/tasklist_provider.dart';
-import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/providers/title_provider.dart';
 import 'package:getsh_tdone/services/logger.dart';
+import 'package:getsh_tdone/theme/theme.dart';
 
 // Custom class FirebaseService which takes a WidgetRef as a parameter.
 // This is used to access the Providers. In the code, it's usable as
@@ -74,8 +74,8 @@ class FirebaseService {
         'displayName': ref.watch(displayNameProvider),
         'photoURL': ref.watch(photoURLProvider),
         'email': ref.watch(emailProvider),
-        'darkMode': ref.watch(isDarkModeProvider),
-        'greenScheme': ref.watch(isGreenSchemeProvider),
+        'darkMode': sIsDark.value,
+        'greenScheme': sIsGreen.value,
         'creationDate': ref.watch(creationDateProvider),
         'lastSignInDate': ref.watch(lastSignInDateProvider),
       });
@@ -150,10 +150,8 @@ class FirebaseService {
                   documentSnapshot['email'] as String;
               ref.read(photoURLProvider.notifier).state =
                   documentSnapshot['photoURL'] as String;
-              ref.read(isDarkModeProvider.notifier).state =
-                  documentSnapshot['darkMode'] as bool;
-              ref.read(isGreenSchemeProvider.notifier).state =
-                  documentSnapshot['greenScheme'] as bool;
+              sIsDark.value = documentSnapshot['darkMode'] as bool;
+              sIsGreen.value = documentSnapshot['greenScheme'] as bool;
               ref.read(creationDateProvider.notifier).state =
                   documentSnapshot['creationDate'] as String;
               ref.read(lastSignInDateProvider.notifier).state =
@@ -377,7 +375,7 @@ class FirebaseService {
     void Function(String success) onSuccess,
   ) async {
     try {
-      final bool updatedThemeMode = ref.watch(isDarkModeProvider);
+      final bool updatedThemeMode = sIsDark.value;
       final User? currentUser = ref.read(firebaseProvider).currentUser;
 
       await ref
@@ -405,7 +403,7 @@ class FirebaseService {
     void Function(String success) onSuccess,
   ) async {
     try {
-      final bool updatedFlexScheme = ref.watch(isGreenSchemeProvider);
+      final bool updatedFlexScheme = sIsGreen.value;
       final User? currentUser = ref.read(firebaseProvider).currentUser;
 
       await ref
@@ -449,9 +447,6 @@ class FirebaseService {
       ..invalidate(titleProvider)
       ..invalidate(descriptionProvider)
       ..invalidate(isCompletedProvider)
-      ..invalidate(isDarkModeProvider)
-      ..invalidate(isGreenSchemeProvider)
-      ..invalidate(themeModeProvider)
       ..invalidate(categoryProvider)
       ..invalidate(categoryStringProvider)
       ..invalidate(sortTaskCategoryProvider)

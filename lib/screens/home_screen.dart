@@ -8,7 +8,6 @@ import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/issearchperformed_provider.dart';
 import 'package:getsh_tdone/providers/smiley_provider.dart';
 import 'package:getsh_tdone/providers/tasklist_provider.dart';
-import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 import 'package:getsh_tdone/widgets/newtask_modal.dart';
@@ -380,20 +379,16 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: ref.watch(
-                          isDarkModeProvider,
-                        )
-                            ? flexSchemeDark(ref).error
-                            : flexSchemeLight(ref).error,
+                        backgroundColor: sIsDark.value
+                            ? cFlexSchemeDark().error
+                            : cFlexSchemeLight().error,
                       ),
                       child: Text(
                         'DELETE',
                         style: TextStyle(
-                          color: ref.watch(
-                            isDarkModeProvider,
-                          )
-                              ? flexSchemeDark(ref).onError
-                              : flexSchemeLight(ref).onError,
+                          color: sIsDark.value
+                              ? cFlexSchemeDark().onError
+                              : cFlexSchemeLight().onError,
                         ),
                       ),
                     ),
@@ -420,9 +415,9 @@ class TaskCardBackGroundEdit extends ConsumerWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
         side: BorderSide(
-          color: ref.watch(isDarkModeProvider)
-              ? flexSchemeDark(ref).primary
-              : flexSchemeLight(ref).primary,
+          color: sIsDark.value
+              ? cFlexSchemeDark().primary
+              : cFlexSchemeLight().primary,
           width: 4.0,
         ),
       ),
@@ -442,9 +437,9 @@ class TaskCardBackGroundEdit extends ConsumerWidget {
             children: <Widget>[
               FaIcon(
                 FontAwesomeIcons.solidPenToSquare,
-                color: ref.watch(isDarkModeProvider)
-                    ? flexSchemeDark(ref).primary
-                    : flexSchemeLight(ref).primary,
+                color: sIsDark.value
+                    ? cFlexSchemeDark().primary
+                    : cFlexSchemeLight().primary,
               ),
             ],
           ),
@@ -466,9 +461,9 @@ class TaskCardBackgroundDelete extends ConsumerWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
         side: BorderSide(
-          color: ref.watch(isDarkModeProvider)
-              ? flexSchemeDark(ref).error
-              : flexSchemeLight(ref).error,
+          color: sIsDark.value
+              ? cFlexSchemeDark().error
+              : cFlexSchemeLight().error,
           width: 4.0,
         ),
       ),
@@ -487,9 +482,9 @@ class TaskCardBackgroundDelete extends ConsumerWidget {
             children: <Widget>[
               FaIcon(
                 FontAwesomeIcons.trash,
-                color: ref.watch(isDarkModeProvider)
-                    ? flexSchemeDark(ref).error
-                    : flexSchemeLight(ref).error,
+                color: sIsDark.value
+                    ? cFlexSchemeDark().error
+                    : cFlexSchemeLight().error,
               ),
             ],
           ),

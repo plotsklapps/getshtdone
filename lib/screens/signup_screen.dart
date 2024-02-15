@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getsh_tdone/providers/displayname_provider.dart';
 import 'package:getsh_tdone/providers/email_provider.dart';
-import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/services/firebase_service.dart';
 import 'package:getsh_tdone/services/navigation.dart';
 import 'package:getsh_tdone/theme/theme.dart';
@@ -164,9 +163,9 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
                                     const EdgeInsets.symmetric(vertical: 8.0),
                                 child: CircularProgressIndicator(
                                   valueColor: AlwaysStoppedAnimation<Color>(
-                                    ref.watch(isDarkModeProvider)
-                                        ? flexSchemeDark(ref).onPrimary
-                                        : flexSchemeLight(ref).onPrimary,
+                                    sIsDark.value
+                                        ? cFlexSchemeDark().onPrimary
+                                        : cFlexSchemeLight().onPrimary,
                                   ),
                                 ),
                               )

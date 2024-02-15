@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getsh_tdone/models/task_model.dart';
 import 'package:getsh_tdone/providers/searchtask_provider.dart';
 import 'package:getsh_tdone/providers/tasklist_provider.dart';
-import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 
@@ -110,9 +109,8 @@ class SearchTaskModalState extends ConsumerState<SearchTaskModal> {
       SnackBar(
         content: Text(error.toString()),
         behavior: SnackBarBehavior.floating,
-        backgroundColor: ref.watch(isDarkModeProvider)
-            ? flexSchemeDark(ref).error
-            : flexSchemeLight(ref).error,
+        backgroundColor:
+            sIsDark.value ? cFlexSchemeDark().error : cFlexSchemeLight().error,
       ),
     );
   }

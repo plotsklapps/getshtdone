@@ -9,12 +9,12 @@ import 'package:getsh_tdone/providers/date_provider.dart';
 import 'package:getsh_tdone/providers/description_provider.dart';
 import 'package:getsh_tdone/providers/iscompleted_provider.dart';
 import 'package:getsh_tdone/providers/sneakpeek_provider.dart';
-import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/providers/title_provider.dart';
 import 'package:getsh_tdone/services/firestore_service.dart';
 import 'package:getsh_tdone/services/logger.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 import 'package:intl/intl.dart';
+import 'package:signals/signals_flutter.dart';
 
 class NewTaskModal extends ConsumerStatefulWidget {
   const NewTaskModal({
@@ -163,9 +163,9 @@ class NewTaskCategoryChoiceSegmentedButtonState
     extends ConsumerState<NewTaskCategoryChoiceSegmentedButton> {
   @override
   Widget build(BuildContext context) {
-    final bool isDarkMode = ref.watch(isDarkModeProvider);
+    final bool isDarkMode = sIsDark.value;
     Color selectedColor =
-        isDarkMode ? flexSchemeDark(ref).primary : flexSchemeLight(ref).primary;
+        isDarkMode ? cFlexSchemeDark().primary : cFlexSchemeLight().primary;
     return Expanded(
       child: SegmentedButton<Categories>(
         selected: ref.watch(newTaskCategoryProvider),
@@ -180,20 +180,20 @@ class NewTaskCategoryChoiceSegmentedButtonState
                     .watch(newTaskCategoryProvider)
                     .contains(Categories.personal)) {
                   selectedColor = isDarkMode
-                      ? flexSchemeDark(ref).primary
-                      : flexSchemeLight(ref).primary;
+                      ? cFlexSchemeDark().primary
+                      : cFlexSchemeLight().primary;
                 } else if (ref
                     .watch(newTaskCategoryProvider)
                     .contains(Categories.work)) {
                   selectedColor = isDarkMode
-                      ? flexSchemeDark(ref).secondary
-                      : flexSchemeLight(ref).secondary;
+                      ? cFlexSchemeDark().secondary
+                      : cFlexSchemeLight().secondary;
                 } else if (ref
                     .watch(newTaskCategoryProvider)
                     .contains(Categories.study)) {
                   selectedColor = isDarkMode
-                      ? flexSchemeDark(ref).tertiary
-                      : flexSchemeLight(ref).tertiary;
+                      ? cFlexSchemeDark().tertiary
+                      : cFlexSchemeLight().tertiary;
                 }
                 return selectedColor;
               }
@@ -339,9 +339,9 @@ class NewTaskSaveButton extends StatelessWidget {
                     'You are currently in sneak peek mode. Currently GSD does '
                     'not support saving a new task without having an account'),
                 behavior: SnackBarBehavior.floating,
-                backgroundColor: ref.watch(isDarkModeProvider)
-                    ? flexSchemeDark(ref).error
-                    : flexSchemeLight(ref).error,
+                backgroundColor: sIsDark.watch(context)
+                    ? cFlexSchemeDark().error
+                    : cFlexSchemeLight().error,
               ),
             );
           }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/services/firebase_service.dart';
 import 'package:getsh_tdone/services/navigation.dart';
 import 'package:getsh_tdone/theme/theme.dart';
@@ -75,20 +74,16 @@ class SignoutModalState extends ConsumerState<SignoutModal> {
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: ref.watch(
-                      isDarkModeProvider,
-                    )
-                        ? flexSchemeDark(ref).error
-                        : flexSchemeLight(ref).error,
+                    backgroundColor: sIsDark.value
+                        ? cFlexSchemeDark().error
+                        : cFlexSchemeLight().error,
                   ),
                   child: Text(
                     'SIGN OUT',
                     style: TextStyle(
-                      color: ref.watch(
-                        isDarkModeProvider,
-                      )
-                          ? flexSchemeDark(ref).onError
-                          : flexSchemeLight(ref).onError,
+                      color: sIsDark.value
+                          ? cFlexSchemeDark().onError
+                          : cFlexSchemeLight().onError,
                     ),
                   ),
                 ),
@@ -105,9 +100,8 @@ class SignoutModalState extends ConsumerState<SignoutModal> {
       SnackBar(
         content: Text(error.toString()),
         behavior: SnackBarBehavior.floating,
-        backgroundColor: ref.watch(isDarkModeProvider)
-            ? flexSchemeDark(ref).error
-            : flexSchemeLight(ref).error,
+        backgroundColor:
+            sIsDark.value ? cFlexSchemeDark().error : cFlexSchemeLight().error,
       ),
     );
   }

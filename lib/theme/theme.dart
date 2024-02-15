@@ -1,18 +1,24 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:signals/signals_flutter.dart';
 
-// Theme config for FlexColorScheme version 7.3.x. Make sure you use
-// same or higher package version, but still same major version. If you
-// use a lower package version, some properties may not be supported.
-// In that case remove them after copying this theme to your app.
+// This file contains two booleans and four computed values that are used to
+// create the theme and color scheme for the app. The two booleans are used to
+// control the theme and color scheme of the app. The computed values are used
+// to create the theme and color scheme based on the two booleans.
 
-ThemeData themeLight(WidgetRef ref) {
-  final FlexScheme flexScheme = ref.watch(flexSchemeProvider);
+Signal<bool> sIsDark = signal<bool>(false);
+
+Signal<bool> sIsGreen = signal<bool>(true);
+
+Computed<FlexScheme> cFlexScheme = computed(() {
+  return sIsGreen.value ? FlexScheme.money : FlexScheme.espresso;
+});
+
+Computed<ThemeData> cThemeLight = computed(() {
   return FlexThemeData.light(
-    scheme: flexScheme,
+    scheme: cFlexScheme.value,
     surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
     blendLevel: 18,
     appBarElevation: 4.0,
@@ -66,15 +72,13 @@ ThemeData themeLight(WidgetRef ref) {
     visualDensity: FlexColorScheme.comfortablePlatformDensity,
     useMaterial3: true,
     swapLegacyOnMaterial3: true,
-// To use the Playground font, add GoogleFonts package and uncomment
     fontFamily: GoogleFonts.bebasNeue().fontFamily,
   );
-}
+});
 
-ThemeData themeDark(WidgetRef ref) {
-  final FlexScheme flexScheme = ref.watch(flexSchemeProvider);
+Computed<ThemeData> cThemeDark = computed(() {
   return FlexThemeData.dark(
-    scheme: flexScheme,
+    scheme: cFlexScheme.value,
     surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
     blendLevel: 20,
     appBarElevation: 4.0,
@@ -129,13 +133,10 @@ ThemeData themeDark(WidgetRef ref) {
     swapLegacyOnMaterial3: true,
     fontFamily: GoogleFonts.bebasNeue().fontFamily,
   );
-}
+});
 
-// Light and dark ColorSchemes made by FlexColorScheme v7.3.1.
-// These ColorScheme objects require Flutter 3.7 or later.
-ColorScheme flexSchemeLight(WidgetRef ref) {
-  final bool isGreenScheme = ref.watch(isGreenSchemeProvider);
-  if (isGreenScheme) {
+Computed<ColorScheme> cFlexSchemeLight = computed(() {
+  if (sIsGreen.value) {
     return const ColorScheme(
       brightness: Brightness.light,
       primary: Color(0xff3f674d),
@@ -204,11 +205,10 @@ ColorScheme flexSchemeLight(WidgetRef ref) {
       surfaceTint: Color(0xff725853),
     );
   }
-}
+});
 
-ColorScheme flexSchemeDark(WidgetRef ref) {
-  final bool isGreenScheme = ref.watch(isGreenSchemeProvider);
-  if (isGreenScheme) {
+Computed<ColorScheme> cFlexSchemeDark = computed(() {
+  if (sIsGreen.value) {
     return const ColorScheme(
       brightness: Brightness.dark,
       primary: Color(0xffa5d1b1),
@@ -277,4 +277,4 @@ ColorScheme flexSchemeDark(WidgetRef ref) {
       surfaceTint: Color(0xffe1bfb9),
     );
   }
-}
+});

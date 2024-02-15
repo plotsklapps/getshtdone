@@ -4,13 +4,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getsh_tdone/providers/displayname_provider.dart';
 import 'package:getsh_tdone/providers/smiley_provider.dart';
 import 'package:getsh_tdone/providers/sneakpeek_provider.dart';
-import 'package:getsh_tdone/providers/theme_provider.dart';
 import 'package:getsh_tdone/services/firebase_service.dart';
 import 'package:getsh_tdone/services/navigation.dart';
 import 'package:getsh_tdone/theme/theme.dart';
 import 'package:getsh_tdone/widgets/deleteuser_modal.dart';
 import 'package:getsh_tdone/widgets/signout_modal.dart';
 import 'package:getsh_tdone/widgets/username_modal.dart';
+import 'package:signals/signals_flutter.dart';
 
 class UserSettingsModal extends ConsumerStatefulWidget {
   const UserSettingsModal({super.key});
@@ -73,8 +73,7 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
           ListTile(
             onTap: () {
               // Whether the user is a sneak peeker or not, change the theme.
-              ref.read(isDarkModeProvider.notifier).state =
-                  !ref.watch(isDarkModeProvider);
+              sIsDark.value = !sIsDark.value;
               // If the user is not a sneak peeker, update the theme in the
               // Firestore database as well.
               if (!ref.watch(isSneakPeekerProvider)) {
@@ -86,11 +85,11 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
                 });
               }
             },
-            title: ref.watch(isDarkModeProvider)
+            title: sIsDark.watch(context)
                 ? const Text('Dark Mode')
                 : const Text('Light Mode'),
             subtitle: const Text('Change the app theme'),
-            trailing: ref.watch(isDarkModeProvider)
+            trailing: sIsDark.watch(context)
                 ? const FaIcon(FontAwesomeIcons.moon)
                 : const FaIcon(FontAwesomeIcons.sun),
           ),
@@ -99,8 +98,7 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
           ListTile(
             onTap: () {
               // Whether the user is a sneak peeker or not, change the color.
-              ref.read(isGreenSchemeProvider.notifier).state =
-                  !ref.watch(isGreenSchemeProvider);
+              sIsGreen.value = !sIsGreen.value;
               // If the user is not a sneak peeker, update the color in the
               // Firestore database as well.
               if (!ref.watch(isSneakPeekerProvider)) {
@@ -112,11 +110,11 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
                 });
               }
             },
-            title: ref.watch(isGreenSchemeProvider)
+            title: sIsGreen.watch(context)
                 ? const Text('Green Money')
                 : const Text('Espresso'),
             subtitle: const Text('Change the app colors'),
-            trailing: ref.watch(isGreenSchemeProvider)
+            trailing: sIsGreen.watch(context)
                 ? const FaIcon(FontAwesomeIcons.moneyBills)
                 : const FaIcon(FontAwesomeIcons.mugHot),
           ),
@@ -174,9 +172,8 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
       SnackBar(
         content: Text('$error'),
         behavior: SnackBarBehavior.floating,
-        backgroundColor: ref.watch(isDarkModeProvider)
-            ? flexSchemeDark(ref).error
-            : flexSchemeLight(ref).error,
+        backgroundColor:
+            sIsDark.value ? cFlexSchemeDark().error : cFlexSchemeLight().error,
       ),
     );
   }
@@ -196,9 +193,8 @@ class UserSettingsModalState extends ConsumerState<UserSettingsModal> {
         content: const Text('You are currently in sneak peek mode. '
             'Please sign in to get access.'),
         behavior: SnackBarBehavior.floating,
-        backgroundColor: ref.watch(isDarkModeProvider)
-            ? flexSchemeDark(ref).error
-            : flexSchemeLight(ref).error,
+        backgroundColor:
+            sIsDark.value ? cFlexSchemeDark().error : cFlexSchemeLight().error,
       ),
     );
   }

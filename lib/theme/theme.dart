@@ -67,7 +67,7 @@ ThemeData themeLight(WidgetRef ref) {
     useMaterial3: true,
     swapLegacyOnMaterial3: true,
 // To use the Playground font, add GoogleFonts package and uncomment
-    fontFamily: GoogleFonts.teko().fontFamily,
+    fontFamily: GoogleFonts.bebasNeue().fontFamily,
   );
 }
 
@@ -127,7 +127,7 @@ ThemeData themeDark(WidgetRef ref) {
     visualDensity: FlexColorScheme.comfortablePlatformDensity,
     useMaterial3: true,
     swapLegacyOnMaterial3: true,
-    fontFamily: GoogleFonts.teko().fontFamily,
+    fontFamily: GoogleFonts.bebasNeue().fontFamily,
   );
 }
 

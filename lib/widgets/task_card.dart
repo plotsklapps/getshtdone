@@ -165,12 +165,58 @@ class TaskCardState extends ConsumerState<TaskCard> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Text(widget.task.category ?? 'No Category'),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: <Widget>[
-                                Text('Created: ${widget.task.createdDate!}'),
-                                Text(
-                                  'Due: ${widget.task.dueDate!}',
+                            Row(
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                      showDragHandle: true,
+                                      isScrollControlled: true,
+                                      context: context,
+                                      builder: (context) {
+                                        return Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            const Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Text(
+                                                  'Focus Mode',
+                                                  style: TextStyle(
+                                                    fontSize: 24.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const Divider(
+                                              thickness: 4,
+                                            ),
+                                            const SizedBox(height: 8.0),
+                                            TimePickerDialog(
+                                              initialTime: TimeOfDay.now(),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  icon: const FaIcon(
+                                      FontAwesomeIcons.arrowsToCircle),
+                                ),
+                                const SizedBox(width: 8.0),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: <Widget>[
+                                    Text(
+                                        'Created: ${widget.task.createdDate!}'),
+                                    Text(
+                                      'Due: ${widget.task.dueDate!}',
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),

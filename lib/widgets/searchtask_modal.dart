@@ -86,11 +86,13 @@ class SearchTaskModalState extends ConsumerState<SearchTaskModal> {
                       searchController.text.trim(),
                     );
                     ref.read(taskListProvider.notifier).state =
-                        AsyncValue.data(tasks);
+                        AsyncValue<List<Task>>.data(tasks);
                     setState(() {
                       isSearching = false;
                     });
-                    Navigator.pop(context);
+                    if (mounted) {
+                      Navigator.pop(context);
+                    }
                   },
                   child: isSearching
                       ? const CircularProgressIndicator()

@@ -1,11 +1,11 @@
 {
-    "name": "getsh_tdone",
-    "short_name": "getsh_tdone",
+    "name": "getshtdone",
+    "short_name": "getshtdone",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "TODO app with Signal state management",
+    "description": "Get Sh_t Done, a better todo app.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -9,11 +9,11 @@ import 'package:signals/signals_flutter.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: MainEntry()));
 }
 
-class MyApp extends ConsumerWidget {
-  const MyApp({super.key});
+class MainEntry extends ConsumerWidget {
+  const MainEntry({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

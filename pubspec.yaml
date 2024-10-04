@@ -8,11 +8,11 @@ environment:
   sdk: '>=3.2.2 <4.0.0'
 
 dependencies:
-  cloud_firestore: ^4.13.3
-  confetti: ^0.7.0
+  cloud_firestore: ^5.4.4
+  confetti: ^0.8.0
   cupertino_icons: ^1.0.2
-  firebase_auth: ^4.15.0
-  firebase_core: ^2.24.0
+  firebase_auth: ^5.3.1
+  firebase_core: ^3.6.0
   flex_color_scheme: ^7.3.1
   flutter:
     sdk: flutter
@@ -22,14 +22,14 @@ dependencies:
   google_fonts: ^6.1.0
   intl: ^0.19.0
   logger: ^2.0.2+1
-  signals: ^4.2.2
+  signals: ^5.5.0
   uuid: ^4.2.2
 
 dev_dependencies:
-  flutter_launcher_icons: ^0.13.1
+  flutter_launcher_icons: ^0.14.1
   flutter_test:
     sdk: flutter
-  very_good_analysis: ^5.1.0
+  very_good_analysis: ^6.0.0
 
 flutter:
   uses-material-design: true

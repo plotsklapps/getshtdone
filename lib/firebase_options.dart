@@ -27,10 +27,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -55,7 +52,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyB4x2E8VsF8OE5ELN6dL6wJsI4Y2m2SyM8',
-    appId: '1:993672599625:android:5d799ab699795317470798',
+    appId: '1:993672599625:android:01ec789dffe23641470798',
     messagingSenderId: '993672599625',
     projectId: 'getsh-tdone',
     storageBucket: 'getsh-tdone.appspot.com',
@@ -63,19 +60,30 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCk2JwbgxUb9Whe9kzocKFrJYX3ZWDaIQ8',
-    appId: '1:993672599625:ios:70bcdd4d13af796e470798',
+    appId: '1:993672599625:ios:2b76ad4bdc81fc1c470798',
     messagingSenderId: '993672599625',
     projectId: 'getsh-tdone',
     storageBucket: 'getsh-tdone.appspot.com',
-    iosBundleId: 'dev.plotsklapps.getshTdone',
+    iosBundleId: 'dev.plotsklapps.getshtdone',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyCk2JwbgxUb9Whe9kzocKFrJYX3ZWDaIQ8',
-    appId: '1:993672599625:ios:4a9e6cf535671939470798',
+    appId: '1:993672599625:ios:2b76ad4bdc81fc1c470798',
     messagingSenderId: '993672599625',
     projectId: 'getsh-tdone',
     storageBucket: 'getsh-tdone.appspot.com',
-    iosBundleId: 'dev.plotsklapps.getshTdone.RunnerTests',
+    iosBundleId: 'dev.plotsklapps.getshtdone',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyD3KxO3FKmmKWy-9n8OQIAsJ7AEdkEut-w',
+    appId: '1:993672599625:web:40de89c5d704533c470798',
+    messagingSenderId: '993672599625',
+    projectId: 'getsh-tdone',
+    authDomain: 'getsh-tdone.firebaseapp.com',
+    storageBucket: 'getsh-tdone.appspot.com',
+    measurementId: 'G-DTFJ2BY5QX',
+  );
+
 }

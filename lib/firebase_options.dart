@@ -46,7 +46,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '993672599625',
     projectId: 'getsh-tdone',
     authDomain: 'getsh-tdone.firebaseapp.com',
-    storageBucket: 'getsh-tdone.appspot.com',
+    storageBucket: 'getsh-tdone.firebasestorage.app',
     measurementId: 'G-NSSBRPDKGE',
   );
 
@@ -55,7 +55,7 @@ class DefaultFirebaseOptions {
     appId: '1:993672599625:android:01ec789dffe23641470798',
     messagingSenderId: '993672599625',
     projectId: 'getsh-tdone',
-    storageBucket: 'getsh-tdone.appspot.com',
+    storageBucket: 'getsh-tdone.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -63,7 +63,7 @@ class DefaultFirebaseOptions {
     appId: '1:993672599625:ios:2b76ad4bdc81fc1c470798',
     messagingSenderId: '993672599625',
     projectId: 'getsh-tdone',
-    storageBucket: 'getsh-tdone.appspot.com',
+    storageBucket: 'getsh-tdone.firebasestorage.app',
     iosBundleId: 'dev.plotsklapps.getshtdone',
   );
 
@@ -72,18 +72,18 @@ class DefaultFirebaseOptions {
     appId: '1:993672599625:ios:2b76ad4bdc81fc1c470798',
     messagingSenderId: '993672599625',
     projectId: 'getsh-tdone',
-    storageBucket: 'getsh-tdone.appspot.com',
+    storageBucket: 'getsh-tdone.firebasestorage.app',
     iosBundleId: 'dev.plotsklapps.getshtdone',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyD3KxO3FKmmKWy-9n8OQIAsJ7AEdkEut-w',
-    appId: '1:993672599625:web:40de89c5d704533c470798',
+    apiKey: 'AIzaSyD0SWNF9b-YloFgv3FqYbjc9N_JqGO6AvM',
+    appId: '1:993672599625:web:f8a3ec24c187adc6470798',
     messagingSenderId: '993672599625',
     projectId: 'getsh-tdone',
     authDomain: 'getsh-tdone.firebaseapp.com',
-    storageBucket: 'getsh-tdone.appspot.com',
-    measurementId: 'G-DTFJ2BY5QX',
+    storageBucket: 'getsh-tdone.firebasestorage.app',
+    measurementId: 'G-9FCTZJXCYN',
   );
 
 }

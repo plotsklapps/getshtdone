@@ -5,10 +5,6 @@ class Logs {
     Logger().w('User is not logged in or verified, going to LoginScreen');
   }
 
-  static void userKnown() {
-    Logger().i('User is logged in or verified, going to HomeScreen');
-  }
-
   static void signupComplete() {
     Logger().i('User is created, verification email sent');
   }

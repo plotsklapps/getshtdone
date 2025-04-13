@@ -7,6 +7,7 @@ import 'package:getsh_tdone/providers/firebase_provider.dart';
 import 'package:getsh_tdone/providers/sneakpeek_provider.dart';
 import 'package:getsh_tdone/services/logger.dart';
 import 'package:getsh_tdone/services/navigation.dart';
+import 'package:logger/logger.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -18,8 +19,9 @@ class SplashScreen extends ConsumerStatefulWidget {
 }
 
 class SplashScreenState extends ConsumerState<SplashScreen> {
+  final Logger _logger = Logger();
   late Timer progressTimer;
-  double progressValue = 0.0;
+  double progressValue = 0;
 
   @override
   void initState() {
@@ -40,7 +42,8 @@ class SplashScreenState extends ConsumerState<SplashScreen> {
       if (currentUser != null && currentUser.emailVerified) {
         progressValue = 1.0;
         progressTimer.cancel();
-        Logs.userKnown();
+        _logger.i('User is logged in or verified, going to HomeScreen');
+
         // User is known: set sneak peeker bool to false.
         ref.read(isSneakPeekerProvider.notifier).state = false;
         Navigation.navigateToHomeScreen(context);
@@ -68,21 +71,21 @@ class SplashScreenState extends ConsumerState<SplashScreen> {
             children: <Widget>[
               Align(
                 child: SizedBox(
-                  height: 100.0,
-                  width: 100.0,
+                  height: 100,
+                  width: 100,
                   child: CircularProgressIndicator(
                     value: progressValue,
-                    strokeWidth: 10.0,
+                    strokeWidth: 10,
                   ),
                 ),
               ),
               Align(
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16.0),
+                  borderRadius: BorderRadius.circular(16),
                   child: Image.asset(
                     'assets/images/gsdIcon.png',
-                    height: 72.0,
-                    width: 72.0,
+                    height: 72,
+                    width: 72,
                   ),
                 ),
               ),

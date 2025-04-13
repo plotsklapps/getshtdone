@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "993672599625",
     "project_id": "getsh-tdone",
-    "storage_bucket": "getsh-tdone.appspot.com"
+    "storage_bucket": "getsh-tdone.firebasestorage.app"
   },
   "client": [
     {

@@ -1,7 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:signals/signals_flutter.dart';
 
 // A list of categories. For now it is not expandable.
 enum Categories { all, personal, work, study }
+
+final Signal<String> sCategory = Signal<String>('all');
 
 // The provider for the category state. It always returns set of categories.
 // The default value is set to all via the Notifier.

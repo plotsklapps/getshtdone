@@ -20,9 +20,7 @@ class MainEntry extends ConsumerWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Get Sh_t Done',
-      theme: sIsDark.watch(context)
-          ? cThemeDark.watch(context)
-          : cThemeLight.watch(context),
+      theme: cThemeData.watch(context),
       home: const SplashScreen(),
     );
   }
